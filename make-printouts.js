@@ -9,6 +9,7 @@ async function main() {
         name: entry["Name"],
         plate: entry["Bib"],
         wave: entry["Wave"],
+        gender: entry["Gender"],
         category: entry["Category"]
     }));
     const rosterRiders = [...await helper.getRoster(config), ...await helper.getWebscorerRegistrations(config)];
@@ -25,11 +26,20 @@ async function main() {
     console.log("Building CSV");
     const csvOutput = ["Here, Wave, Name, #, Wave 2, Cat, Parent, Phone"];
     sortedRiders.forEach(r => {
-            const row = ` , ${r.waveNumber}, \"${r.name}\", ${r.plate}, ${r.wave}, ${r.category}), \"${r.parent}\", ${r.phone}`
+            const row = ` , ${r.waveNumber}, \"${r.name}\", ${r.plate}, ${r.wave}, ${r.category}, \"${r.parent}\", ${r.phone}`
             csvOutput.push(row);
     });
 
     fs.writeFile("./files/checkin.csv", csvOutput.join("\n"), e => console.error(e));
+
+    console.log("Building CSV");
+    const csvOutput2 = ["Wave, Name, #, Wave, M/F"];
+    sortedRiders.forEach(r => {
+        const row = `${r.waveNumber}, \"${r.name}\", ${r.plate}, ${r.wave}, ${r.gender}`
+        csvOutput2.push(row);
+    });
+
+    fs.writeFile("./files/wavesheet.csv", csvOutput2.join("\n"), e => console.error(e));
 
 }
 
