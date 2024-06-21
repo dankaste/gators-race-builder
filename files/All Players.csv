@@ -1,0 +1,386 @@
+id,team,season_id,season,player_first_name,player_last_name,gender,birth_date,position,number,Side,parent1_email,parent1_first_name,parent1_last_name,parent1_mobile_number,parent2_email,parent2_first_name,parent2_last_name,parent2_mobile_number,street,city,state,zip
+1633520,Black Advanced - Kaste,5833,2024,Kraig,Armstrong,M,5/16/2008,,2,,llarmstrong@me.com,Lori,Armstrong,,rarmstrong@wscloud.org,Rick,Armstrong,614-595-9894,6283 Valley Stream Dr,Dublin,OH,43017
+1633521,Black Advanced - Kaste,5833,2024,Brody,Armstrong,M,6/4/2010,,3,,llarmstrong@me.com,Lori,Armstrong,,rarmstrong@wscloud.org,Rick,Armstrong,614-595-9894,6283 Valley Stream Dr,Dublin,OH,43017
+1633541,White Advanced - Coleman,5833,2024,Fletcher,Robenstine,M,2/2/2012,,11,,robenstine@gmail.com,Kyle,Robenstine,740-707-1404,jessica.robenstine@gmail.com,Jess,Robenstine,740-817-1132,180 Winding Valley Dr,Delaware ,OH,43015
+1633542,White Advanced - Coleman,5833,2024,Lola,Robenstine,F,2/23/2010,,12,,robenstine@gmail.com,Kyle,Robenstine,740-707-1404,jessica.robenstine@gmail.com,Jess,Robenstine,740-817-1132,180 Winding Valley Dr,Delaware ,OH,43015
+1633551,Neon Advanced - Armstrong,5833,2024,Andrew,Davis,M,7/7/2011,,20,,jldavis0414@outlook.com,Jamie,Davis,614-738-0688,,,,,7965 Severhill Court,Dublin,OH,43016
+1633552,Neon Advanced - Armstrong,5833,2024,Samuel,Davis,M,12/1/2009,,21,,jldavis0414@outlook.com,Jamie,Davis,614-738-0688,,,,,7965 Severhill Court,Dublin,OH,43016
+1633555,Neon Advanced - Armstrong,5833,2024,Joseph,Panzner,M,11/1/2010,,23,,trembling_blue_stars@yahoo.com,Wendy,Panzner,614-915-6210,,,,,6722 Elmers Court,Columbus,OH,43085
+1633548,White Advanced - Coleman,5833,2024,Parker,West,M,7/24/2012,,64,,westfamily1149@gmail.com,Christy,West,614-313-1687,,,,,,,,
+1633560,Neon Advanced - Armstrong,5833,2024,Lucas,Zhang,M,9/16/2012,,72,,zhang.7617@yahoo.com,Nan,Zhang,614-441-7888,,,,,,,,
+1633550,Neon Advanced - Armstrong,5833,2024,Bear,Cook,M,5/10/2012,,75,,scooksc1@gmail.com,Scott,Cook,614-582-3228,,,,,6685 Mcvey Blvd,Columbus ,OH,43235
+1631763,Black Advanced - Kaste,5833,2024,Nolan,Downs,M,12/17/2010,,80,,ashley.downs@gmail.com,Ashley,Downs,937-269-2779,jeffrey.downs@gmail.com,Jeff,Downs,937-269-2777,2201 Castle Crest Drive,Worthington,OH,43085
+1633536,White Advanced - Coleman,5833,2024,Samantha,Forsythe,F,4/13/2012,Rider,87,,lisa.c.forsythe@gmail.com,Lisa,Forsythe,614-581-9435,matt_forsythe@yahoo.com,Matt,Forsythe,614-551-0169,7757 Mellacent Dr.,Columbus,OH,43235
+1633575,Purple Advanced - Robenstine,5833,2024,Donovan,Lawrence,M,2/26/2013,,99,,sweeneymg@yahoo.com,Meghan,Lawrence,614-937-4203,,,,,7772 Samberly Rd.,Dublin,OH,`43016
+1633528,Black Advanced - Kaste,5833,2024,Henry,Rizek,M,5/21/2011,,108,,danrizek@gmail.com,Dan,Rizek,614-563-2992,emilyrizek@gmail.com,Emily,Rizek,614-354-3791,,,,
+1633519,Black Advanced - Kaste,5833,2024,Jack,Arden,M,2/14/2011,,115,,douglasarden@yahoo.com,Doug,Arden,614-804-6436,,,,,6767 Bowerman Ct,Worthington,OH,43085
+1633549,Purple Advanced - Robenstine,5833,2024,Grant,Aldridge,M,6/4/2012,,144,,aldridgefamilyfive@gmail.com,Kim,Aldridge,937-367-9335,,,,,6729 Merwin Road,Columbus,OH,43235
+1633533,White Advanced - Coleman,5833,2024,Ben,Arden,M,11/14/2013,,150,,douglasarden@yahoo.com,Doug,Arden,614-804-6436,,,,,6767 Bowerman Ct,Worthington,OH,43085
+1633522,Black Advanced - Kaste,5833,2024,Jaden,Coleman,M,7/22/2011,,162,,catoiii@yahoo.com,Cato,Coleman,614-633-5361,,,,,,,,43021
+1633564,Pink Advanced - Hughes,5833,2024,Riley,Crnarich,F,6/18/2014,,164,,bstats31@gmail.com,Bryan,Crnarich,330-774-3837,rachael.crnarich@gmail.com,Rachel,Crnarich,614-325-2399,3244 Montclair Ave ,Lewis Center ,OH,43035
+1631764,Purple Advanced - Robenstine,5833,2024,Oliver,Downs,M,6/26/2013,,165,,ashley.downs@gmail.com,Ashley,Downs,937-269-2779,jeffrey.downs@gmail.com,Jeff,Downs,937-269-2777,2201 Castle Crest Drive,Worthington,Ohio,43085
+1633566,Pink Advanced - Hughes,5833,2024,Lauren,Hood,F,8/14/2013,,176,,hood.211@osu.edu,Jim,Hood,651-925-7292,,,,,6840 E Bowerman St,Worthington,OH,43085
+1633537,White Advanced - Coleman,5833,2024,Andy,Lai,M,4/30/2012,,188,,nlaiod@hotmail.com,Nicky,Lai,614-352-5167,frascolai5@gmail.com,Cara,Lai,937-305-0665,4767 McGreevy Ct ,Dublin ,OH,43017
+1633538,White Advanced - Coleman,5833,2024,Brian,Liu,M,10/21/2013,,195,,huiho.liu@gmail.com,Huihong,Liu,412-999-3303,,,,,,,,
+1633660,Purple Grinders - Versele,5833,2024,Leilani,Serfass,F,5/7/2014,,221,,luzano.2@osu.edu,Emma,Serfass,614-312-2386,Uncasam@hotmail.com,Aaron,Serfass,,3145 Parkside Road,Columbus,OH,43204
+1633589,Blue Advanced - Downs,5833,2024,Mahala,Serfass,F,10/6/2012,,222,,luzano.2@osu.edu,Emma,Serfass,614-312-2386,Uncasam@hotmail.com,Aaron,Serfass,,3145 Parkside Road,Columbus,OH,43204
+1633578,White Advanced - Coleman,5833,2024,Keir,Sharp,M,2/1/2013,,224,,pamdquigley@gmail.com,Pamela,Quigley,614-330-4776,,,,,5065 Lancaster Rd,Hebron,OH,43025
+1633697,Yellow Grinders - Miles,5833,2024,John,Tamerlano,M,8/11/2015,,234,,ktamerlano@gmail.com,Kelly,Tamerlano,614-325-2055,justintamerlano@hotmail.com,Justin,Tamerlano,704-369-4628,,,,
+1633546,White Advanced - Coleman,5833,2024,Carrera,Walcott,F,2/26/2012,,244,,twalco@hotmail.com,Taro,Walcott,440-522-3678,kutidag@hotmail.com,Angelina,Walcott,440-915-6528,7847 Sutcliff Court,Dublin,OH,43016
+1633547,White Advanced - Coleman,5833,2024,Targa,Walcott,M,8/22/2013,,245,,twalco@hotmail.com,Taro,Walcott,440-522-3678,kutidag@hotmail.com,Angelina,Walcott,440-915-6528,7847 Sutcliff Court,Dublin,OH,43016
+1633591,Blue Advanced - Downs,5833,2024,Ava,West,F,1/28/2014,,251,,westfamily1149@gmail.com,Christy,West,614-313-1687,,,,,1149 Merston Dr.,Columbus,OH,43235
+1633636,Pink Advanced - Hughes,5833,2024,Macy,Wright,F,5/9/2015,,258,,mike.wright2@gmail.com,Michael,Wright,614-403-2408,,,,,,,,
+1633531,Black Advanced - Kaste,5833,2024,Mack,Wright,M,4/29/2013,,259,,mike.wright2@gmail.com,Michael,Wright,614-403-2408,,,,,,,,
+1633637,Red Advanced - Walcott,5833,2024,Eric,Allison,M,1/2/2016,,259,,maureenlyoung@gmail.com,Maureen,Allison,614-286-4449,,,,,,,,
+1633561,Pink Advanced - Hughes,5833,2024,Sophia,Allison,F,3/26/2014,,260,,maureenlyoung@gmail.com,Maureen,Allison,614-286-4449,,,,,,,,
+1633518,Black Advanced - Kaste,5833,2024,Jack,Amato,M,11/20/2009,,261,,lynne_m_amato@yahoo.com,Lynne,Amato,614-330-6114,,,,,3779 Carters Corner Rd,Sunbury,OH,43074
+1633532,White Advanced - Coleman,5833,2024,Lucas,Anderson,M,4/4/2012,,263,,anne_rebman@hotmail.com,Anne,Rebman,614-595-6954,,,,,6185 Sugar Maple Dr,Westerville,OH,43082
+1633583,Blue Advanced - Downs,5833,2024,Megan,Anicio,F,5/3/2011,,264,,elizangelaanicio@hotmail.com,Elizangela,Anicio,614-774-8665,,,,,7748 Schoolway Ct,Dublin,OH,43016
+1633741,Blue Rollers - Davlin,5833,2024,Logan,Bednarz,M,11/29/2016,,269,,kbednarzpt@gmail.com,Kristin,Bednarz,419-602-0410,,,,,,,,
+1633625,Orange Advanced - Wakefield,5833,2024,Harper,Bovid,F,2/28/2013,,273,,coachjamibovid@gmail.com,Jami,Bovid,989-751-0159,sbovid@gmail.com,Stanley,Bovid,989-698-6125,2061 Olde Sawmill Blvd ,Dublin,OH,43016
+1633801,Red Rollers - Lewis,5833,2024,Tavenner,Stone,M,5/17/2017,,277,,m.chanstone@gmail.com,Melissa,Chan,614-563-1366,tstone16@gmail.com,Tim,Stone,614-226-5386,,,,
+1633534,White Advanced - Coleman,5833,2024,Zavier,Chin,M,7/19/2011,,278,,brian.p.chin@gmail.com,Brian,Chin,740-506-2129,,,,,,,,
+1633652,Purple Grinders - Versele,5833,2024,Julia,Davlin,F,4/18/2011,,283,,sarah.davlin@gmail.com,Sarah,Davlin,614-619-4033,rob.davlin@gmail.com,Rob,Davlin,614-580-5102,,,,
+1633677,Green Grinders - Walcott,5833,2024,Raegan,Feeney,F,12/23/2014,,287,,rwnotredame4@gmail.com,Rachel,Feeney,614-440-8538,,,,,7550 Tina Ct ,Columbus,OH,43235
+1633565,Pink Advanced - Hughes,5833,2024,Kailey,Forsythe,F,6/26/2014,,290,,lisa.c.forsythe@gmail.com,Lisa,Forsythe,614-581-9435,matt_forsythe@yahoo.com,Matt,Forsythe,614-551-0169,7757 Mellacent Dr.,Columbus,OH,43235
+1633614,Yellow Advanced - Kaste,5833,2024,Granville,Gillogly,M,4/16/2015,,291,,erin.gillogly@gmail.com,Erin,Gillogly,614-361-0204,chris.gillogly@gmail.com,Chris,Gillogly,614-579-6053,63 Ormsbee Ave,Westerville,OH,43081
+1633573,Purple Advanced - Robenstine,5833,2024,Edward,Glenn-Applegate,M,5/1/2013,,293,,peteapplegate@hotmail.com,Peter,Glenn-Applegate,615-804-2755,peter.glenn.applegate@gmail.com,Peter,Glenn-Applegate,615-804-2755,912 Hartford Street,Worthington,OH,43085
+1633602,Green Advanced - Little,5833,2024,Connor,Goodman,M,11/17/2013,,297,,sarah.goodman319@gmail.com,Sarah,Goodman,614-205-3629,,,,,367 Hennessey Ave ,Worthington ,OH,43085
+1633615,Yellow Advanced - Kaste,5833,2024,Grayson,Goodman,M,9/1/2015,,298,,sarah.goodman319@gmail.com,Sarah,Goodman,614-205-3629,,,,,367 Hennessey Ave ,Worthington ,OH,43085
+1633616,Yellow Advanced - Kaste,5833,2024,Maddox,Hall,M,5/2/2016,,301,,jilliankellbach@gmail.com,Jillian,Hall,740-815-1540,hall.1030@gmail.com,Joe,Hall,614-563-8730,4455 Olentangy River Rd ,delaware,OH,43015
+1633718,Red Grinders - Ralston,5833,2024,Tyler,Hall,M,6/22/2018,,302,,jilliankellbach@gmail.com,Jillian,Hall,740-815-1540,hall.1030@gmail.com,Joe,Hall,614-563-8730,4455 Olentangy River Rd ,delaware,OH,43015
+1633653,Purple Grinders - Versele,5833,2024,Louis,Haverkamp,M,6/14/2012,,304,,haverkamp.laura@gmail.com,Laura,Haverkamp,614-738-0207,mfhjr@hotmail.com,Michael,Haverkamp,,1989 Sutter Pkwy ,Dublin ,OH,43016
+1633567,Pink Advanced - Hughes,5833,2024,Caroline,Hughes,F,5/25/2013,,309,,ryanghughes.614@gmail.com,Ryan,Hughes,614-581-3937,,,,,6597 Masefield St,Worthington,OH,43085
+1633629,Pink Advanced - Hughes,5833,2024,Paige,Hughes,F,3/26/2016,,310,,ryanghughes.614@gmail.com,Ryan,Hughes,614-581-3937,,,,,6597 Masefield St,Worthington,OH,43085
+1633524,White Advanced - Coleman,5833,2024,Evan,Kruder,M,1/17/2011,,316,,akruder@gmail.com,Allison,Kruder,513-226-0281,,,,,4164 Checkerberry Ct,Hilliard,OH,43026
+1633694,Yellow Grinders - Miles,5833,2024,Ellis,Kirch,M,7/26/2016,,317,,andy.kirch@gmail.com,Andrew,Kirch,614-500-3183,,,,,5693 Harrow Glen Ct,Galena,OH,43021
+1633586,Blue Advanced - Downs,5833,2024,Braxton,Kubli,M,11/8/2013,,319,,lindseysjensen@yahoo.com,Lindsey,Kubli,614-203-4854,,,,,7606 gylwyn ct,dublin,OH,43017
+1633587,Blue Advanced - Downs,5833,2024,Hadley,Lewis,F,5/16/2012,,322,,wesley.lewis112@gmail.com,Wesley,Lewis,740-272-1360,,,,,,,,
+1633568,Pink Advanced - Hughes,5833,2024,Charlotte,Little,F,2/21/2014,,323,,aim17us@gmail.com,Aimee,Little,614-530-0534,tyosu5@gmail.com,Tyler,Little,614-595-5791,2106 Millrow Loop,Dublin,OH,43016
+1633569,Pink Advanced - Hughes,5833,2024,Kinley,Lock,F,8/8/2014,,324,,amyelock@gmail.com,Amy,Lock,614-537-4822,,,,,,,,
+1633525,Black Advanced - Kaste,5833,2024,Lachlan,MacGregor,M,8/7/2010,,326,,ianandstacy@gmail.com,Stacy,MacGregor,614-499-6864,,,,,6337 Oisin Ct,Dublin,OH,43016
+1633684,Green Grinders - Walcott,5833,2024,Jace,Manning,M,12/17/2015,,329,,manning.joe@live.com,Joe,Manning,614-312-7819,manning.alicia@live.com,Alicia,Manning,614-915-8053,2096 Scottingham Dr.,Dublin,OH,43016
+1633526,Black Advanced - Kaste,5833,2024,Parker,Marsh,M,1/15/2010,,332,,derek.marsh@scotts.com,Derek,Marsh,561-402-3188,,,,,,,,
+1633606,Green Advanced - Little,5833,2024,George Kaden,Longazel,M,3/21/2014,,334,,jmcclory4@gmail.com,Jessica,McClory,937-903-9277,,,,,,,,
+1633669,Blue Grinders - Stevenson,5833,2024,Jacob,McEntire,M,3/31/2014,,335,,meesh9@gmail.com,Michelle,McEntire,614-638-5176,adammcentire2@gmail.com,Adam,McEntire,,7174 Linworth Rd,Columbus,OH,43235
+1633695,Yellow Grinders - Miles,5833,2024,Sammy,McEntire,M,4/29/2016,,336,,meesh9@gmail.com,Michelle,McEntire,614-638-5176,adammcentire2@gmail.com,Adam,McEntire,,7174 Linworth Rd,Columbus,OH,43235
+1633748,Blue Rollers - Davlin,5833,2024,Ben,Mongold,M,11/14/2017,,340,,chris.mongold@gmail.com,Chris,Mongold,614-668-3002,tmongold@me.com,Tram,Mongold,614-208-5963,,,,
+1633670,Blue Grinders - Stevenson,5833,2024,Cameron,Mowry,M,9/7/2015,,343,,financecommand@themowrys.net,Alicia,Mowry,614-506-2829,,,,,6773 Bowerman Court,Worthington,OH,43085
+1633656,Purple Grinders - Versele,5833,2024,Gabriel,Mowry,M,8/23/2011,,344,,financecommand@themowrys.net,Alicia,Mowry,614-506-2829,,,,,6773 Bowerman Court,Worthington,OH,43085
+1633631,Orange Advanced - Wakefield,5833,2024,Avery,Pace,F,8/27/2014,,346,,lauren.pace.9613@gmail.com,Lauren,Pace,330-808-1376,tim.pace.99@gmail.com,Tim,Pace,216-513-2677,3333 Ellister Dr. ,Delaware,OH,43015
+1633571,Pink Advanced - Hughes,5833,2024,Ramona,Panzner,F,8/31/2013,,347,,trembling_blue_stars@yahoo.com,Wendy,Panzner,614-915-6210,,,,,6722 Elmers Court,Columbus,OH,43085
+1633657,Purple Grinders - Versele,5833,2024,Emma,Pastore,F,6/1/2013,,349,,sarapastore1004@gmail.com,Sara,Pastore,614-595-8492,mattpastore@gmail.com,Matt,Pastore,440-488-0240,7617 Southview Court,Columbus ,OH,43235
+1633577,Purple Advanced - Robenstine,5833,2024,Lukas,Preston,M,11/11/2013,,351,,jonpaul.preston@gmail.com,Jp,Preston,330-634-4136,,,,,,,,
+1633588,Blue Advanced - Downs,5833,2024,Ben,Pierson,M,5/4/2013,,351,,mjpierson@gmail.com,Michael,Pierson,513-325-7949,,,,,6375 Sea Drive,Lewis Center ,OH,43035
+1633572,Pink Advanced - Hughes,5833,2024,Victoria,Pogue,F,4/25/2014,,353,,deannarizek@gmail.com,Deanna,Pogue,614-296-0640,,,,,182 Woodchuck Dr,Sunbury,OH,43074
+1633642,Red Advanced - Walcott,5833,2024,Will,Pogue,M,2/10/2016,,354,,deannarizek@gmail.com,Deanna,Pogue,614-296-0640,,,,,182 Woodchuck Dr,Sunbury,OH,43074
+1633685,Green Grinders - Walcott,5833,2024,Carmella,Pryear,F,12/11/2014,,356,,tpryear@gmail.com,Theresa,Pryear,330-388-4286,,,,,,,,
+1633723,Red Grinders - Ralston,5833,2024,Scout,Sharp,F,9/12/2017,,357,,pamdquigley@gmail.com,Pamela,Quigley,614-330-4776,,,,,5065 Lancaster Rd,Hebron,OH,43025
+1633662,Blue Grinders - Stevenson,5833,2024,Julian,Anderson,M,3/24/2015,,360,,anne_rebman@hotmail.com,Anne,Rebman,614-595-6954,,,,,6185 Sugar Maple Dr,Westerville,OH,43082
+1633671,Blue Grinders - Stevenson,5833,2024,Owen,Rengel,M,5/12/2015,,363,,suzeslater@gmail.com,Susan,Rengel,614-581-7442,,,,,2184 Severhill Dr,Dublin,OH,43016
+1633709,Orange Grinders - Tamerlano,5833,2024,Wyatt,Sampsill,M,8/10/2017,,371,,ylime116@yahoo.com,Emily,Sampsill,614-886-2588,,,,,,,,
+1633710,Orange Grinders - Tamerlano,5833,2024,Enzo,Serfass,M,4/20/2017,,376,,luzano.2@osu.edu,Emma,Serfass,614-312-2386,Uncasam@hotmail.com,Aaron,Serfass,,3145 Parkside Road,Columbus,OH,43204
+1633673,Blue Grinders - Stevenson,5833,2024,Joshua,Skocik,M,4/5/2014,,387,,kristina.e.bennett@gmail.com,Kristina,Skocik,412-445-1174,,,,,1069 Kirk Ave,Columbus,OH,43085
+1633543,White Advanced - Coleman,5833,2024,Samantha,Skocik,F,2/9/2012,,388,,kristina.e.bennett@gmail.com,Kristina,Skocik,412-445-1174,,,,,1069 Kirk Ave,Columbus,OH,43085
+1633540,White Advanced - Coleman,5833,2024,Cameron,Mason,M,2/23/2012,,390,,chadmmason@gmail.com,Chad M,Mason,614-378-7049,,,,,657 E Jeffrey Pl,Columbus,OH,43214
+1633590,Blue Advanced - Downs,5833,2024,Connor,Stiles,M,3/15/2013,,392,,patpstiles@gmail.com,Patrick,Stiles,614-316-1986,,,,,1282 McCoy Rd,Columbus,OH,43220
+1633691,Yellow Grinders - Miles,5833,2024,Samuel,Glenn-Applegate,M,4/18/2016,,394,,peteapplegate@hotmail.com,Peter,Glenn-Applegate,615-804-2755,peter.glenn.applegate@gmail.com,Peter,Glenn-Applegate,615-804-2755,912 Hartford Street,Worthington,OH,43085
+1633674,Blue Grinders - Stevenson,5833,2024,Lincoln,Tebben,M,7/14/2015,,395,,emtebben@gmail.com,Erin,Tebben,614-598-1882,,,,,2811 Dresden St.,Columbus,OH,43224
+1633725,Red Grinders - Ralston,5833,2024,Fiona,Vozza,F,9/20/2017,,399,,brittany.vozza@gmail.com,Brittany,Vozza,412-719-7545,,,,,185 mainsail drive,Westerville,OH,43081
+1633579,Purple Advanced - Robenstine,5833,2024,Oliver,Vozza,M,6/18/2013,,400,,brittany.vozza@gmail.com,Brittany,Vozza,412-719-7545,,,,,185 mainsail drive,Westerville,OH,43081
+1633545,White Advanced - Coleman,5833,2024,Stella,Vozza,F,7/19/2010,,401,,brittany.vozza@gmail.com,Brittany,Vozza,412-719-7545,,,,,185 mainsail drive,Westerville,OH,43081
+1633647,Red Advanced - Walcott,5833,2024,Dakar,Walcott,M,3/16/2017,,402,,twalco@hotmail.com,Taro,Walcott,440-522-3678,kutidag@hotmail.com,Angelina,Walcott,440-915-6528,7847 Sutcliff Court,Dublin,OH,43016
+1633530,Black Advanced - Kaste,5833,2024,Brooks,Ward,M,8/9/2013,,404,,timwardjr@gmail.com,Timothy,Ward,614-226-3244,,,,,1184 Forsyth Lane,Galena,OH,43021
+1633580,White Advanced - Coleman,5833,2024,Paxton,Ward,M,11/8/2015,,405,,timwardjr@gmail.com,Timothy,Ward,614-226-3244,,,,,1184 Forsyth Lane,Galena,OH,43021
+1633624,Yellow Advanced - Kaste,5833,2024,Leo,Weckesser,M,5/13/2015,,406,,rose.weckesser@gmail.com,Rose,Weckesser,614-783-9430,phil.weckesser@gmail.com,Phil,Weckesser,937-241-3661,8158 Pelham Dr,Westerville,OH,43081
+1774336,Base Coaches (Rollers),5833,2024,Grace,Sun,F,2/23/2012,Junior Coach,407,,wm887@yahoo.com,Min,Wei,614-377-4995,,,,,2125 millrow loop ,Dublin ,OH,43016
+1633700,Yellow Grinders - Miles,5833,2024,Ansel,Wieland,M,8/24/2016,,408,,tsesarecool@gmail.com,Kurt,Wieland,614-403-0163,,,,,,,,
+1633581,Purple Advanced - Robenstine,5833,2024,Henson,Wieland,M,3/30/2013,,409,,tsesarecool@gmail.com,Kurt,Wieland,614-403-0163,,,,,,,,
+1633592,Blue Advanced - Downs,5833,2024,Maxwell,Wollenburg,M,2/16/2014,,412,,nate.wollenburg@gmail.com,Nathan,Wollenburg,440-781-9567,,,,,8719 Glenamoy Circle,Dublin,OH,43017
+1633793,Pink Balance - Robenstine,5833,2024,Bianca,Bierl,F,4/12/2019,,415,,folk1418@yahoo.com,Erin,Bierl,614-579-3326,,,,,,,,
+1633776,Yellow Rollers - Lock,5833,2024,Liam,Hackworth,M,3/1/2019,,416,,hackworth.7@gmail.com,Tasha,Hackworth,740-815-7162,,,,,1624 Flat Rock Court,Columbus,OH,43235
+1633761,Green Rollers - Hardin,5833,2024,Ivy,Kirch,F,10/12/2019,,417,,andy.kirch@gmail.com,Andrew,Kirch,614-500-3183,,,,,5693 Harrow Glen Ct,Galena,OH,43021
+1633763,Green Rollers - Hardin,5833,2024,Theodore,Vozza,M,6/27/2019,,419,,brittany.vozza@gmail.com,Brittany,Vozza,412-719-7545,,,,,185 mainsail drive,Westerville,OH,43081
+1633726,Red Grinders - Ralston,5833,2024,Monza,Walcott,M,1/10/2019,,420,,twalco@hotmail.com,Taro,Walcott,440-522-3678,kutidag@hotmail.com,Angelina,Walcott,440-915-6528,7847 Sutcliff Court,Dublin,OH,43016
+1633802,Red Rollers - Lewis,5833,2024,Luka,Weckesser,M,3/9/2019,,421,,rose.weckesser@gmail.com,Rose,Weckesser,614-783-9430,phil.weckesser@gmail.com,Phil,Weckesser,937-241-3661,8158 Pelham Dr,Westerville,OH,43081
+1633755,Green Rollers - Hardin,5833,2024,Ella,Bednarz,F,5/21/2018,,422,,kbednarzpt@gmail.com,Kristin,Bednarz,419-602-0410,,,,,,,,
+1633781,Orange Rollers - Crnarich,5833,2024,Ethan,Bednarz,M,5/21/2018,,423,,kbednarzpt@gmail.com,Kristin,Bednarz,419-602-0410,,,,,,,,
+1633774,Yellow Rollers - Lock,5833,2024,Grayson,Ewald,M,8/13/2018,,424,,rcw1984@gmail.com,Rachel,Ewald,973-670-3866,,,,,,,,
+1633756,Green Rollers - Hardin,5833,2024,Sienna,Forsythe,F,7/17/2018,,425,,lisa.c.forsythe@gmail.com,Lisa,Forsythe,614-581-9435,matt_forsythe@yahoo.com,Matt,Forsythe,614-551-0169,7757 Mellacent Dr.,Columbus,OH,43235
+1633784,Orange Rollers - Crnarich,5833,2024,Charlotte,McEntire,F,8/21/2019,,427,,meesh9@gmail.com,Michelle,McEntire,614-638-5176,adammcentire2@gmail.com,Adam,McEntire,,7174 Linworth Rd,Columbus,OH,43235
+1633789,Orange Rollers - Crnarich,5833,2024,Sylvia,Scherer,F,10/7/2018,,428,,lkscherer86@gmail.com,Laura,Scherer,740-504-1862,Bdscherer@gmail.com,Brandon,Scherer,740-334-7224,,,,
+1633715,Red Grinders - Ralston,5833,2024,Ada,Allison,F,4/4/2018,,431,,maureenlyoung@gmail.com,Maureen,Allison,614-286-4449,,,,,,,,
+1633716,Red Grinders - Ralston,5833,2024,Christian,Combs,M,10/3/2017,,434,,holly_o_combs@yahoo.com,Holly,Combs,614-746-2432,,,,,,,,
+1633747,Blue Rollers - Davlin,5833,2024,Billie,Manning,F,2/12/2017,,435,,manning.joe@live.com,Joe,Manning,614-312-7819,manning.alicia@live.com,Alicia,Manning,614-915-8053,2096 Scottingham Dr.,Dublin,OH,43016
+1633717,Red Grinders - Ralston,5833,2024,Luna,Gillogly,F,10/3/2017,,437,,erin.gillogly@gmail.com,Erin,Gillogly,614-361-0204,chris.gillogly@gmail.com,Chris,Gillogly,614-579-6053,63 Ormsbee Ave,Westerville,OH,43081
+1633762,Green Rollers - Hardin,5833,2024,Cecelia,Little,F,11/7/2017,,438,,aim17us@gmail.com,Aimee,Little,614-530-0534,tyosu5@gmail.com,Tyler,Little,614-595-5791,2106 Millrow Loop,Dublin,OH,43016
+1633643,Red Advanced - Walcott,5833,2024,Emily,Schmitt,F,11/26/2017,,440,,careyschmitt@yahoo.com,Carey,Schmitt,614-439-1193,,,,,109 S Riverview St,Dublin,OH,43017
+1633705,Orange Grinders - Tamerlano,5833,2024,Tighe,Montee,M,6/6/2017,,441,,mark.montee@gmail.com,Mark,Montee,614-809-4660,,,,,10431 Butternut Drive,Plain City,OH,43064
+1633681,Green Grinders - Walcott,5833,2024,Jason,Hardin,M,12/25/2015,,443,,jeremyhardin13@gmail.com,Jeremy,Hardin,614-638-3288,,,,,2150 Shawnmont ct,Dublin,OH,43016
+1633735,Purple Rollers - Little,5833,2024,Carter,Mason,M,9/24/2016,,444,,chadmmason@gmail.com,Chad M,Mason,614-378-7049,,,,,657 E Jeffrey Pl,Columbus,OH,43214
+1633750,Blue Rollers - Davlin,5833,2024,Elias,Potts,M,4/25/2017,,446,,eric.r.potts.1@ohio.edu,Eric,Potts,740-288-5269,,,,,251 Clark Drive,CIRCLEVILLE,OH,43113
+1633698,Yellow Grinders - Miles,5833,2024,August,Vogel,M,10/26/2016,,449,,kelley.romoser@gmail.com,Kelley,Vogel,740-707-4489,,,,,5830 Granby St,Worthington,OH,43085
+1633638,Red Advanced - Walcott,5833,2024,Andrew,Kaste,M,12/1/2016,,450,,dan.kaste@gmail.com,Dan,Kaste,440-667-2744,kgauen2@gmail.com,Katie,Kaste,614-975-7894,6755 Spring Run Dr,Westerville,OH,43082
+1633743,Blue Rollers - Davlin,5833,2024,Skyler,Cox,F,6/1/2016,,452,,suzih4@gmail.com,Suzi,Cox,513-607-9541,,,,,,,,
+1633731,Purple Rollers - Little,5833,2024,Catherine,Davlin,F,11/20/2015,,453,,sarah.davlin@gmail.com,Sarah,Davlin,614-619-4033,rob.davlin@gmail.com,Rob,Davlin,614-580-5102,7762 SEDDON DRIVE,DUBLIN,OH,43016
+1633679,Green Grinders - Walcott,5833,2024,Mackenzie,Hackworth,F,3/21/2016,,454,,hackworth.7@gmail.com,Tasha,Hackworth,740-815-7162,,,,,1624 Flat Rock Court,Columbus,OH,43235
+1633683,Green Grinders - Walcott,5833,2024,Riley,Kress,F,6/7/2016,,455,,lauren.kress@live.com,Lauren,Kress,937-307-7418,,,,,2153 Surreygate Dr,Columbus,OH,43235
+1633739,Purple Rollers - Little,5833,2024,Elizabeth,Skocik,F,7/17/2016,,456,,kristina.e.bennett@gmail.com,Kristina,Skocik,412-445-1174,,,,,1069 Kirk Ave,Columbus,OH,43085
+1633668,Blue Grinders - Stevenson,5833,2024,Jude,Mccomb,M,2/11/2015,,457,,jkmccomb734@sbcglobal.net,Jude,McComb,614-506-1078,,,,,,,,
+1633664,Blue Grinders - Stevenson,5833,2024,Collin,Canterbury,M,10/5/2014,,458,,james.canterbury.3@gmail.com,James,Canterbury,419-450-6260,,,,,,,,
+1633672,Blue Grinders - Stevenson,5833,2024,Jacob,Schira,M,12/8/2015,,459,,tommyschira@gmail.com,Thomas,Schira,614-648-8822,,,,,7519 Sagewood Ct,Columbus,OH,43235
+1633737,Purple Rollers - Little,5833,2024,Colette,Pedro,F,6/24/2015,,460,,kate.j.pedro@gmail.com,Kate,Pedro,614-738-3104,,,,,,,,
+1633650,Purple Grinders - Versele,5833,2024,Sloane,Dabilis,F,7/9/2014,,462,,summersweet19@gmail.com,Summer,Dabilis,614-824-0247,,,,,,,,
+1633593,Blue Advanced - Downs,5833,2024,Sophia,Zhou,F,1/22/2013,,464,,wenbojoe@gmail.com,Wenbo,Zhou,612-868-3496,,,,,,,,
+1633594,Blue Advanced - Downs,5833,2024,Andrew,Zhou,M,1/22/2013,,465,,wenbojoe@gmail.com,Wenbo,Zhou,612-868-3496,,,,,,,,
+1633658,Purple Grinders - Versele,5833,2024,Sabene,Pedro,F,9/28/2013,,468,,kate.j.pedro@gmail.com,Kate,Pedro,614-738-3104,,,,,,,,
+1633645,Red Advanced - Walcott,5833,2024,Josephine,Wakefield,F,1/1/2017,,472,,jbrodywakefield@gmail.com,Brody,Wakefield,614-599-0791,,,,,3502 River Narrows Rd,Hilliard,OH,43026
+1633640,Red Advanced - Walcott,5833,2024,Beck,Lutmer,M,7/20/2015,,473,,paigeralbright@gmail.com,Paige,Lutmer,330-606-7340,,,,,1090 Beechview Dr S ,Worthington ,OH,43085
+1633617,Yellow Advanced - Kaste,5833,2024,Atlas,Hughes,M,9/23/2015,,474,,andrewcharleshughes@gmail.com,Andy,Hughes,614-787-2512,,,,,,,,
+1633622,Yellow Advanced - Kaste,5833,2024,Bryce,Raymond,M,4/27/2015,,475,,liz.h.raymond@gmail.com,Liz,Raymond,740-571-1886,,,,,1934 Slaton Court ,Columbus,OH,43235
+1633623,Yellow Advanced - Kaste,5833,2024,Hayden,Schmitt,M,7/10/2015,,476,,careyschmitt@yahoo.com,Carey,Schmitt,614-439-1193,,,,,109 S Riverview St,Dublin,OH,43017
+1633646,Red Advanced - Walcott,5833,2024,Hattie,Wakefield,F,8/1/2014,,479,,jbrodywakefield@gmail.com,Brody,Wakefield,614-599-0791,,,,,3502 River Narrows Rd,Hilliard,OH,43026
+1633651,White Advanced - Coleman,5833,2024,Elliot,Davis,M,1/17/2014,,485,,mrsamydavis@gmail.com,Amy,Davis,614-561-8090,,,,,1190 Snohomish Ave,columbus,OH,43085
+1633574,Purple Advanced - Robenstine,5833,2024,Drew,Hallahan,M,9/18/2013,,486,,randomann@gmail.com,Ann,Shroyer,773-308-6794,,,,,476 Bellfrey Dr,Westerville,OH,43082
+1633576,Purple Advanced - Robenstine,5833,2024,Ben,Logan,M,10/14/2013,,487,,ejcorvi@hotmail.com,Erica,Logan,614-439-6930,marclogan72@gmail.com,Marc,Logan,614-378-2295,3791 Peak Ridge Drive,Columbus,OH,43230
+1633544,White Advanced - Coleman,5833,2024,Grayson,Suckow,M,8/5/2013,,488,,leighfender@gmail.com,Leigh,Fenderbosch,614-507-4359,wcs7475@gmail.com,Bill,Suckow,614-777-7973,6072 Renfield drive ,Dublin,OH,43017
+1633584,Blue Advanced - Downs,5833,2024,penelope,hickman-filipow,F,7/4/2012,,491,,bethanyfilipow@gmail.com,Bethany,Filipow,614-302-7340,james.d.hickman@gmail.com,Dan,Hickman,614-209-9541,2456 Powell ave,Bexley,OH,43209
+1633554,Neon Advanced - Armstrong,5833,2024,Corwin,Hickman-Filipow,M,7/4/2012,,493,,bethanyfilipow@gmail.com,Bethany,Filipow,614-302-7340,james.d.hickman@gmail.com,Dan,Hickman,614-209-9541,2456 Powell ave,Bexley,OH,43209
+1633535,White Advanced - Coleman,5833,2024,Owen,Deblasis,M,10/6/2010,,499,,jendeblasis@gmail.com,Jen,Deblasis,614-323-2890,muskie003@hotmail.com,Justin,DeBlasis,304-280-6034,7740 Schoolway Court,Dublin,OH,43016
+1633785,Orange Rollers - Crnarich,5833,2024,Archie,Robenstine,M,3/22/2019,,500,,robenstine@gmail.com,Kyle,Robenstine,740-707-1404,jessica.robenstine@gmail.com,Jess,Robenstine,740-817-1132,180 Winding Valley Dr,Delaware ,OH,43015
+1633585,Blue Advanced - Downs,5833,2024,Oliver,Hughes,M,2/16/2014,,506,,andrewcharleshughes@gmail.com,Andy,Hughes,614-787-2512,,,,,,,,
+1633570,Pink Advanced - Hughes,5833,2024,Isobel,Marshall,F,4/10/2014,,507,,nicmarsh77@gmail.com,Nicole,Marshall,380-204-3681,darrenmarshall853@gmail.com,Darren,Marshall,801-574-8353,,,,
+1633539,White Advanced - Coleman,5833,2024,Amelia,Marshall,F,5/17/2012,,508,,nicmarsh77@gmail.com,Nicole,Marshall,380-204-3681,darrenmarshall853@gmail.com,Darren,Marshall,801-574-8353,,,,
+1633553,White Advanced - Coleman,5833,2024,Greyson,Harshbarger,M,2/4/2011,,511,,jennifer_fairburn@yahoo.com,Jennifer,Harshbarger,304-638-4353,,,,,1198 Wallean Drive,Westerville,OH,43081
+1633529,Black Advanced - Kaste,5833,2024,Grant,Schultz,M,3/24/2010,,512,,jschultz@roof-management.com,Dana,Schultz,614-353-8877,rkdjc@hotmail.com,Dana,Schultz,614-353-8877,,,,
+1633736,Purple Rollers - Little,5833,2024,Jonah,Pastore,M,5/15/2017,,514,,sarapastore1004@gmail.com,Sara,Pastore,614-595-8492,mattpastore@gmail.com,Matt,Pastore,440-488-0240,7617 Southview Court,Columbus ,OH,43235
+1633714,Red Grinders - Ralston,5833,2024,Lola,Aker,F,4/14/2019,,515,,aker8100@gmail.com,Shawn,Aker,330-718-8130,,,,,,,,
+1633727,Purple Rollers - Little,5833,2024,Cooper,Aube,M,3/15/2016,,516,,aube.ryan@gmail.com,Ryan,Aube,571-414-1520,,,,,5963 Tarrin Cr.,Dublin,OH,43016
+1633527,Neon Advanced - Armstrong,5833,2024,Alexander,Radliff,M,11/13/2010,,518,,pradliff@gmail.com,Phil,Radliff,614-701-6432,kisha.radliff@gmail.com,Kisha,Radliff,614-701-7201,221 Richards Rd,Columbus,OH,43214
+1633758,Green Rollers - Hardin,5833,2024,Sophia,Jewell,F,8/15/2018,,519,,jmjewell02@gmail.com,Jessica,Jewell,440-396-6027,,,,,306 Woodsview Dr,Ostrander,OH,43061
+1633816,Red Rollers - Lewis,5833,2024,Noah,Beck,M,11/19/2019,,520,,brittanyanddrew@gmail.com,Brittany,Beck,614-602-7231,,,,,4336 Kathryn crossing ,Powell,OH,43065
+1633729,Purple Rollers - Little,5833,2024,Sophie,Beck,F,1/11/2016,,521,,brittanyanddrew@gmail.com,Brittany,Beck,614-602-7231,,,,,4336 Kathryn crossing ,Powell,OH,43065
+1633701,Orange Grinders - Tamerlano,5833,2024,Clayton,Bovid,M,11/19/2016,,522,,coachjamibovid@gmail.com,Jami,Bovid,989-751-0159,sbovid@gmail.com,Stanley,Bovid,989-698-6125,2061 Olde Sawmill Blvd ,Dublin,OH,43016
+1633563,Pink Advanced - Hughes,5833,2024,Bella,Burgess,F,12/22/2013,,523,,callielburgess@gmail.com,Callie,Burgess,614-805-4461,,,,,4945 Applecross Dr,Dublin ,OH,43017
+1633730,Purple Rollers - Little,5833,2024,Genevieve,Chapman,F,1/7/2016,,524,,jrandka@gmail.com,Kristen,Chapman,740-381-2617,,,,,7968 Severhill Ct.,Dublin,OH,43016
+1633688,Yellow Grinders - Miles,5833,2024,Evan,Cirker,M,5/18/2016,,525,,starrynews@yahoo.com,Marissa,Cirker,513-253-8543,,,,,963 Norway Dr.,Columbus,OH,43221
+1633804,Green Balance - Forsythe,5833,2024,Quentin,Clark,M,9/16/2019,,526,,clarkwm88@gmail.com,Will,Clark,937-546-6102,,,,,,,,
+1633805,Green Balance - Forsythe,5833,2024,Bodhi,Cook,M,5/19/2019,,527,,scooksc1@gmail.com,Scott,Cook,614-582-3228,,,,,6685 Mcvey Blvd,Columbus ,OH,43235
+1633806,Green Balance - Forsythe,5833,2024,Scout,Cook,F,5/19/2019,,528,,scooksc1@gmail.com,Scott,Cook,614-582-3228,,,,,6685 Mcvey Blvd,Columbus ,OH,43235
+1633744,Blue Rollers - Davlin,5833,2024,Levi,Davlin,M,6/19/2017,,529,,sarah.davlin@gmail.com,Sarah,Davlin,614-619-4033,rob.davlin@gmail.com,Rob,Davlin,614-580-5102,7762 SEDDON DRIVE,DUBLIN,OH,43016
+1633665,Blue Grinders - Stevenson,5833,2024,Chase,Ewald,M,6/21/2015,,531,,rcw1984@gmail.com,Rachel,Ewald,973-670-3866,,,,,,,,
+1633796,Red Rollers - Lewis,5833,2024,Ryen,Feeney,F,6/4/2018,,532,,rwnotredame4@gmail.com,Rachel,Feeney,614-440-8538,,,,,7550 Tina Ct ,Columbus,OH,43235
+1633600,Purple Advanced - Robenstine,5833,2024,Ezekiel,Georgeff,M,12/9/2014,Rider,535,,pgeorgeff@protonmail.com,Peter,Georgeff,360-567-9513,,,,,,,,
+1633690,Yellow Grinders - Miles,5833,2024,Jack,Georgeff,M,10/9/2016,,536,,pgeorgeff@protonmail.com,Peter,Georgeff,360-567-9513,,,,,,,,
+1633757,Green Rollers - Hardin,5833,2024,Sophie,Georgeff,F,3/18/2018,,537,,pgeorgeff@protonmail.com,Peter,Georgeff,360-567-9513,,,,,,,,
+1633759,Green Rollers - Hardin,5833,2024,Max,Jewell,M,12/1/2019,,538,,jmjewell02@gmail.com,Jessica,Jewell,440-396-6027,,,,,306 Woodsview Dr,Ostrander,OH,43061
+1633680,Green Grinders - Walcott,5833,2024,Parker,Hammons,F,3/17/2016,,539,,morelandjessica@yahoo.com,Jessica,Hammons,614-353-6085,,,,,,,,
+1633797,Red Rollers - Lewis,5833,2024,Ryan,Hardin,M,5/12/2019,,540,,jeremyhardin13@gmail.com,Jeremy,Hardin,614-638-3288,,,,,2150 Shawnmont ct,Dublin,OH,43016
+1633782,Orange Rollers - Crnarich,5833,2024,Holland,Hierro,F,2/7/2018,,541,,jaymee.hierro@gmail.com,Jaymee,Hierro,614-381-2286,,,,,7184 flat rock drive ,Columbus ,OH,43235
+1633626,Orange Advanced - Wakefield,5833,2024,Haddy,Hierro,F,11/11/2013,,542,,jaymee.hierro@gmail.com,Jaymee,Hierro,614-381-2286,,,,,7184 flat rock drive ,Columbus ,OH,43235
+1633628,Pink Advanced - Hughes,5833,2024,Reagan,Hoffman,F,12/21/2015,,543,,travis.m.hoffman@gmail.com,Travis,Hoffman,614-506-8623,jessmhoffman@gmail.com,Jessica,Hoffman,614-506-9040,1982 Primrose Ave,Lewis Center ,OH,43035
+1633666,Blue Grinders - Stevenson,5833,2024,Joseph,Holmes,M,9/17/2013,,544,,thedoughyone72@gmail.com,Doug,Holmes,614-204-0939,,,,,27 E. 5th Ave ,Columbus,OH,43201
+1633777,Yellow Rollers - Lock,5833,2024,Joseph,Hunt,M,3/18/2019,,545,,hecoughl@gmail.com,Hannah,Hunt,614-370-6315,,,,,472 Colonial Avenue ,Worthington ,OH,43085
+1633732,Purple Rollers - Little,5833,2024,Olivia,Jewell,F,6/20/2015,,546,,jmjewell02@gmail.com,Jessica,Jewell,440-396-6027,,,,,306 Woodsview Dr,Ostrander,OH,43061
+1633682,Green Grinders - Walcott,5833,2024,Ellis,Knierim,F,6/17/2015,,547,,srknierim@outlook.com,Steve,Knierim,517-403-5684,chelsea.knierim@hotmail.com,Chelsea,Knierim,517-403-3777,,,,
+1633667,Blue Grinders - Stevenson,5833,2024,Caleb,Koegler,M,2/11/2015,,548,,meghankoegler@gmail.com,Meghan,Koegler,740-815-8699,,,,,7033 SAINT NINIANS ST,LEWIS CENTER,OH,43035
+1633720,Red Grinders - Ralston,5833,2024,Robert,Lehner,M,10/4/2017,,550,,zpeedracer@aol.com,Nicholas,Lehner,518-852-3385,,,,,3102 Winding Woods Dr.,Powell,OH,43065
+1633618,Yellow Advanced - Kaste,5833,2024,Davis,McLoughlin,M,2/26/2016,,551,,eric@aacolpa.com,Eric,McLoughlin,614-266-5569,laura.s.mcloughlin@gmail.com,Laura,McLoughlin,614-313-8924,8819 Worrell,Powell,OH,43065
+1633641,Red Advanced - Walcott,5833,2024,Ramona,Morgan,F,1/19/2016,,553,,dmorgan@bsdarchitects.com,daniel,morgan,330-979-8316,,,,,5584 Windwood Dr.,Dublin,OH,43017
+1633630,Orange Advanced - Wakefield,5833,2024,Evelyn,Morgan,F,11/1/2013,,554,,dmorgan@bsdarchitects.com,daniel,morgan,330-979-8316,,,,,,,,
+1633721,Red Grinders - Ralston,5833,2024,Watson,Neal,M,3/7/2018,,556,,benjamin.neal.225@gmail.com,Benjamin,Neal,330-317-7431,debrenaeneal@gmail.com,Deborah,Neal,330-671-8680,6631 Cook Rd,Powell,OH,43065
+1633619,Yellow Advanced - Kaste,5833,2024,Edison,Neal,M,5/17/2016,,557,,benjamin.neal.225@gmail.com,Benjamin,Neal,330-317-7431,debrenaeneal@gmail.com,Deborah,Neal,330-671-8680,6631 Cook Rd,Powell,OH,43065
+1633706,Orange Grinders - Tamerlano,5833,2024,Morgan,Pace,F,4/16/2017,,558,,lauren.pace.9613@gmail.com,Lauren,Pace,330-808-1376,tim.pace.99@gmail.com,Tim,Pace,216-513-2677,3333 Ellister Dr. ,Delaware,OH,43015
+1633749,Blue Rollers - Davlin,5833,2024,Niko,Pedro,M,3/13/2017,,559,,kate.j.pedro@gmail.com,Kate,Pedro,614-738-3104,,,,,,,,
+1633751,Blue Rollers - Davlin,5833,2024,Lucas,Rengel,M,11/3/2017,,563,,suzeslater@gmail.com,Susan,Rengel,614-581-7442,,,,,2184 Severhill Dr,Dublin,OH,43016
+1633633,Orange Advanced - Wakefield,5833,2024,Adelyn,rose,F,7/30/2013,,566,,pfrose6@gmail.com,patrick,rose,567-395-4310,,,,,,,,
+1633786,Orange Rollers - Crnarich,5833,2024,Elijah,Saunders,M,2/18/2020,,568,,atsaunders.90@gmail.com,Andrew,Saunders,614-440-0935,,,,,2820 Schoen Lake Dr,Powell,OH,43065
+1633787,Orange Rollers - Crnarich,5833,2024,Isaiah,Saunders,M,2/18/2020,,569,,atsaunders.90@gmail.com,Andrew,Saunders,614-440-0935,,,,,2820 Schoen Lake Dr,Powell,OH,43065
+1633826,Blue Balance - Vozza,5833,2024,Beckett,Sayre,M,5/28/2020,,570,,msayre@wscloud.org,Madi,Sayre,614-570-7836,,,,,5510 Boucher Dr.,Orient,OH,43146
+1633738,Purple Rollers - Little,5833,2024,Eliza,Scherer,F,10/3/2015,,571,,lkscherer86@gmail.com,Laura,Scherer,740-504-1862,Bdscherer@gmail.com,Brandon,Scherer,740-334-7224,,,,
+1633659,Purple Grinders - Versele,5833,2024,Louis,Scherer,M,4/22/2013,,572,,lkscherer86@gmail.com,Laura,Scherer,740-504-1862,Bdscherer@gmail.com,Brandon,Scherer,740-334-7224,,,,
+1633556,Neon Advanced - Armstrong,5833,2024,Graham,rose,M,11/3/2010,,579,,pfrose6@gmail.com,patrick,rose,567-395-4310,,,,,,,,
+1633696,Yellow Grinders - Miles,5833,2024,Conway,Sheldon,M,9/25/2016,,580,,lsheldon15@gmail.com,Conway,Sheldon,614-425-6137,,,,,6671 Millbrae Road,Columbus,OH,43235
+1633809,Green Balance - Forsythe,5833,2024,Emma,Spath,F,9/9/2018,,581,,njspath@gmail.com,Nicole,Spath,631-521-4190,,,,,,,,
+1633607,Green Advanced - Little,5833,2024,Griffin,Todd,M,9/29/2014,,584,,stef.todd13@gmail.com,Stefanie,Todd,614-406-8463,,,,,4499 Hunter Lake Dr. ,Powell,OH,43065
+1633635,Orange Advanced - Wakefield,5833,2024,Claire,Turner,F,10/2/2014,,585,,twesturner@gmail.com,Thomas,Turner,614-282-7644,,,,,309 Beech Trail Ct,Powell,OH,43065
+1633634,Orange Advanced - Wakefield,5833,2024,Elizabeth,Turner,F,10/2/2014,,586,,twesturner@gmail.com,Thomas,Turner,614-282-7644,,,,,309 Beech Trail Ct,Powell,OH,43065
+1633558,Neon Advanced - Armstrong,5833,2024,Remy,Versele,M,8/11/2011,,588,,loganversele@gmail.com,Logan,Versele,614-580-2017,,,,,,,,
+1633791,Orange Rollers - Crnarich,5833,2024,Matilda,Vogel,F,3/3/2020,,589,,kelley.romoser@gmail.com,Kelley,Vogel,740-707-4489,,,,,5830 Granby St,Worthington,OH,43085
+1633699,Yellow Grinders - Miles,5833,2024,Isaac,Wetzel,M,9/14/2016,,590,,jeremiesmith77@gmail.com,Jeremie,Smith,217-621-5523,,,,,6617 Elm Park Drive,Galloway,OH,43119
+1633767,Green Rollers - Hardin,5833,2024,Tyler,Young,M,6/2/2018,,591,,kmmolnar@yahoo.com,Kristin,Young,614-403-8348,,,,,366 Northview Dr,Powell,OH,43065
+1633582,Purple Advanced - Robenstine,5833,2024,Evan,Young,M,7/6/2011,,592,,kmmolnar@yahoo.com,Kristin,Young,614-403-8348,,,,,366 Northview Dr,Powell,OH,43065
+1633740,Purple Rollers - Little,5833,2024,Ethan,Zhang,M,10/4/2016,,594,,zhang.7617@yahoo.com,Nan,Zhang,614-441-7888,,,,,,,,
+1633778,Yellow Rollers - Lock,5833,2024,Connor,Kuckuck,M,6/16/2018,,595,,tbennettk@gmail.com,Tabby,Kuckuck,304-844-1657,,,,,854 Summertree Ln,Westerville,OH,43081
+1633825,Blue Balance - Vozza,5833,2024,Eliza,Kuckuck,F,4/6/2020,,596,,tbennettk@gmail.com,Tabby,Kuckuck,304-844-1657,,,,,854 Summertree Ln,Westerville,OH,43081
+1633595,Green Advanced - Little,5833,2024,Henry,Brulport,M,10/10/2014,,597,,heidibrulport@gmail.com,Heidi,Brulport,614-747-2217,,,,,,,,
+1633792,Red Rollers - Lewis,5833,2024,Isaac,Adams,M,5/25/2019,,598,,adamshollym@gmail.com,Holly,Adams,570-242-8675,,,,,1098 Ravine Ridge Drive,Worthington,OH,43085
+1633764,Green Rollers - Hardin,5833,2024,Vivienne,Wakefield,F,1/29/2019,,600,,jbrodywakefield@gmail.com,Brody,Wakefield,614-599-0791,,,,,3502 River Narrows Rd,Hilliard,OH,43026
+1633644,Red Advanced - Walcott,5833,2024,Wren,Sharp,F,3/17/2015,,601,,pamdquigley@gmail.com,Pamela,Quigley,614-330-4776,,,,,5065 Lancaster Rd,Hebron,OH,43025
+1633523,Black Advanced - Kaste,5833,2024,Taiga,Hong,M,2/14/2010,,603,,suzuyofoster@gmail.com,Nicole,Foster,614-600-6775,,,,,,,,
+1633557,Neon Advanced - Armstrong,5833,2024,Ryker,Turano,M,10/30/2009,,604,,karenturano@gmail.com,Karen,Turano,614-330-6265,,,,,,,,
+1633676,Green Grinders - Walcott,5833,2024,Graceson,Combs,M,11/2/2015,,605,,holly_o_combs@yahoo.com,Holly,Combs,614-746-2432,,,,,,,,
+1633562,Pink Advanced - Hughes,5833,2024,Emma,Bailey,F,12/19/2013,,606,,orprotary@yahoo.com,Luke,Bailey,614-483-9031,namitoku@hotmail.com,Riya,Bailey,614-634-8816,981 Middle Ground RD SW,Pataskala,OH,43062
+1633596,Green Advanced - Little,5833,2024,Cameron,Burke,M,9/13/2013,,607,,kellydburke@yahoo.com,Kelly,Burke,614-599-2702,burkeleah5@gmail.com,Leah,Burke,614-668-5561,4389 Hunters Bend,Powell,OH,43065
+1633597,Green Advanced - Little,5833,2024,Finley,Burke,M,9/13/2013,,608,,kellydburke@yahoo.com,Kelly,Burke,614-599-2702,burkeleah5@gmail.com,Leah,Burke,614-668-5561,4389 Hunters Bend,Powell,OH,43065
+1633598,Green Advanced - Little,5833,2024,Dylan,Dorsett,M,12/12/2014,,609,,dorsett.derek@gmail.com,Dylan,Dorsett,614-779-3377,,,,,,,,
+1633599,Purple Advanced - Robenstine,5833,2024,Hudson,Gassman,M,6/27/2014,,610,,justin.gassman@gmail.com,Justin,Gassman,614-499-9141,leazac@yahoo.com,Leaza,Cohen,614-327-9406,8339 Danbridge Way,Westerville,OH,43082
+1633601,Neon Advanced - Armstrong,5833,2024,Julian,Gibson,M,6/28/2011,,611,,gibsonkati@yahoo.com,Nancy,Gibson,740-815-7214,,,,,"114 North 17th Street, Apartment 305",Columbus,OH,43203
+1633603,Green Advanced - Little,5833,2024,Beau,Guntle,M,1/8/2012,,612,,ktguntle@gmail.com,Katie,Guntle,614-519-3810,ktguntle@live.com,Katie,Guntle,614-519-3810,,,,
+1633605,Green Advanced - Little,5833,2024,Bergen,Houtman,M,11/25/2012,,613,,houtman333@hotmail.com,derek,houtman,207-852-1372,,,,,,,,
+1633608,Green Advanced - Little,5833,2024,Zeke,Williams,M,10/28/2013,,614,,williams.spencer@gmail.com,Spencer,Williams,614-595-0574,williams.darci@gmail.com,Darci,Williams,614-915-8552,247 Pocono rd,Columbus,OH,43235
+1633609,Yellow Advanced - Kaste,5833,2024,Lucas,Bailey,M,3/27/2016,,615,,orprotary@yahoo.com,Luke,Bailey,614-483-9031,namitoku@hotmail.com,Riya,Bailey,614-634-8816,981 Middle Ground RD SW,Pataskala,OH,43062
+1633612,Yellow Advanced - Kaste,5833,2024,Jack,Beringer,M,12/31/2015,,616,,kyle.beringer@gmail.com,Kyle,Beringer,614-205-0809,,,,,2127 Sharwood ct,Columbus ,OH,43235
+1633613,Yellow Advanced - Kaste,5833,2024,Wells,Esber,M,2/18/2015,,617,,kelsey.esber@yahoo.com,Kelsey,Esber,614-565-1498,,,,,1758 Braumiller Road,Delaware,OH,43015
+1633620,Yellow Advanced - Kaste,5833,2024,Wyatt,Parker,M,12/14/2015,,618,,lauramparker78@gmail.com,Laura,Parker,386-747-8362,,,,,6871 Perry Drive,Worthington,OH,43085
+1633621,Yellow Advanced - Kaste,5833,2024,Joseph,Pozmantir,M,6/27/2015,,619,,joshuapozmantir@gmail.com,Josh,Pozmantir,614-325-2641,,,,,,,,
+1633632,Orange Advanced - Wakefield,5833,2024,Mikayla,Qin,F,8/14/2013,,620,,qinke84pp@gmail.com,Ke,Qin,937-823-6033,,,,,,,,
+1633639,Red Advanced - Walcott,5833,2024,David,Konoval,M,7/27/2016,,621,,yelkonoval@gmail.com,Yana,Konoval,440-523-1391,yanakonoval@icloud.com,Yana,Konoval,440-523-1391,2196 Stratingham dr,Dublin,OH,43016
+1633648,Red Advanced - Walcott,5833,2024,Dylan,Wyckoff,F,4/29/2015,,622,,climbhills@aol.com,Brett,Wyckoff,609-335-0512,dgregory23@hotmail.com,Darcie,Wyckoff,614-915-9790,7409 Upper Clarenton Drive N,New Albany,OH,43054
+1633655,Orange Advanced - Wakefield,5833,2024,Marin,McLoughlin,F,10/22/2012,,623,,eric@aacolpa.com,Eric,McLoughlin,614-266-5569,laura.s.mcloughlin@gmail.com,Laura,McLoughlin,614-313-8924,8819 Worrell,Powell,OH,43065
+1633661,Purple Grinders - Versele,5833,2024,Finley,Steele,F,4/9/2013,,624,,jmbsteele@gmail.com,Jen,Steele,614-946-0879,tylerjsteele@gmail.com,Tyler,Steele,614-638-3477,,,,
+1633649,Purple Grinders - Versele,5833,2024,Nora,Birrer,F,1/31/2014,,625,,anyarenee@gmail.com,Anya,Gugliemotto,614-309-9584,,,,,,,,
+1633654,Purple Grinders - Versele,5833,2024,Evelyn,Kowaleski,F,6/16/2014,,626,,adamkowaleski@firsthospitality.com,Adam,Kowaleski,419-515-4377,,,,,,,,
+1633663,Blue Grinders - Stevenson,5833,2024,Hudson,Bird,M,4/2/2014,,627,,justinbird7@gmail.com,Justin,Bird,614-214-2358,,,,,2181 Arlington Ave.,Columbus,OH,43221
+1633675,Blue Grinders - Stevenson,5833,2024,Tucker,Williams,M,10/4/2015,,628,,williams.spencer@gmail.com,Spencer,Williams,614-595-0574,williams.darci@gmail.com,Darci,Williams,614-915-8552,247 Pocono rd,Columbus,OH,43235
+1633686,Green Grinders - Walcott,5833,2024,Liam,Suarez Espinal,M,10/12/2014,,629,,den.espinal21@gmail.com,Denisse,Espinal,657-237-6212,,,,,,,,
+1633678,Green Grinders - Walcott,5833,2024,Oliver,Haas,M,7/8/2015,,630,,rachel@deaninsurancegroup.com,Rachel,Dean-Haas,614-506-5538,chadhaas@icloud.com,Chad,Haas,614-406-4157,,,,
+1633687,Green Grinders - Walcott,5833,2024,Emalyn,Weatherholtz,F,8/28/2015,,631,,kweatherholtz@gmail.com,Kodi,Weatherholtz,405-513-1137,dweatherholtz@gmail.com,Danielle,Weatherholtz,405-974-1464,7883 Eagle Trace Dr,Westerville,OH,43082
+1633692,Yellow Grinders - Miles,5833,2024,Thomas,Gray,M,10/21/2015,,632,,tg340398@hotmail.com,Thomas,Gray,614-365-0981,robynr727@yahoo.com,Robyn,Gray,614-769-3615,,,,
+1633693,Yellow Grinders - Miles,5833,2024,Eli,Jordan,M,5/2/2016,,633,,mr.joelrjordan@gmail.com,Joel,Jordan,740-591-2564,ellen@ellenjordan.com,Ellen,Jordan,513-374-4036,880 Wake Dr,Westerville,OH,43082
+1633689,Yellow Grinders - Miles,5833,2024,Liam,Cresencia,M,10/30/2016,,634,,jcresencia@gmail.com,John,Cresencia,937-524-5646,,,,,1437 Bryden Rd,Columbus,OH,43205
+1633711,Orange Grinders - Tamerlano,5833,2024,Kenny,Shutts,M,12/12/2016,,635,,maureenshutts@gmail.com,Jared,Shutts,720-505-9172,,,,,7388 Fairfield lakes ,Powell ,OH,43065
+1633702,Orange Grinders - Tamerlano,5833,2024,Olive,Hipsher,F,1/17/2017,,636,,hipsherj@yahoo.com,Jason,Hipsher,614-554-6286,,,,,2916 Abbey Knoll Dr,Lewis Center,OH,43035
+1633703,Orange Grinders - Tamerlano,5833,2024,Zachary,Jarvis,M,3/13/2017,,637,,christopher.w.jarvis@gmail.com,Christopher,Jarvis,614-439-4283,,,,,6859 Merwood St,Columbus,OH,43235
+1633713,Orange Grinders - Tamerlano,5833,2024,Theodore,Yoder,M,4/7/2017,,639,,mlyoder@gmail.com,Michael,Yoder,330-466-1455,laurenf.yoder@gmail.com,Lauren,Yoder,540-230-0313,218 Richards Rd,Columbus,OH,43214
+1633708,Orange Grinders - Tamerlano,5833,2024,Levi,Ronschke,M,4/12/2017,,640,,joelronschke@gmail.com,Joel,Ronschke,614-519-9349,,,,,483 Melrose ave,Columbus,OH,43202
+1633712,Orange Grinders - Tamerlano,5833,2024,Cody,Wyckoff,F,6/11/2017,,641,,climbhills@aol.com,Brett,Wyckoff,609-335-0512,dgregory23@hotmail.com,Darcie,Wyckoff,614-915-9790,7409 Upper Clarenton Drive N,New Albany,OH,43054
+1633707,Orange Grinders - Tamerlano,5833,2024,Ellie,Qin,F,6/12/2017,,642,,rikohuang96@gmail.com,Rui,Huang,937-716-0286,,,,,11461 Quail Ridge Dr,Plain city,OH,43064
+1633722,Red Grinders - Ralston,5833,2024,Madeleine,Pozmantir,F,11/22/2017,,643,,joshuapozmantir@gmail.com,Josh,Pozmantir,614-325-2641,,,,,,,,
+1633719,Red Grinders - Ralston,5833,2024,Theo,Hyun,M,4/7/2019,,644,,tomhyun@gmail.com,Thomas,Hyun,516-241-5767,mmwiethe@gmail.com,Marisa,Hyun,304-280-5996,4700 Chantry Ct,Columbus,OH,43220
+1633724,Red Grinders - Ralston,5833,2024,Samuel,Tweedy,M,5/1/2019,,645,,michaeltweedy2@gmail.com,Michael,Tweedy,614-743-9965,,,,,886 Inwood pl.,Columbus ,OH,43224
+1633733,Purple Rollers - Little,5833,2024,Casper,Kenreich,M,8/5/2014,,646,,wagner235@gmail.com,Holly,Kenreich,614-596-5053,,,,,,,,
+1633734,Purple Rollers - Little,5833,2024,Greyson,Kenreich,M,10/28/2016,,647,,wagner235@gmail.com,Holly,Kenreich,614-596-5053,,,,,,,,
+1633728,Purple Rollers - Little,5833,2024,Benjamin,Baumgardt,M,7/14/2014,,648,,youlin1223@yahoo.com,Youlin,Baumgardt,614-695-4591,,,,,7188 Asheville park dr,Columbus ,OH,43235
+1633742,Blue Rollers - Davlin,5833,2024,Bodhi,Bichsel,M,6/18/2017,,649,,josieakrause@gmail.com,Josie,Bichsel,614-940-1059,,,,,978 Blind Brook Dr.,Columbus,OH,43235
+1633745,Blue Rollers - Davlin,5833,2024,Navya,Kamath,F,11/5/2016,,650,,pratimank28@gmail.com,Pratima,Nayak,248-885-5298,,,,,7765 Wavetree ct,Columbus,OH,43235
+1633746,Blue Rollers - Davlin,5833,2024,Mira,Krymskiy,F,6/30/2016,,651,,ciana.krymskiy@gmail.com,Ciana,Krymskiy,614-735-0768,dima.krymskiy@gmail.com,Dima,Krymskiy,614-585-9570,2201 Surrywood Dr,Dublin,OH,43016
+1633752,Blue Rollers - Davlin,5833,2024,River,Steele,M,3/18/2017,,652,,jmbsteele@gmail.com,Jen,Steele,614-946-0879,tylerjsteele@gmail.com,Tyler,Steele,614-638-3477,,,,
+1633753,Blue Rollers - Davlin,5833,2024,Harlow,Tippett,F,6/20/2017,,653,,pm_dundee@yahoo.com,Eric,Tippett,614-323-8905,,,,,3073 Midgard Rd,Columbus,OH,43202
+1633754,Blue Rollers - Davlin,5833,2024,Knox,Wadenstierna,M,11/27/2016,,654,,jwadenstierna@gmail.com,Jill,Wadenstierna,614-746-5968,dwadenstierna@gmail.com,Dave,Wadenstierna,614-270-1144,10068 Wintercreeper Ct,Plain City,OH,43064
+1633760,Green Rollers - Hardin,5833,2024,Oliver,Jordan,M,2/8/2019,,655,,mr.joelrjordan@gmail.com,Joel,Jordan,740-591-2564,ellen@ellenjordan.com,Ellen,Jordan,513-374-4036,880 Wake Dr,Westerville,OH,43082
+1633765,Green Rollers - Hardin,5833,2024,Rosalie,Weatherholtz,F,5/24/2018,,656,,kweatherholtz@gmail.com,Kodi,Weatherholtz,405-513-1137,dweatherholtz@gmail.com,Danielle,Weatherholtz,405-974-1464,7883 Eagle Trace Dr,Westerville,OH,43082
+1633766,Green Rollers - Hardin,5833,2024,Nora,Yoder,F,5/2/2019,,657,,mlyoder@gmail.com,Michael,Yoder,330-466-1455,laurenf.yoder@gmail.com,Lauren,Yoder,540-230-0313,218 Richards Rd,Columbus,OH,43214
+1633768,Yellow Rollers - Lock,5833,2024,Watson,Accursi,M,11/5/2018,,658,,mallory.accursi@gmail.com,Mallory,Accursi,302-463-8369,,,,,5421 Central College Road,Westerville,OH,43081
+1633769,Yellow Rollers - Lock,5833,2024,Juniper,Albaugh,F,10/13/2017,,659,,jessie.albaugh@gmail.com,Jessie,Albaugh,602-793-8928,,,,,9011 Killochan Court,Dublin,OH,43017
+1633770,Yellow Rollers - Lock,5833,2024,Cora,Burgess,F,11/16/2017,,660,,callielburgess@gmail.com,Callie,Burgess,614-805-4461,,,,,4945 Applecross Dr,Dublin ,OH,43017
+1633771,Yellow Rollers - Lock,5833,2024,Charlotte,Daffner,F,12/25/2017,,661,,whitney.daffner@gmail.com,Whitney,Daffner,614-354-5195,,,,,7604 Southview Ct,Columbus,OH,43235
+1633772,Yellow Rollers - Lock,5833,2024,Vidhu,Datla,M,2/15/2018,,662,,dheera.cloud@gmail.com,Dheera,Alluri,,,,,,9039 Emerald hill dr,Lewis Center,OH,43035
+1633773,Yellow Rollers - Lock,5833,2024,Abhay,Datla,M,2/15/2018,,663,,dheera.cloud@gmail.com,Dheera,Alluri,,,,,,9039 Emerald hill dr,Lewis Center,OH,43035
+1633775,Yellow Rollers - Lock,5833,2024,Camden,Gallagher,M,9/13/2017,,664,,aplusjgallagher@gmail.com,Ashley,Gallagher,740-238-0197,,,,,,,,
+1633779,Yellow Rollers - Lock,5833,2024,Audrianna,Longazel,F,9/26/2017,,665,,jmcclory4@gmail.com,Jessica,McClory,937-903-9277,,,,,,,,
+1633780,Yellow Rollers - Lock,5833,2024,Jack,Mahler,M,6/6/2018,,666,,kelli_jk@hotmail.com,Kelli Jo,Mahler,740-706-1592,lars@legalsifter.com,Lars,Mahler,415-412-3161,,,,
+1633783,Orange Rollers - Crnarich,5833,2024,Mats,Lutmer,M,7/24/2020,,667,,paigeralbright@gmail.com,Paige,Lutmer,330-606-7340,,,,,1090 Beechview Dr S ,Worthington ,OH,43085
+1633788,Orange Rollers - Crnarich,5833,2024,Hailey,Saunders,F,4/10/2018,,668,,atsaunders.90@gmail.com,Andrew,Saunders,614-440-0935,,,,,2820 Schoen Lake Dr,Powell,OH,43065
+1633790,Orange Rollers - Crnarich,5833,2024,Jonah,Todd,M,6/14/2019,,669,,stef.todd13@gmail.com,Stefanie,Todd,614-406-8463,,,,,4499 Hunter Lake Dr. ,Powell,OH,43065
+1633794,Red Rollers - Lewis,5833,2024,Andrew,Canterbury,M,6/2/2017,,670,,james.canterbury.3@gmail.com,James,Canterbury,419-450-6260,,,,,,,,
+1633795,Pink Balance - Robenstine,5833,2024,Stella,Daffner,F,5/29/2019,,671,,whitney.daffner@gmail.com,Whitney,Daffner,614-354-5195,,,,,7604 Southview Ct,Columbus,OH,43235
+1633798,Red Rollers - Lewis,5833,2024,Meera,Kamath,F,5/25/2018,,672,,pratimank28@gmail.com,Pratima,Nayak,248-885-5298,,,,,7765 Wavetree ct,Columbus,OH,43235
+1633799,Green Balance - Forsythe,5833,2024,Henry,Pozmantir,M,4/16/2020,,673,,joshuapozmantir@gmail.com,Josh,Pozmantir,614-325-2641,,,,,,,,
+1633800,Red Rollers - Lewis,5833,2024,Carson,Sheldon,M,6/5/2019,,674,,lsheldon15@gmail.com,Conway,Sheldon,614-425-6137,,,,,,,,
+1633803,Green Balance - Forsythe,5833,2024,Chloe,Bichsel,F,7/16/2019,,675,,josieakrause@gmail.com,Josie,Bichsel,614-940-1059,,,,,978 Blind Brook Dr.,Columbus,OH,43235
+1633807,Green Balance - Forsythe,5833,2024,Lyle,Hamilton,M,5/2/2018,,676,,catherinebrown25@yahoo.com,Catherine,Hamilton,614-592-4549,,,,,7984 Oakwind Ct,Westerville,OH,43081
+1633808,Green Balance - Forsythe,5833,2024,Kat,Jarvis,F,8/14/2019,,677,,christopher.w.jarvis@gmail.com,Christopher,Jarvis,614-439-4283,,,,,6859 Merwood St,Columbus,OH,43235
+1633810,Green Balance - Forsythe,5833,2024,Everly,Stanard,F,7/26/2018,,678,,jr223003@gmail.com,Jessica,Stanard,937-541-9331,,,,,7569 Southview Ct,Columbus,OH,43235
+1633811,Green Balance - Forsythe,5833,2024,Lemar,Suarez Espinal,M,9/30/2018,,679,,den.espinal21@gmail.com,Denisse,Espinal,657-237-6212,,,,,,,,
+1633815,Pink Balance - Robenstine,5833,2024,Madeleine,Adkins,F,1/31/2020,,680,,brennadowning@gmail.com,Brenna,Adkins,614-441-1997,,,,,,,,
+1633817,Pink Balance - Robenstine,5833,2024,Jameson,Bovid,M,5/7/2020,,681,,coachjamibovid@gmail.com,Jami,Bovid,989-751-0159,sbovid@gmail.com,Stanley,Bovid,989-698-6125,2061 Olde Sawmill Blvd ,Dublin,OH,43016
+1633818,Pink Balance - Robenstine,5833,2024,Ziva,Cox,F,11/17/2020,,682,,suzih4@gmail.com,Suzi,Cox,513-607-9541,,,,,,,,
+1633819,Pink Balance - Robenstine,5833,2024,Brock,Henney,M,9/19/2020,,683,,bhenney777@hotmail.com,Ben,Henney,614-306-8160,,,,,549 Lambourne Ave,Worthington,OH,43085
+1633820,Pink Balance - Robenstine,5833,2024,Emmett,Jordan,M,4/26/2021,,684,,mr.joelrjordan@gmail.com,Joel,Jordan,740-591-2564,ellen@ellenjordan.com,Ellen,Jordan,513-374-4036,880 Wake Dr,Westerville,OH,43082
+1633821,Red Rollers - Lewis,5833,2024,Callaghan,Montee,M,2/24/2021,,685,,mark.montee@gmail.com,Mark,Montee,614-809-4660,,,,,10431 Butternut Drive,Plain City,OH,43064
+1633822,Pink Balance - Robenstine,5833,2024,Alexander,Spath,M,5/4/2021,,686,,njspath@gmail.com,Nicole,Spath,631-521-4190,,,,,,,,
+1633823,Blue Balance - Vozza,5833,2024,Graham,Adams,M,5/3/2021,,687,,adamshollym@gmail.com,Holly,Adams,570-242-8675,,,,,1098 Ravine Ridge Drive,Worthington,OH,43085
+1633824,Blue Balance - Vozza,5833,2024,Espen,Dean,F,1/14/2020,,688,,smithemilyl@gmail.com,Espen,Dean,614-738-6499,,,,,8383 Dunnbury ,Powell,OH,43065
+1633827,Blue Balance - Vozza,5833,2024,Ryan,Sheehan,M,9/27/2019,,689,,donnadonna89@hotmail.com,Donna,Sheehan,516-815-2079,,,,,6794 Bowerman Street West ,Worthington ,OH,43085
+1633828,Blue Balance - Vozza,5833,2024,Micah,Tweedy,F,3/19/2021,,690,,michaeltweedy2@gmail.com,Michael,Tweedy,614-743-9965,,,,,886 Inwood pl.,Columbus ,OH,43224
+1633829,Blue Balance - Vozza,5833,2024,Maverick,Wezner,M,9/19/2020,,691,,j.pogue11@yahoo.com,Jeff,Pogue,614-557-5642,,,,,,,,
+1633830,Blue Balance - Vozza,5833,2024,Emmett,Zipfel,M,1/25/2021,,692,,ehzipfel@gmail.com,Erin,Zipfel,419-283-6131,tzipfel@gmail.com,Travis,Zipfel,419-944-7463,441 Lambourne ave,Worthington,OH,43085
+1633814,Red Rollers - Lewis,5833,2024,Archie,Zhang,M,5/20/2019,,693,,zhangnewlife@yahoo.com,Jianchao,Zhang,614-580-2161,,,,,"2121 Steffi DR., Optional, Suite / Apt #, Suite / Apt #",Hilliard,OH,43026
+1633559,Neon Advanced - Armstrong,5833,2024,Milo,Yetman,M,4/14/2011,,694,,cyetman3@yahoo.com,Chris,Yetman,614-425-0178,,,,,308 E Tulane Rd,Columbus,OH,43202
+1732599,,,,Oliver,Blank,M,9/27/2015,,9000,,nsantuzzi@gmail.com,Nicole,Blank,614-893-3694,,,,,,Columbus,,
+1732600,,,,Wyatt,Blank,M,3/29/2018,,9001,,nsantuzzi@gmail.com,Nicole,Blank,614-893-3694,,,,,,Columbus,,
+1732601,,,,Hudson,Buchanan,M,1/20/2020,,9002,,logan.buchanan96@yahoo.com,Logan,Buchanan,740-341-8002,,,,,,Marion,,
+1822993,,,,Gabriel,Bucholtz,M,7/26/2017,,9003,,ryan.k.bucholtz@gmail.com,Ryan,Bucholtz,614-625-9390,,,,,77 S Spring Road,Westerville,OH,43081
+1822994,,,,Daniel,Bucholtz,M,8/21/2020,,9004,,ryan.k.bucholtz@gmail.com,Ryan,Bucholtz,614-625-9390,,,,,77 S Spring Road,Westerville,OH,43081
+1745022,,,,Arcadia,Buescher,F,2/24/2021,,9005,,remahjane@gmail.com,Remah,Buescher,614-657-2851,,,,,2368 Wickliffe Rd,Columbua,OH,43221
+1821964,,,,Louis,Collins,M,5/20/2019,,9006,,juliehao99@gmail.com,julie,hao,502-432-5950,,,,,1342 Forsyth Lane,Galena,OH,43021
+1821965,,,,Amelia,Collins,F,4/16/2018,,9007,,juliehao99@gmail.com,julie,hao,502-432-5950,,,,,1342 Forsyth Lane,Galena,OH,43021
+1756296,,,,Silas,Crist,M,11/15/2012,,9008,,mjcrist@gmail.com,Sarah,Crist,330-907-5591,,,,,7354 Apple Creek Rd,Sterling,OH,44276
+1756297,,,,Elona,Crist,F,9/6/2013,,9009,,mjcrist@gmail.com,Sarah,Crist,330-907-5591,,,,,7354 Apple Creek Rd,Sterling,OH,44276
+1756298,,,,Ruby,Crist,F,11/3/2015,,9010,,mjcrist@gmail.com,Sarah,Crist,330-907-5591,,,,,7354 Apple Creek Rd,Sterling,OH,44276
+1842617,,,,Nick,Daniel,M,7/28/2009,,9011,,vince_daniel@hotmail.com,Vincent,Daniel,410-302-3820,,,,,7044 Corazon Dr,Dublin,OH,43016
+1732602,,,,Milena,Flores,F,6/2/2017,,9012,,jmfg1983@hotmail.com,Manuel,Flores,419-571-9341,,,,,,"Mansfield, Ohio",,
+1760483,,,,Ashton,Geither,M,1/15/2018,,9013,,scottgeither@gmail.com,Scotty,Geither,440-655-5805,,,,,3971 Woodbridge ,Columbus ,OH,43220
+1809654,,,,George,Hawks,M,3/16/1985,,9014,,ghawks026@gmail.com,George,Hawks,614-946-1369,,,,,,,,
+1821330,,,,Colton,Heater,M,4/22/2018,,9015,,bheater823@gmail.com,Brittany,Heater,419-957-9503,,,,,250 Saddlebred Cir,Marysville,OH,43040
+1828672,,,,Rowan,Hickman,M,4/8/2019,,9016,,casey.101813@gmail.com,Casey,Hickman,937-212-4107,,,,,,,,
+1732603,,,,Maxwell,Hromco,M,4/20/2015,,9017,,hromcod@gmail.com,Douglas,Hromco,740-591-8540,,,,,,Worthington,,
+1732604,,,,Mason,Imhoff,M,4/26/2019,,9018,,imhoff.cait@gmail.com,Caitlin,Imhoff,614-309-1430,,,,,7790 Sefton park dr,Columbus,OH,43235
+1806925,,,,James,Kaste,M,7/1/2022,,9019,,dan.kaste@gmail.com,Dan,Kaste,440-667-2744,,,,,6755 Spring Run Dr,Westerville,OH,43082
+1843098,,,,Owen,Kelley,M,4/11/2014,,9020,,brad.weaver2@gmail.com,Brad,Weaver,740-851-0620,,,,,170 Burr Oak Rd.,CHILLICOTHE,OH,45601
+1732605,,,,Bo,Lanning,M,3/2/2017,,9021,,3lannings@gmail.com,Shandi,Lanning,740-644-8207,,,,,,Newark,,
+1732606,,,,Ryder,Lanning,M,9/20/2014,,9022,,3lannings@gmail.com,Shandi,Lanning,740-644-8207,,,,,,Newark,,
+1827410,,,,Grant,Larimore,M,6/30/2017,,9023,,slarimore64@gmail.com,Sarah,Larimore,614-271-0411,,,,,,,,
+1827411,,,,Will,Larimore,M,6/3/2019,,9024,,slarimore64@gmail.com,Sarah,Larimore,614-271-0411,,,,,,,,
+1822919,,,,Alex,Lawrence,M,11/17/2013,,9025,,lauralawrence35@gmail.com,Laura,Lawrence,614-203-4538,,,,,3478 Courtland Dr ,Lewis Center ,OH,43035
+1796147,,,,Berkeley,Lee,F,2/26/2015,,9026,,etwagne@yahoo.com,Elizabeth,Lee,419-575-6351,,,,,8670 Solether Rd.,Cygnet,OH,43413
+1796148,,,,Abram,Lee,M,10/20/2016,,9027,,etwagne@yahoo.com,Elizabeth,Lee,419-575-6351,,,,,8670 Solether Rd.,Cygnet,OH,43413
+1732607,,,,Cullen,McAllister,M,6/21/2021,,9028,,melissamcallister13@gmail.com,Melissa,McAllister,724-825-0397,,,,,9880 Dutch School Road,Dresden ,OH,43821
+1732608,,,,Jonathon,McAllister,M,1/8/2016,,9029,,melissamcallister13@gmail.com,Melissa,McAllister,724-825-0397,,,,,9880 Dutch School Road,Dresden ,OH,43821
+1732612,,,,Ben,Moore,M,8/24/2013,,9030,,gina.rossi.moore@gmail.com,Gina,Moore,614-562-4461,adammoore1981@gmail.com,Adam,Moore,614-332-3190,,Worthington,,
+1745021,,,,Quill,Murphy,M,6/12/2018,,9031,,remahjane@gmail.com,Remah,Buescher,614-657-2851,,,,,2368 Wickliffe Rd,Columbua,OH,43221
+1838056,,,,Quinn,Mutchler,F,8/21/2017,,9032,,mutchler.m@gmail.com,Matthew,Mutchler,419-306-8923,,,,,6099 Red Bank Rd,Galena,OH,43021
+1838057,,,,Emery,Mutchler,F,6/22/2020,,9033,,mutchler.m@gmail.com,Matthew,Mutchler,419-306-8923,,,,,6099 Red Bank Rd,Galena,OH,43021
+1732609,,,,Van,Randolph,M,6/3/2021,,9034,,peypey642@yahoo.com,Peyton,Randolph,740-777-3556,,,,,,Baltimore,,
+1843645,,,,Paxton,Renner,M,7/23/2013,,9035,,brad.weaver2@gmail.com,Brad,Weaver,740-851-0620,,,,,170 Burr Oak Rd.,CHILLICOTHE,OH,45601
+1746037,,,,Colton,Robertson,M,4/11/2013,,9036,,coleenrobertson@sbcglobal.net,Coleen,Robertson,614-282-9378,,,,,755 Autumn Branch Road,Westerville ,OH,43081
+1746038,,,,Will,Robertson,M,4/11/2013,,9037,,coleenrobertson@sbcglobal.net,Coleen,Robertson,614-282-9378,,,,,755 Autumn Branch Road,Westerville ,OH,43081
+1747821,,,,Bodie,Roman,M,10/5/2017,,9038,,kalak271@gmail.com,Kala,Roman,419-302-0873,,,,,415 Enon Rd,New Carlisle ,OH,45344
+1747822,,,,Archer,Roman,M,5/19/2020,,9039,,kalak271@gmail.com,Kala,Roman,419-302-0873,,,,,415 Enon Rd,New Carlisle ,OH,45344
+1786296,,,,Olive,Seidel,F,5/17/2015,,9040,,brenden.seidel@icloud.com,Brenden,Seidel,614-596-5281,,,,,4459 Okell Rd,Columbus,OH,43224
+1786297,,,,Rosemary,Seidel,F,1/2/2017,,9041,,brenden.seidel@icloud.com,Brenden,Seidel,614-596-5281,,,,,4459 Okell Rd,Columbus,OH,43224
+1786405,,,,Sage,Seidel,M,2/13/2021,,9042,,brenden.seidel@icloud.com,Brenden,Seidel,614-596-5281,,,,,4459 Okell Rd,Columbus,OH,43224
+1772842,,,,Elijah,Trummer,M,9/19/2020,,9043,,matthewtrummer@gmail.com,Matt,Trummer,937-271-1279,,,,,,,,
+1843164,,,,Charlotte,Underwood,F,7/1/2015,,9044,,brad.weaver2@gmail.com,Brad,Weaver,740-851-0620,,,,,170 Burr Oak Rd.,CHILLICOTHE,OH,45601
+1732610,,,,Menno,Van Maasakkers,M,12/21/2015,,9045,,sarahdriscollkelly@gmail.com,Sarah,Kelly,617-823-8711,,,,,1305 Murrell Ave,Grandview Heights,OH,43212
+1732611,,,,Graham,Wareham,M,9/2/2019,,9046,,Josh.Wareham104@gmail.com,Josh,Wareham,419-512-2653,,,,,,POWELL,,
+1809091,,,,Luca,West,M,5/9/2014,,9047,,felicitynw@gmail.com,Felicity,Nesham-West,614-302-0700,,,,,,,,
+1764362,,,,Nico,Williams,M,4/25/2018,,9048,,mwilliams2561@gmail.com,Mike,Williams,330-224-2071,,,,,1764 Tremont Rd,Upper Arlington,OH,43212
+1764363,,,,Adria,Williams,F,4/5/2015,,9049,,mwilliams2561@gmail.com,Mike,Williams,330-224-2071,,,,,1764 Tremont Rd,Upper Arlington,OH,43212
+1852942,,,,Austin,Armul,M,2/19/2017,,9050,,toreyarmul@gmail.com,Torey,Armul,281-635-6301,,,,,5283 RESERVE DR,DUBLIN,OH,43017
+1852876,,,,Brady,Armul,M,3/6/2015,,9051,,toreyarmul@gmail.com,Torey,Armul,281-635-6301,,,,,5283 RESERVE DR,DUBLIN,OH,43017
+1847907,,,,Delaney,Botschner,F,1/22/2014,,9052,,brandon.botschner@gmail.com,Brandon,Botschner,937-672-3093,,,,,,,,
+1847908,,,,Peter,Botschner,M,12/28/2016,,9053,,brandon.botschner@gmail.com,Brandon,Botschner,937-672-3093,,,,,,,,
+1847906,,,,Sophie,Botschner,F,10/10/2011,,9054,,brandon.botschner@gmail.com,Brandon,Botschner,937-672-3093,,,,,,,,
+1846427,,,,Charlotte,Cress,F,1/7/2021,,9055,,cress.19.2@gmail.com,Michael,Cress,,,,,,2362 Woodstock Rd,Columbus,OH,43221
+1846428,,,,Turner,Cress,M,11/7/2018,,9056,,cress.19.2@gmail.com,Michael,Cress,,,,,,2362 Woodstock Rd,Columbus,OH,43221
+1852068,,,,Aiden,Crowley,M,4/5/2015,,9057,,joecrowley1@gmail.com,Joe,Crowley,617-688-1816,,,,,,,,
+1848932,,,,Addison,Hoffman,F,12/14/2015,,9058,,joe.hoffman@mail.com,Joseph,Hoffman,614-359-5883,,,,,10073 Wintercreeper Ct ,Plain City,OH,43064
+1859315,,,,Grayson,Holtzlander,M,1/21/2014,,9059,,holtzlanderm@yahoo.com,Matt,Holtzlander,614-395-1259,,,,,2238 Park Circle,Lewis Center,OH,43035
+1846625,,,,Griffin,Imhoff,M,9/19/2020,,9060,,imhoff.cait@gmail.com,Caitlin,Imhoff,614-309-1430,,,,,7790 Sefton park dr,Columbus,OH,43235
+1847456,,,,Titus,Kong,M,2/22/2014,,9061,,dekong@gmail.com,Darlene,Kong,614-579-9908,,,,,7803 Stoneford Dr,Columbus,OH,43235
+1847215,,,,Evie,Kowaleski,F,6/16/2014,,9062,,allyson.kowaleski@gmail.com,allyson,kowaleski,419-656-3511,,,,,7610 Southview Ct,Columbus,OH,43235
+1850309,,,,Maddie,Kruder,F,6/21/2013,,9063,,akruder@gmail.com,Allison,Kruder,513-226-0281,,,,,4164 Checkerberry Ct,Hilliard,OH,43026
+1846301,,,,Eliana,Pace,F,7/30/2019,,9064,,alysnyd@gmail.com,Alyssa,Snyder,614-620-2025,,,,,,,,
+1859729,,,,Payton,Renner,M,7/23/2016,,9065,,drenn33@gmail.com,Dan,Renner,740-253-5088,,,,,,,,
+1859730,,,,HENRIK,RUSSELL,M,11/9/2016,,9066,,silentj327@gmail.com,JEREMY,RUSSELL,614-314-6112,,,,,7217 HAWKSBEARD DR,WESTERVILLE,OH,43082
+1859732,,,,MABEL,RUSSELL,F,11/9/2016,,9067,,silentj327@gmail.com,JEREMY,RUSSELL,614-314-6112,,,,,7217 HAWKSBEARD DR,WESTERVILLE,OH,43082
+1859731,,,,WATSON,RUSSELL,M,5/3/2014,,9068,,silentj327@gmail.com,JEREMY,RUSSELL,614-314-6112,,,,,7217 HAWKSBEARD DR,WESTERVILLE,OH,43082
+1849955,,,,Abby,Serrano,F,9/24/2012,,9069,,fasttrack_354@hotmail.com,kevin,serrano,719-238-3602,,,,,,,,
+1848207,,,,Lincoln,Shreve,M,1/30/2016,,9070,,bradshreve@yahoo.com,Brad,Shreve,330-814-6156,,,,,,,,
+1847794,,,,Jack,Teeters,M,11/16/2018,,9071,,caseyteeters44@gmail.com,Casey,Teeters,614-531-9337,,,,,1400 Tiehack Court,Columbus,OH,43235
+1847793,,,,Liam,Teeters,M,11/16/2018,,9072,,caseyteeters44@gmail.com,Casey,Teeters,614-531-9337,,,,,1400 Tiehack Court,Columbus,OH,43235
+1850696,,,,Cohen,Ward,M,12/19/2019,,9073,,timwardjr@gmail.com,Timothy,Ward,614-226-3244,,,,,1184 Forsyth Lane,Galena,OH,43021
+1850697,,,,Holden,Ward,M,12/19/2019,,9074,,timwardjr@gmail.com,Timothy,Ward,614-226-3244,,,,,1184 Forsyth Lane,Galena,OH,43021
+1850667,,,,James,Wright,M,6/9/2014,,9075,,wright21088@gmail.com,James,Wright,614-419-8633,,,,,4436 Brickwood Dr,Hilliard,OH,43036
