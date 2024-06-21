@@ -1,285 +1,290 @@
-Name, First Name, Last Name, Distance, Category, Wave, Age, Gender, Email, Bib
-"Jordan, Emmett", Emmett, Jordan, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, mr.joelrjordan@gmail.com, 684
-"Hamilton, Lyle", Lyle, Hamilton, Balance Bike, Balance M, Wave 1 (Balance M), 6, M, catherinebrown25@yahoo.com, 676
-"Zipfel, Emmett", Emmett, Zipfel, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, ehzipfel@gmail.com, 692
-"Seidel, Sage", Sage, Seidel, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, brenden.seidel@icloud.com, 9042
-"Adams, Graham", Graham, Adams, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, adamshollym@gmail.com, 687
-"Kaste, James", James, Kaste, Balance Bike, Balance M, Wave 1 (Balance M), 1, M, dan.kaste@gmail.com, 9019
-"Collins, Louis", Louis, Collins, Balance Bike, Balance M, Wave 1 (Balance M), 5, M, juliehao99@gmail.com, 9006
-"Sheehan, Ryan", Ryan, Sheehan, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, donnadonna89@hotmail.com, 689
-"Henney, Brock", Brock, Henney, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, bhenney777@hotmail.com, 683
-"Sayre, Beckett", Beckett, Sayre, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, msayre@wscloud.org, 570
-"Imhoff, Griffin", Griffin, Imhoff, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, imhoff.cait@gmail.com, 9060
-"Bovid, Jameson", Jameson, Bovid, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, coachjamibovid@gmail.com, 681
-"Ward, Cohen", Cohen, Ward, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, timwardjr@gmail.com, 9073
-"Ward, Holden", Holden, Ward, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, timwardjr@gmail.com, 9074
-"Cook, Bodhi", Bodhi, Cook, Balance Bike, Balance M, Wave 1 (Balance M), 5, M, scooksc1@gmail.com, 527
-"McAllister, Cullen", Cullen, McAllister, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, melissamcallister13@gmail.com, 9028
-"Randolph, Van", Van, Randolph, Balance Bike, Balance M, Wave 1 (Balance M), 3, M, peypey642@yahoo.com, 
-"Buchanan, Hudson", Hudson, Buchanan, Balance Bike, Balance M, Wave 1 (Balance M), 4, M, logan.buchanan96@yahoo.com, 
-"Buescher, Arcadia", Arcadia, Buescher, Balance Bike, Balance F, Wave 2 (Balance F), 3, F, remahjane@gmail.com, 9005
-"Collins, Amelia", Amelia, Collins, Balance Bike, Balance F, Wave 2 (Balance F), 6, F, juliehao99@gmail.com, 9007
-"Kuckuck, Eliza", Eliza, Kuckuck, Balance Bike, Balance F, Wave 2 (Balance F), 4, F, tbennettk@gmail.com, 596
-"Bichsel, Chloe", Chloe, Bichsel, Balance Bike, Balance F, Wave 2 (Balance F), 4, F, josieakrause@gmail.com, 675
-"Jarvis, Kat", Kat, Jarvis, Balance Bike, Balance F, Wave 2 (Balance F), 4, F, christopher.w.jarvis@gmail.com, 677
-"Mutchler, Emery", Emery, Mutchler, Balance Bike, Balance F, Wave 2 (Balance F), 3, F, mutchler.m@gmail.com, 9033
-"Daffner, Stella", Stella, Daffner, Balance Bike, Balance F, Wave 2 (Balance F), 5, F, whitney.daffner@gmail.com, 671
-"Tweedy, Micah", Micah, Tweedy, Balance Bike, Balance F, Wave 2 (Balance F), 3, F, michaeltweedy2@gmail.com, 690
-"Dean, Espen", Espen, Dean, Balance Bike, Balance F, Wave 2 (Balance F), 4, F, smithemilyl@gmail.com, 688
-"Cress, Charlotte", Charlotte, Cress, Balance Bike, Balance F, Wave 2 (Balance F), 3, F, cress.19.2@gmail.com, 9055
-"Cook, Scout", Scout, Cook, Balance Bike, Balance F, Wave 2 (Balance F), 5, F, scooksc1@gmail.com, 528
-"Stanard, Everly", Everly, Stanard, Balance Bike, Balance F, Wave 2 (Balance F), 5, F, jr223003@gmail.com, 678
-"Vogel, Matilda", Matilda, Vogel, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, kelley.romoser@gmail.com, 589
-"Lutmer, Mats", Mats, Lutmer, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, paigeralbright@gmail.com, 667
-"McEntire, Charlotte", Charlotte, McEntire, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, meesh9@gmail.com, 427
-"Kirch, Ivy", Ivy, Kirch, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, andy.kirch@gmail.com, 417
-"Montee, Callaghan", Callaghan, Montee, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, mark.montee@gmail.com, 685
-"Vozza, Theodore", Theodore, Vozza, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, brittany.vozza@gmail.com, 419
-"Saunders, Elijah", Elijah, Saunders, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, atsaunders.90@gmail.com, 568
-"Saunders, Isaiah", Isaiah, Saunders, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, atsaunders.90@gmail.com, 569
-"Jewell, Max", Max, Jewell, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, jmjewell02@gmail.com, 538
-"Bucholtz, Daniel", Daniel, Bucholtz, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, ryan.k.bucholtz@gmail.com, 9004
-"Beck, Noah", Noah, Beck, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, brittanyanddrew@gmail.com, 520
-"Wareham, Graham", Graham, Wareham, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, Josh.Wareham104@gmail.com, 
-"Jordan, Oliver", Oliver, Jordan, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 5, M, mr.joelrjordan@gmail.com, 655
-"Murphy, Quill", Quill, Murphy, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, remahjane@gmail.com, 9031
-"Williams, Nico", Nico, Williams, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, mwilliams2561@gmail.com, 9048
-"Accursi, Watson", Watson, Accursi, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 5, M, mallory.accursi@gmail.com, 658
-"Young, Tyler", Tyler, Young, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, kmmolnar@yahoo.com, 591
-"Neal, Watson", Watson, Neal, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, benjamin.neal.225@gmail.com, 556
-"Adams, Isaac", Isaac, Adams, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 5, M, adamshollym@gmail.com, 598
-"Heater, Colton", Colton, Heater, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, bheater823@gmail.com, 9015
-"Kuckuck, Connor", Connor, Kuckuck, Pedal Bike, 5-6 M, Wave 4 (5-6 M), 6, M, tbennettk@gmail.com, 595
-"Rengel, Lucas", Lucas, Rengel, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 6, M, suzeslater@gmail.com, 563
-"Hall, Tyler", Tyler, Hall, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, jilliankellbach@gmail.com, 302
-"Hunt, Joseph", Joseph, Hunt, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, hecoughl@gmail.com, 545
-"Lehner, Robert", Robert, Lehner, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 6, M, zpeedracer@aol.com, 550
-"Hackworth, Liam", Liam, Hackworth, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, hackworth.7@gmail.com, 416
-"Tweedy, Samuel", Samuel, Tweedy, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, michaeltweedy2@gmail.com, 645
-"Todd, Jonah", Jonah, Todd, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, stef.todd13@gmail.com, 669
-"Cress, Turner", Turner, Cress, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, cress.19.2@gmail.com, 9056
-"Imhoff, Mason", Mason, Imhoff, Pedal Bike, 5-6 M, Wave 5 (5-6 M), 5, M, imhoff.cait@gmail.com, 9018
-"Walcott, Monza", Monza, Walcott, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, twalco@hotmail.com, 420
-"Teeters, Liam", Liam, Teeters, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, caseyteeters44@gmail.com, 9072
-"Teeters, Jack", Jack, Teeters, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, caseyteeters44@gmail.com, 9071
-"Robenstine, Archie", Archie, Robenstine, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, robenstine@gmail.com, 500
-"Weckesser, Luka", Luka, Weckesser, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, rose.weckesser@gmail.com, 421
-"Datla, Vidhu", Vidhu, Datla, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, dheera.cloud@gmail.com, 662
-"Datla, Abhay", Abhay, Datla, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, dheera.cloud@gmail.com, 663
-"Bucholtz, Gabriel", Gabriel, Bucholtz, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, ryan.k.bucholtz@gmail.com, 9003
-"Zhang, Archie", Archie, Zhang, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, zhangnewlife@yahoo.com, 693
-"Geither, Ashton", Ashton, Geither, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, scottgeither@gmail.com, 9013
-"Hyun, Theo", Theo, Hyun, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, tomhyun@gmail.com, 644
-"Bednarz, Ethan", Ethan, Bednarz, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, kbednarzpt@gmail.com, 423
-"Mahler, Jack", Jack, Mahler, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, larsmahler@yahoo.com, 
-"Lehenr, Robbie", Robbie, Lehenr, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, zpeedracer@aol.com, 550
-"Blank, Wyatt", Wyatt, Blank, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, nsantuzzi@gmail.com, 
-"Yoder, Nora", Nora, Yoder, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 5, F, mlyoder@gmail.com, 657
-"Daffner, Charlotte", Charlotte, Daffner, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, whitney.daffner@gmail.com, 661
-"Albaugh, Juniper", Juniper, Albaugh, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, jessie.albaugh@gmail.com, 659
-"Burgess, Cora", Cora, Burgess, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, callielburgess@gmail.com, 660
-"Forsythe, Sienna", Sienna, Forsythe, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 5, F, lisa.c.forsythe@gmail.com, 425
-"Wakefield, Vivienne", Vivienne, Wakefield, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 5, F, jbrodywakefield@gmail.com, 600
-"Mutchler, Quinn", Quinn, Mutchler, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, mutchler.m@gmail.com, 9032
-"Kamath, Meera", Meera, Kamath, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, pratimank28@gmail.com, 672
-"Weatherholtz, Rosalie", Rosalie, Weatherholtz, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, kweatherholtz@gmail.com, 656
-"Vozza, Fiona", Fiona, Vozza, Pedal Bike, 5-6 F, Wave 8 (5-6 F), 6, F, brittany.vozza@gmail.com, 399
-"Saunders, Hailey", Hailey, Saunders, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, atsaunders.90@gmail.com, 668
-"Feeney, Ryen", Ryen, Feeney, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, rwnotredame4@gmail.com, 532
-"Jewell, Sophia", Sophia, Jewell, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 5, F, jmjewell02@gmail.com, 519
-"Little, Cecelia", Cecelia, Little, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, aim17us@gmail.com, 438
-"Hierro, Holland", Holland, Hierro, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, jaymee.hierro@gmail.com, 541
-"Gillogly, Luna", Luna, Gillogly, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, erin.gillogly@gmail.com, 437
-"Schmitt, Emily", Emily, Schmitt, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, careyschmitt@yahoo.com, 440
-"Sharp, Scout", Scout, Sharp, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, pamdquigley@gmail.com, 357
-"Longazel, Audrianna", Audrianna, Longazel, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, jmcclory4@gmail.com, 665
-"Bednarz, Ella", Ella, Bednarz, Pedal Bike, 5-6 F, Wave 9 (5-6 F), 6, F, kbednarzpt@gmail.com, 422
-"Bailey, Lucas", Lucas, Bailey, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 8, M, orprotary@yahoo.com, 615
-"Yoder, Theodore", Theodore, Yoder, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 7, M, mlyoder@gmail.com, 639
-"Jordan, Eli", Eli, Jordan, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 8, M, mr.joelrjordan@gmail.com, 633
-"Van Maasakkers, Menno", Menno, Van Maasakkers, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 8, M, sarahdriscollkelly@gmail.com, 9045
-"Mason, Carter", Carter, Mason, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 7, M, chadmmason@gmail.com, 444
-"Vogel, August", August, Vogel, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 7, M, kelley.romoser@gmail.com, 449
-"Kaste, Andrew", Andrew, Kaste, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 7, M, dan.kaste@gmail.com, 450
-"Aube, Cooper", Cooper, Aube, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 8, M, aube.ryan@gmail.com, 516
-"Konoval, David", David, Konoval, Pedal Bike, 7-8 M, Wave 10 (7-8 M), 7, M, yelkonoval@gmail.com, 621
-"Neal, Edison", Edison, Neal, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 8, M, benjamin.neal.225@gmail.com, 557
-"Lee, Abram", Abram, Lee, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 7, M, etwagne@yahoo.com, 9027
-"Lutmer, Beck", Beck, Lutmer, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 8, M, paigeralbright@gmail.com, 473
-"Ronschke, Levi", Levi, Ronschke, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 7, M, joelronschke@gmail.com, 640
-"Bichsel, Bodhi", Bodhi, Bichsel, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 7, M, josieakrause@gmail.com, 649
-"Wadenstierna, Knox", Knox, Wadenstierna, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 7, M, jwadenstierna@gmail.com, 654
-"Hardin, Jason", Jason, Hardin, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 8, M, jeremyhardin13@gmail.com, 443
-"Beringer, Jack", Jack, Beringer, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 8, M, kyle.beringer@gmail.com, 616
-"McEntire, Sammy", Sammy, McEntire, Pedal Bike, 7-8 M, Wave 11 (7-8 M), 8, M, meesh9@gmail.com, 336
-"Jarvis, Zachary", Zachary, Jarvis, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 7, M, christopher.w.jarvis@gmail.com, 637
-"Kirch, Ellis", Ellis, Kirch, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 7, M, andy.kirch@gmail.com, 317
-"Pastore, Jonah", Jonah, Pastore, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 7, M, sarapastore1004@gmail.com, 514
-"McLoughlin, Davis", Davis, McLoughlin, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, eric@aacolpa.com, 551
-"Hall, Maddox", Maddox, Hall, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, jilliankellbach@gmail.com, 301
-"Williams, Tucker", Tucker, Williams, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, williams.spencer@gmail.com, 628
-"Mowry, Cameron", Cameron, Mowry, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, financecommand@themowrys.net, 343
-"Glenn-Applegate, Samuel", Samuel, Glenn-Applegate, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, peteapplegate@hotmail.com, 394
-"Cirker, Evan", Evan, Cirker, Pedal Bike, 7-8 M, Wave 12 (7-8 M), 8, M, starrynews@yahoo.com, 525
-"Montee, Tighe", Tighe, Montee, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, mark.montee@gmail.com, 441
-"Parker, Wyatt", Wyatt, Parker, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, lauramparker78@gmail.com, 618
-"Walcott, Dakar", Dakar, Walcott, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, twalco@hotmail.com, 402
-"Serfass, Enzo", Enzo, Serfass, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, luzano.2@osu.edu, 376
-"Davlin, Levi", Levi, Davlin, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, sarah.davlin@gmail.com, 529
-"Bovid, Clayton", Clayton, Bovid, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, coachjamibovid@gmail.com, 522
-"Ward, Paxton", Paxton, Ward, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, timwardjr@gmail.com, 405
-"Manning, Jace", Jace, Manning, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, manning.joe@live.com, 329
-"Cresencia, Liam", Liam, Cresencia, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, jcresencia@gmail.com, 634
-"Schira, Jacob", Jacob, Schira, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, tommyschira@gmail.com, 459
-"Schmitt, Hayden", Hayden, Schmitt, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, careyschmitt@yahoo.com, 476
-"Sheldon, Conway", Conway, Sheldon, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, lsheldon15@gmail.com, 580
-"Tebben, Lincoln", Lincoln, Tebben, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, emtebben@gmail.com, 395
-"McAllister, Jonathon", Jonathon, McAllister, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, melissamcallister13@gmail.com, 9029
-"Wetzel, Isaac", Isaac, Wetzel, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, jeremiesmith77@gmail.com, 590
-"Pogue, Will", Will, Pogue, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, deannarizek@gmail.com, 354
-"Shutts, Kenny", Kenny, Shutts, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, maureenshutts@gmail.com, 635
-"RUSSELL, HENRIK", HENRIK, RUSSELL, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, silentj327@gmail.com, 9066
-"Potts, Elias", Elias, Potts, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, eric.r.potts.1@ohio.edu, 446
-"Georgeff, Jack", Jack, Georgeff, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, pgeorgeff@protonmail.com, 536
-"Bednarz, Logan", Logan, Bednarz, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, kbednarzpt@gmail.com, 269
-"Haas, Oliver", Oliver, Haas, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, rachel@deaninsurancegroup.com, 
-"Lanning, Bo", Bo, Lanning, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, 3lannings@gmail.com, 
-"Blank, Oliver", Oliver, Blank, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, nsantuzzi@gmail.com, 
-"Kress, Riley", Riley, Kress, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 8, F, lauren.kress@live.com, 455
-"Crist, Ruby", Ruby, Crist, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 8, F, mjcrist@gmail.com, 9010
-"Chapman, Genevieve", Genevieve, Chapman, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 8, F, jrandka@gmail.com, 524
-"Wyckoff, Cody", Cody, Wyckoff, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, climbhills@aol.com, 641
-"Seidel, Rosemary", Rosemary, Seidel, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, brenden.seidel@icloud.com, 9041
-"Pace, Morgan", Morgan, Pace, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, lauren.pace.9613@gmail.com, 558
-"Krymskiy, Mira", Mira, Krymskiy, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, ciana.krymskiy@gmail.com, 651
-"Wakefield, Josephine", Josephine, Wakefield, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, jbrodywakefield@gmail.com, 472
-"Skocik, Elizabeth", Elizabeth, Skocik, Pedal Bike, 7-8 F, Wave 16 (7-8 F), 7, F, kristina.e.bennett@gmail.com, 456
-"Hipsher, Olive", Olive, Hipsher, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 7, F, hipsherj@yahoo.com, 636
-"Kamath, Navya", Navya, Kamath, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 7, F, pratimank28@gmail.com, 650
-"Hackworth, Mackenzie", Mackenzie, Hackworth, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, hackworth.7@gmail.com, 454
-"Weatherholtz, Emalyn", Emalyn, Weatherholtz, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, kweatherholtz@gmail.com, 631
-"Underwood, Charlotte", Charlotte, Underwood, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, brad.weaver2@gmail.com, 9044
-"Hoffman, Reagan", Reagan, Hoffman, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, travis.m.hoffman@gmail.com, 543
-"Davlin, Catherine", Catherine, Davlin, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, sarah.davlin@gmail.com, 453
-"Hoffman, Addison", Addison, Hoffman, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 8, F, joe.hoffman@mail.com, 9058
-"Manning, Billie", Billie, Manning, Pedal Bike, 7-8 F, Wave 17 (7-8 F), 7, F, manning.joe@live.com, 435
-"Hughes, Paige", Paige, Hughes, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 8, F, ryanghughes.614@gmail.com, 310
-"Beck, Sophie", Sophie, Beck, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 8, F, brittanyanddrew@gmail.com, 521
-"Qin, Ellie", Ellie, Qin, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 7, F, rikohuang96@gmail.com, 642
-"Tippett, Harlow", Harlow, Tippett, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 7, F, pm_dundee@yahoo.com, 653
-"RUSSELL, MABEL", MABEL, RUSSELL, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 7, F, silentj327@gmail.com, 9067
-"Morgan, Ramona", Ramona, Morgan, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 8, F, dmorgan@bsdarchitects.com, 553
-"Flores, Milena", Milena, Flores, Pedal Bike, 7-8 F, Wave 18 (7-8 F), 7, F, jmfg1983@hotmail.com, 
-"Downs, Oliver", Oliver, Downs, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, ashley.downs@gmail.com, 165
-"Suckow, Grayson", Grayson, Suckow, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, leighfender@gmail.com, 488
-"Davis, Elliot", Elliot, Davis, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, mrsamydavis@gmail.com, 485
-"Logan, Ben", Ben, Logan, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, ejcorvi@hotmail.com, 487
-"Arden, Ben", Ben, Arden, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, douglasarden@yahoo.com, 150
-"Lawrence, Alex", Alex, Lawrence, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, lauralawrence35@gmail.com, 9025
-"Raymond, Bryce", Bryce, Raymond, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 9, M, liz.h.raymond@gmail.com, 475
-"Skocik, Joshua", Joshua, Skocik, Pedal Bike, 9-10 M, Wave 19 (9-10 M), 10, M, kristina.e.bennett@gmail.com, 387
-"Rengel, Owen", Owen, Rengel, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 9, M, suzeslater@gmail.com, 363
-"McEntire, Jacob", Jacob, McEntire, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, meesh9@gmail.com, 335
-"Bird, Hudson", Hudson, Bird, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, justinbird7@gmail.com, 627
-"Williams, Zeke", Zeke, Williams, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, williams.spencer@gmail.com, 614
-"Kubli, Braxton", Braxton, Kubli, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, lindseysjensen@yahoo.com, 319
-"Todd, Griffin", Griffin, Todd, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 9, M, stef.todd13@gmail.com, 584
-"Kelley, Owen", Owen, Kelley, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, brad.weaver2@gmail.com, 9020
-"Renner, Paxton", Paxton, Renner, Pedal Bike, 9-10 M, Wave 20 (9-10 M), 10, M, brad.weaver2@gmail.com, 9035
-"Gassman, Hudson", Hudson, Gassman, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 9, M, justin.gassman@gmail.com, 610
-"Koegler, Caleb", Caleb, Koegler, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 9, M, meghankoegler@gmail.com, 548
-"Walcott, Targa", Targa, Walcott, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, twalco@hotmail.com, 245
-"Kong, Titus", Titus, Kong, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, dekong@gmail.com, 9061
-"Burke, Cameron", Cameron, Burke, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, kellydburke@yahoo.com, 607
-"Burke, Finley", Finley, Burke, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, kellydburke@yahoo.com, 608
-"Wright, James", James, Wright, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, wright21088@gmail.com, 9075
-"Ward, Brooks", Brooks, Ward, Pedal Bike, 9-10 M, Wave 21 (9-10 M), 10, M, timwardjr@gmail.com, 404
-"Gillogly, Granville", Granville, Gillogly, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 9, M, erin.gillogly@gmail.com, 291
-"Hallahan, Drew", Drew, Hallahan, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 10, M, randomann@gmail.com, 486
-"Weckesser, Leo", Leo, Weckesser, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 9, M, rose.weckesser@gmail.com, 406
-"Anderson, Julian", Julian, Anderson, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 9, M, anne_rebman@hotmail.com, 360
-"Wollenburg, Maxwell", Maxwell, Wollenburg, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 10, M, nate.wollenburg@gmail.com, 412
-"Esber, Wells", Wells, Esber, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 9, M, kelsey.esber@yahoo.com, 617
-"Holtzlander, Grayson", Grayson, Holtzlander, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 10, M, holtzlanderm@yahoo.com, 9059
-"Holmes, Joseph", Joseph, Holmes, Pedal Bike, 9-10 M, Wave 22 (9-10 M), 10, M, thedoughyone72@gmail.com, 544
-"RUSSELL, WATSON", WATSON, RUSSELL, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, silentj327@gmail.com, 9068
-"Longazel, George Kaden", George Kaden, Longazel, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, jmcclory4@gmail.com, 334
-"Ewald, Chase", Chase, Ewald, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 9, M, rcw1984@gmail.com, 531
-"Georgeff, Ezekiel", Ezekiel, Georgeff, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 9, M, pgeorgeff@protonmail.com, 535
-"Lanning, Ryder", Ryder, Lanning, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 9, M, 3lannings@gmail.com, 
-"Hromco, Maxwell", Maxwell, Hromco, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 9, M, hromcod@gmail.com, 
-"Bailey, Emma", Emma, Bailey, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 10, F, orprotary@yahoo.com, 606
-"Crist, Elona", Elona, Crist, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 10, F, mjcrist@gmail.com, 9009
-"Williams, Adria", Adria, Williams, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, mwilliams2561@gmail.com, 9049
-"Wyckoff, Dylan", Dylan, Wyckoff, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, climbhills@aol.com, 622
-"Seidel, Olive", Olive, Seidel, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, brenden.seidel@icloud.com, 9040
-"Lee, Berkeley", Berkeley, Lee, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, etwagne@yahoo.com, 9026
-"Pace, Avery", Avery, Pace, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, lauren.pace.9613@gmail.com, 346
-"Burgess, Bella", Bella, Burgess, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 10, F, callielburgess@gmail.com, 523
-"Forsythe, Kailey", Kailey, Forsythe, Pedal Bike, 9-10 F, Wave 24 (9-10 F), 9, F, lisa.c.forsythe@gmail.com, 290
-"Wakefield, Hattie", Hattie, Wakefield, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 9, F, jbrodywakefield@gmail.com, 479
-"Kowaleski, Evie", Evie, Kowaleski, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, allyson.kowaleski@gmail.com, 9062
-"Feeney, Raegan", Raegan, Feeney, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 9, F, rwnotredame4@gmail.com, 287
-"Serfass, Leilani", Leilani, Serfass, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, luzano.2@osu.edu, 221
-"Jewell, Olivia", Olivia, Jewell, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 9, F, jmjewell02@gmail.com, 546
-"Little, Charlotte", Charlotte, Little, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, aim17us@gmail.com, 323
-"Hierro, Haddy", Haddy, Hierro, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, jaymee.hierro@gmail.com, 542
-"Crnarich, Riley", Riley, Crnarich, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, bstats31@gmail.com, 164
-"Hood, Lauren", Lauren, Hood, Pedal Bike, 9-10 F, Wave 25 (9-10 F), 10, F, hood.211@osu.edu, 176
-"Panzner, Ramona", Ramona, Panzner, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, trembling_blue_stars@yahoo.com, 347
-"Pogue, Victoria", Victoria, Pogue, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, deannarizek@gmail.com, 353
-"West, Ava", Ava, West, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, westfamily1149@gmail.com, 251
-"Turner, Elizabeth", Elizabeth, Turner, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 9, F, twesturner@gmail.com, 586
-"Turner, Claire", Claire, Turner, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 9, F, twesturner@gmail.com, 585
-"Sharp, Wren", Wren, Sharp, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 9, F, pamdquigley@gmail.com, 601
-"Marshall, Isobel", Isobel, Marshall, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, nicmarsh77@gmail.com, 507
-"Qin, Mikayla", Mikayla, Qin, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, qinke84pp@gmail.com, 620
-"Birrer, Nora", Nora, Birrer, Pedal Bike, 9-10 F, Wave 26 (9-10 F), 10, F, anyarenee@gmail.com, 625
-"Mason, Cameron", Cameron, Mason, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 12, M, chadmmason@gmail.com, 390
-"Crist, Silas", Silas, Crist, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 11, M, mjcrist@gmail.com, 9008
-"Young, Evan", Evan, Young, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 12, M, kmmolnar@yahoo.com, 592
-"Pierson, Ben", Ben, Pierson, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 11, M, mjpierson@gmail.com, 351
-"Haverkamp, Louis", Louis, Haverkamp, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 12, M, haverkamp.laura@gmail.com, 304
-"Davis, Andrew", Andrew, Davis, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 12, M, jldavis0414@outlook.com, 20
-"Lawrence, Donovan", Donovan, Lawrence, Pedal Bike, 11-12 M, Wave 27 (11-12 M), 11, M, sweeneymg@yahoo.com, 99
-"Gibson, Julian", Julian, Gibson, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 12, M, gibsonkati@yahoo.com, 611
-"Mowry, Gabriel", Gabriel, Mowry, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 12, M, financecommand@themowrys.net, 344
-"Glenn-Applegate, Edward", Edward, Glenn-Applegate, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 11, M, peteapplegate@hotmail.com, 293
-"Lai, Andy", Andy, Lai, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 12, M, nlaiod@hotmail.com, 188
-"Vozza, Oliver", Oliver, Vozza, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 11, M, brittany.vozza@gmail.com, 400
-"Robenstine, Fletcher", Fletcher, Robenstine, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 12, M, robenstine@gmail.com, 11
-"Cook, Bear", Bear, Cook, Pedal Bike, 11-12 M, Wave 28 (11-12 M), 12, M, scooksc1@gmail.com, 75
-"Coleman, Jaden", Jaden, Coleman, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 12, M, catoiii@yahoo.com, 162
-"Anderson, Lucas", Lucas, Anderson, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 12, M, anne_rebman@hotmail.com, 263
-"Aldridge, Grant", Grant, Aldridge, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 12, M, aldridgefamilyfive@gmail.com, 144
-"Stiles, Connor", Connor, Stiles, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 11, M, patpstiles@gmail.com, 392
-"Hickman-Filipow, Corwin", Corwin, Hickman-Filipow, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 11, M, bethanyfilipow@gmail.com, 493
-"Sharp, Keir", Keir, Sharp, Pedal Bike, 11-12 M, Wave 29 (11-12 M), 11, M, pamdquigley@gmail.com, 224
-"Forsythe, Samantha", Samantha, Forsythe, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 12, F, lisa.c.forsythe@gmail.com, 87
-"Skocik, Samantha", Samantha, Skocik, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 12, F, kristina.e.bennett@gmail.com, 388
-"Pastore, Emma", Emma, Pastore, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 11, F, sarapastore1004@gmail.com, 349
-"McLoughlin, Marin", Marin, McLoughlin, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 11, F, eric@aacolpa.com, 623
-"Walcott, Carrera", Carrera, Walcott, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 12, F, twalco@hotmail.com, 244
-"Serfass, Mahala", Mahala, Serfass, Pedal Bike, 11-12 F, Wave 30 (11-12 F), 11, F, luzano.2@osu.edu, 222
-"Bovid, Harper", Harper, Bovid, Pedal Bike, 11-12 F, Wave 31 (11-12 F), 11, F, coachjamibovid@gmail.com, 273
-"Kruder, Maddie", Maddie, Kruder, Pedal Bike, 11-12 F, Wave 31 (11-12 F), 11, F, akruder@gmail.com, 9063
-"Hughes, Caroline", Caroline, Hughes, Pedal Bike, 11-12 F, Wave 31 (11-12 F), 11, F, ryanghughes.614@gmail.com, 309
-"hickman-filipow, penelope", penelope, hickman-filipow, Pedal Bike, 11-12 F, Wave 31 (11-12 F), 11, F, bethanyfilipow@gmail.com, 491
-"Marshall, Amelia", Amelia, Marshall, Pedal Bike, 11-12 F, Wave 31 (11-12 F), 12, F, nicmarsh77@gmail.com, 508
-"Downs, Nolan", Nolan, Downs, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, ashley.downs@gmail.com, 80
-"Deblasis, Owen", Owen, Deblasis, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, jendeblasis@gmail.com, 499
-"Arden, Jack", Jack, Arden, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, douglasarden@yahoo.com, 115
-"Harshbarger, Greyson", Greyson, Harshbarger, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, jennifer_fairburn@yahoo.com, 511
-"Radliff, Alexander", Alexander, Radliff, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, pradliff@gmail.com, 518
-"Davis, Samuel", Samuel, Davis, Pedal Bike, 13+ M, Wave 32 (13+ M), 14, M, jldavis0414@outlook.com, 21
-"Panzner, Joseph", Joseph, Panzner, Pedal Bike, 13+ M, Wave 32 (13+ M), 13, M, trembling_blue_stars@yahoo.com, 23
-"Daniel, Nick", Nick, Daniel, Pedal Bike, 13+ M, Wave 33 (13+ M), 14, M, vince_daniel@hotmail.com, 9011
-"Yetman, Milo", Milo, Yetman, Pedal Bike, 13+ M, Wave 33 (13+ M), 13, M, cyetman3@yahoo.com, 694
-"Kruder, Evan", Evan, Kruder, Pedal Bike, 13+ M, Wave 33 (13+ M), 13, M, akruder@gmail.com, 316
-"Armstrong, Kraig", Kraig, Armstrong, Pedal Bike, 13+ M, Wave 33 (13+ M), 16, M, llarmstrong@me.com, 2
-"Armstrong, Brody", Brody, Armstrong, Pedal Bike, 13+ M, Wave 33 (13+ M), 14, M, llarmstrong@me.com, 3
-"MacGregor, Lachlan", Lachlan, MacGregor, Pedal Bike, 13+ M, Wave 33 (13+ M), 13, M, ianandstacy@gmail.com, 326
-"Schultz, Grant", Grant, Schultz, Pedal Bike, 13+ M, Wave 33 (13+ M), 14, M, rkdjc@hotmail.com, 512
-"Anicio, Megan", Megan, Anicio, Pedal Bike, 13+ F, Wave 34 (13+ F), 13, F, elizangelaanicio@hotmail.com, 264
-"Vozza, Stella", Stella, Vozza, Pedal Bike, 13+ F, Wave 34 (13+ F), 13, F, brittany.vozza@gmail.com, 401
-"Robenstine, Lola", Lola, Robenstine, Pedal Bike, 13+ F, Wave 34 (13+ F), 14, F, robenstine@gmail.com, 12
+Name, First Name, Last Name, Distance, Category, Wave, Age, Gender, Email, Bib, Parent, Phone
+"Buescher, Arcadia", Arcadia, Buescher, Balance Bike, Balance F, Wave 1 (Balance F), 3, F, remahjane@gmail.com, 9005, Remah Buescher, 614-657-2851
+"Collins, Amelia", Amelia, Collins, Balance Bike, Balance F, Wave 1 (Balance F), 6, F, juliehao99@gmail.com, 9007, julie hao, 502-432-5950
+"Kuckuck, Eliza", Eliza, Kuckuck, Balance Bike, Balance F, Wave 1 (Balance F), 4, F, tbennettk@gmail.com, 596, Tabby Kuckuck, 304-844-1657
+"Bichsel, Chloe", Chloe, Bichsel, Balance Bike, Balance F, Wave 1 (Balance F), 4, F, josieakrause@gmail.com, 675, Josie Bichsel, 614-940-1059
+"Jarvis, Kat", Kat, Jarvis, Balance Bike, Balance F, Wave 1 (Balance F), 4, F, christopher.w.jarvis@gmail.com, 677, Christopher Jarvis, 614-439-4283
+"Mutchler, Emery", Emery, Mutchler, Balance Bike, Balance F, Wave 1 (Balance F), 3, F, mutchler.m@gmail.com, 9033, Matthew Mutchler, 419-306-8923
+"Daffner, Stella", Stella, Daffner, Balance Bike, Balance F, Wave 1 (Balance F), 5, F, whitney.daffner@gmail.com, 671, Whitney Daffner, 614-354-5195
+"Tweedy, Micah", Micah, Tweedy, Balance Bike, Balance F, Wave 1 (Balance F), 3, F, michaeltweedy2@gmail.com, 690, Michael Tweedy, 614-743-9965
+"Dean, Espen", Espen, Dean, Balance Bike, Balance F, Wave 1 (Balance F), 4, F, smithemilyl@gmail.com, 688, Espen Dean, 614-738-6499
+"Cress, Charlotte", Charlotte, Cress, Balance Bike, Balance F, Wave 1 (Balance F), 3, F, cress.19.2@gmail.com, 9055, Michael Cress, 
+"Cook, Scout", Scout, Cook, Balance Bike, Balance F, Wave 1 (Balance F), 5, F, scooksc1@gmail.com, 528, Scott Cook, 614-582-3228
+"Stanard, Everly", Everly, Stanard, Balance Bike, Balance F, Wave 1 (Balance F), 5, F, jr223003@gmail.com, 678, Jessica Stanard, 937-541-9331
+"Jordan, Emmett", Emmett, Jordan, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, mr.joelrjordan@gmail.com, 684, Joel Jordan, 740-591-2564
+"Hamilton, Lyle", Lyle, Hamilton, Balance Bike, Balance M, Wave 2 (Balance M), 6, M, catherinebrown25@yahoo.com, 676, Catherine Hamilton, 614-592-4549
+"Zipfel, Emmett", Emmett, Zipfel, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, ehzipfel@gmail.com, 692, Erin Zipfel, 419-283-6131
+"Seidel, Sage", Sage, Seidel, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, brenden.seidel@icloud.com, 9042, Brenden Seidel, 614-596-5281
+"Adams, Graham", Graham, Adams, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, adamshollym@gmail.com, 687, Holly Adams, 570-242-8675
+"Kaste, James", James, Kaste, Balance Bike, Balance M, Wave 2 (Balance M), 1, M, dan.kaste@gmail.com, 9019, Dan Kaste, 440-667-2744
+"Collins, Louis", Louis, Collins, Balance Bike, Balance M, Wave 2 (Balance M), 5, M, juliehao99@gmail.com, 9006, julie hao, 502-432-5950
+"Sheehan, Ryan", Ryan, Sheehan, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, donnadonna89@hotmail.com, 689, Donna Sheehan, 516-815-2079
+"Henney, Brock", Brock, Henney, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, bhenney777@hotmail.com, 683, Ben Henney, 614-306-8160
+"Sayre, Beckett", Beckett, Sayre, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, msayre@wscloud.org, 570, Madi Sayre, 614-570-7836
+"Imhoff, Griffin", Griffin, Imhoff, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, imhoff.cait@gmail.com, 9060, Caitlin Imhoff, 614-309-1430
+"Bovid, Jameson", Jameson, Bovid, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, coachjamibovid@gmail.com, 681, Jami Bovid, 989-751-0159
+"Ward, Cohen", Cohen, Ward, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, timwardjr@gmail.com, 9073, Timothy Ward, 614-226-3244
+"Ward, Holden", Holden, Ward, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, timwardjr@gmail.com, 9074, Timothy Ward, 614-226-3244
+"Cook, Bodhi", Bodhi, Cook, Balance Bike, Balance M, Wave 2 (Balance M), 5, M, scooksc1@gmail.com, 527, Scott Cook, 614-582-3228
+"McAllister, Cullen", Cullen, McAllister, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, melissamcallister13@gmail.com, 9028, Melissa McAllister, 724-825-0397
+"Buchanan, Hudson", Hudson, Buchanan, Balance Bike, Balance M, Wave 2 (Balance M), 4, M, logan.buchanan96@yahoo.com, 9002, Logan Buchanan, 7403418002
+"Randolph, Van", Van, Randolph, Balance Bike, Balance M, Wave 2 (Balance M), 3, M, peypey642@yahoo.com, 9034, Peyton Randolph, 7407773556
+"Vogel, Matilda", Matilda, Vogel, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, kelley.romoser@gmail.com, 589, Kelley Vogel, 740-707-4489
+"Lutmer, Mats", Mats, Lutmer, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, paigeralbright@gmail.com, 667, Paige Lutmer, 330-606-7340
+"McEntire, Charlotte", Charlotte, McEntire, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, meesh9@gmail.com, 427, Michelle McEntire, 614-638-5176
+"Kirch, Ivy", Ivy, Kirch, Pedal Bike, 3-4, Wave 3 (3-4), 4, F, andy.kirch@gmail.com, 417, Andrew Kirch, 614-500-3183
+"Montee, Callaghan", Callaghan, Montee, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, mark.montee@gmail.com, 685, Mark Montee, 614-809-4660
+"Vozza, Theodore", Theodore, Vozza, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, brittany.vozza@gmail.com, 419, Brittany Vozza, 412-719-7545
+"Saunders, Elijah", Elijah, Saunders, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, atsaunders.90@gmail.com, 568, Andrew Saunders, 614-440-0935
+"Saunders, Isaiah", Isaiah, Saunders, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, atsaunders.90@gmail.com, 569, Andrew Saunders, 614-440-0935
+"Jewell, Max", Max, Jewell, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, jmjewell02@gmail.com, 538, Jessica Jewell, 440-396-6027
+"Bucholtz, Daniel", Daniel, Bucholtz, Pedal Bike, 3-4, Wave 3 (3-4), 3, M, ryan.k.bucholtz@gmail.com, 9004, Ryan Bucholtz, 614-625-9390
+"Beck, Noah", Noah, Beck, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, brittanyanddrew@gmail.com, 520, Brittany Beck, 614-602-7231
+"Wareham, Graham", Graham, Wareham, Pedal Bike, 3-4, Wave 3 (3-4), 4, M, Josh.Wareham104@gmail.com, 9046, Josh Wareham, 4195122653
+"Yoder, Nora", Nora, Yoder, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 5, F, mlyoder@gmail.com, 657, Michael Yoder, 330-466-1455
+"Daffner, Charlotte", Charlotte, Daffner, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, whitney.daffner@gmail.com, 661, Whitney Daffner, 614-354-5195
+"Albaugh, Juniper", Juniper, Albaugh, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, jessie.albaugh@gmail.com, 659, Jessie Albaugh, 602-793-8928
+"Burgess, Cora", Cora, Burgess, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, callielburgess@gmail.com, 660, Callie Burgess, 614-805-4461
+"Forsythe, Sienna", Sienna, Forsythe, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 5, F, lisa.c.forsythe@gmail.com, 425, Lisa Forsythe, 614-581-9435
+"Wakefield, Vivienne", Vivienne, Wakefield, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 5, F, jbrodywakefield@gmail.com, 600, Brody Wakefield, 614-599-0791
+"Mutchler, Quinn", Quinn, Mutchler, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, mutchler.m@gmail.com, 9032, Matthew Mutchler, 419-306-8923
+"Kamath, Meera", Meera, Kamath, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, pratimank28@gmail.com, 672, Pratima Nayak, 248-885-5298
+"Weatherholtz, Rosalie", Rosalie, Weatherholtz, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, kweatherholtz@gmail.com, 656, Kodi Weatherholtz, 405-513-1137
+"Vozza, Fiona", Fiona, Vozza, Pedal Bike, 5-6 F, Wave 4 (5-6 F), 6, F, brittany.vozza@gmail.com, 399, Brittany Vozza, 412-719-7545
+"Saunders, Hailey", Hailey, Saunders, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, atsaunders.90@gmail.com, 668, Andrew Saunders, 614-440-0935
+"Feeney, Ryen", Ryen, Feeney, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, rwnotredame4@gmail.com, 532, Rachel Feeney, 614-440-8538
+"Jewell, Sophia", Sophia, Jewell, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 5, F, jmjewell02@gmail.com, 519, Jessica Jewell, 440-396-6027
+"Little, Cecelia", Cecelia, Little, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, aim17us@gmail.com, 438, Aimee Little, 614-530-0534
+"Hierro, Holland", Holland, Hierro, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, jaymee.hierro@gmail.com, 541, Jaymee Hierro, 614-381-2286
+"Gillogly, Luna", Luna, Gillogly, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, erin.gillogly@gmail.com, 437, Erin Gillogly, 614-361-0204
+"Schmitt, Emily", Emily, Schmitt, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, careyschmitt@yahoo.com, 440, Carey Schmitt, 614-439-1193
+"Sharp, Scout", Scout, Sharp, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, pamdquigley@gmail.com, 357, Pamela Quigley, 614-330-4776
+"Longazel, Audrianna", Audrianna, Longazel, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, jmcclory4@gmail.com, 665, Jessica McClory, 937-903-9277
+"Bednarz, Ella", Ella, Bednarz, Pedal Bike, 5-6 F, Wave 5 (5-6 F), 6, F, kbednarzpt@gmail.com, 422, Kristin Bednarz, 4196020410
+"Jordan, Oliver", Oliver, Jordan, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, mr.joelrjordan@gmail.com, 655, Joel Jordan, 740-591-2564
+"Murphy, Quill", Quill, Murphy, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, remahjane@gmail.com, 9031, Remah Buescher, 614-657-2851
+"Williams, Nico", Nico, Williams, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, mwilliams2561@gmail.com, 9048, Mike Williams, 330-224-2071
+"Accursi, Watson", Watson, Accursi, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, mallory.accursi@gmail.com, 658, Mallory Accursi, 302-463-8369
+"Young, Tyler", Tyler, Young, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, kmmolnar@yahoo.com, 591, Kristin Young, 614-403-8348
+"Neal, Watson", Watson, Neal, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, benjamin.neal.225@gmail.com, 556, Benjamin Neal, 330-317-7431
+"Adams, Isaac", Isaac, Adams, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 5, M, adamshollym@gmail.com, 598, Holly Adams, 570-242-8675
+"Heater, Colton", Colton, Heater, Pedal Bike, 5-6 M, Wave 6 (5-6 M), 6, M, bheater823@gmail.com, 9015, Brittany Heater, 419-957-9503
+"Kuckuck, Connor", Connor, Kuckuck, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, tbennettk@gmail.com, 595, Tabby Kuckuck, 304-844-1657
+"Rengel, Lucas", Lucas, Rengel, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, suzeslater@gmail.com, 563, Susan Rengel, 614-581-7442
+"Hall, Tyler", Tyler, Hall, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, jilliankellbach@gmail.com, 302, Jillian Hall, 740-815-1540
+"Hunt, Joseph", Joseph, Hunt, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, hecoughl@gmail.com, 545, Hannah Hunt, 614-370-6315
+"Lehner, Robert", Robert, Lehner, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 6, M, zpeedracer@aol.com, 550, Nicholas Lehner, 518-852-3385
+"Hackworth, Liam", Liam, Hackworth, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, hackworth.7@gmail.com, 416, Tasha Hackworth, 740-815-7162
+"Tweedy, Samuel", Samuel, Tweedy, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, michaeltweedy2@gmail.com, 645, Michael Tweedy, 614-743-9965
+"Todd, Jonah", Jonah, Todd, Pedal Bike, 5-6 M, Wave 7 (5-6 M), 5, M, stef.todd13@gmail.com, 669, Stefanie Todd, 614-406-8463
+"Cress, Turner", Turner, Cress, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, cress.19.2@gmail.com, 9056, Michael Cress, 
+"Imhoff, Mason", Mason, Imhoff, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, imhoff.cait@gmail.com, 9018, Caitlin Imhoff, 614-309-1430
+"Walcott, Monza", Monza, Walcott, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, twalco@hotmail.com, 420, Taro Walcott, 440-522-3678
+"Teeters, Liam", Liam, Teeters, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, caseyteeters44@gmail.com, 9072, Casey Teeters, 614-531-9337
+"Teeters, Jack", Jack, Teeters, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, caseyteeters44@gmail.com, 9071, Casey Teeters, 614-531-9337
+"Robenstine, Archie", Archie, Robenstine, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, robenstine@gmail.com, 500, Kyle Robenstine, 740-707-1404
+"Weckesser, Luka", Luka, Weckesser, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 5, M, rose.weckesser@gmail.com, 421, Rose Weckesser, 614-783-9430
+"Datla, Vidhu", Vidhu, Datla, Pedal Bike, 5-6 M, Wave 8 (5-6 M), 6, M, dheera.cloud@gmail.com, 662, Dheera Alluri, 
+"Datla, Abhay", Abhay, Datla, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, dheera.cloud@gmail.com, 663, Dheera Alluri, 
+"Bucholtz, Gabriel", Gabriel, Bucholtz, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, ryan.k.bucholtz@gmail.com, 9003, Ryan Bucholtz, 614-625-9390
+"Zhang, Archie", Archie, Zhang, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 5, M, zhangnewlife@yahoo.com, 693, Jianchao Zhang, 614-580-2161
+"Geither, Ashton", Ashton, Geither, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, scottgeither@gmail.com, 9013, Scotty Geither, 440-655-5805
+"Hyun, Theo", Theo, Hyun, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 5, M, tomhyun@gmail.com, 644, Thomas Hyun, 516-241-5767
+"Bednarz, Ethan", Ethan, Bednarz, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, kbednarzpt@gmail.com, 423, Kristin Bednarz, 4196020410
+"Blank, Wyatt", Wyatt, Blank, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, nsantuzzi@gmail.com, 9001, Nicole Blank, 16148933694
+"Mahler, Jack", Jack, Mahler, Pedal Bike, 5-6 M, Wave 9 (5-6 M), 6, M, larsmahler@yahoo.com, 666, Lars Mahler, 4154123161
+"Kress, Riley", Riley, Kress, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 8, F, lauren.kress@live.com, 455, Lauren Kress, 937-307-7418
+"Crist, Ruby", Ruby, Crist, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 8, F, mjcrist@gmail.com, 9010, Sarah Crist, 330-907-5591
+"Chapman, Genevieve", Genevieve, Chapman, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 8, F, jrandka@gmail.com, 524, Kristen Chapman, 740-381-2617
+"Wyckoff, Cody", Cody, Wyckoff, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, climbhills@aol.com, 641, Brett Wyckoff, 609-335-0512
+"Seidel, Rosemary", Rosemary, Seidel, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, brenden.seidel@icloud.com, 9041, Brenden Seidel, 614-596-5281
+"Pace, Morgan", Morgan, Pace, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, lauren.pace.9613@gmail.com, 558, Lauren Pace, 330-808-1376
+"Krymskiy, Mira", Mira, Krymskiy, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, ciana.krymskiy@gmail.com, 651, Ciana Krymskiy, 614-735-0768
+"Wakefield, Josephine", Josephine, Wakefield, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, jbrodywakefield@gmail.com, 472, Brody Wakefield, 614-599-0791
+"Skocik, Elizabeth", Elizabeth, Skocik, Pedal Bike, 7-8 F, Wave 10 (7-8 F), 7, F, kristina.e.bennett@gmail.com, 456, Kristina Skocik, 412-445-1174
+"Hipsher, Olive", Olive, Hipsher, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 7, F, hipsherj@yahoo.com, 636, Jason Hipsher, 614-554-6286
+"Kamath, Navya", Navya, Kamath, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 7, F, pratimank28@gmail.com, 650, Pratima Nayak, 248-885-5298
+"Hackworth, Mackenzie", Mackenzie, Hackworth, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, hackworth.7@gmail.com, 454, Tasha Hackworth, 740-815-7162
+"Weatherholtz, Emalyn", Emalyn, Weatherholtz, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, kweatherholtz@gmail.com, 631, Kodi Weatherholtz, 405-513-1137
+"Underwood, Charlotte", Charlotte, Underwood, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, brad.weaver2@gmail.com, 9044, Brad Weaver, 740-851-0620
+"Hoffman, Reagan", Reagan, Hoffman, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, travis.m.hoffman@gmail.com, 543, Travis Hoffman, 614-506-8623
+"Davlin, Catherine", Catherine, Davlin, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, sarah.davlin@gmail.com, 453, Sarah Davlin, 614-619-4033
+"Hoffman, Addison", Addison, Hoffman, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 8, F, joe.hoffman@mail.com, 9058, Joseph Hoffman, 614-359-5883
+"Manning, Billie", Billie, Manning, Pedal Bike, 7-8 F, Wave 11 (7-8 F), 7, F, manning.joe@live.com, 435, Joe Manning, 614-312-7819
+"Hughes, Paige", Paige, Hughes, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 8, F, ryanghughes.614@gmail.com, 310, Ryan Hughes, 614-581-3937
+"Beck, Sophie", Sophie, Beck, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 8, F, brittanyanddrew@gmail.com, 521, Brittany Beck, 614-602-7231
+"Qin, Ellie", Ellie, Qin, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 7, F, rikohuang96@gmail.com, 642, Rui Huang, 937-716-0286
+"Tippett, Harlow", Harlow, Tippett, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 7, F, pm_dundee@yahoo.com, 653, Eric Tippett, 614-323-8905
+"RUSSELL, MABEL", MABEL, RUSSELL, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 7, F, silentj327@gmail.com, 9067, JEREMY RUSSELL, 614-314-6112
+"Morgan, Ramona", Ramona, Morgan, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 8, F, dmorgan@bsdarchitects.com, 553, daniel morgan, 330-979-8316
+"Schulte, Adeline", Adeline, Schulte, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 8, F, mr.joelrjordan@gmail.com, 9076, Joel Jordan, 740-591-2564
+"Flores, Milena", Milena, Flores, Pedal Bike, 7-8 F, Wave 12 (7-8 F), 7, F, jmfg1983@hotmail.com, 9012, Manuel Flores, 4195719341
+"Bailey, Lucas", Lucas, Bailey, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, orprotary@yahoo.com, 615, Luke Bailey, 614-483-9031
+"Yoder, Theodore", Theodore, Yoder, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, mlyoder@gmail.com, 639, Michael Yoder, 330-466-1455
+"Jordan, Eli", Eli, Jordan, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, mr.joelrjordan@gmail.com, 633, Joel Jordan, 740-591-2564
+"Van Maasakkers, Menno", Menno, Van Maasakkers, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, sarahdriscollkelly@gmail.com, 9045, Sarah Kelly, 617-823-8711
+"Mason, Carter", Carter, Mason, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, chadmmason@gmail.com, 444, Chad M Mason, 614-378-7049
+"Vogel, August", August, Vogel, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, kelley.romoser@gmail.com, 449, Kelley Vogel, 740-707-4489
+"Kaste, Andrew", Andrew, Kaste, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, dan.kaste@gmail.com, 450, Dan Kaste, 440-667-2744
+"Aube, Cooper", Cooper, Aube, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 8, M, aube.ryan@gmail.com, 516, Ryan Aube, 571-414-1520
+"Konoval, David", David, Konoval, Pedal Bike, 7-8 M, Wave 13 (7-8 M), 7, M, yelkonoval@gmail.com, 621, Yana Konoval, 440-523-1391
+"Neal, Edison", Edison, Neal, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, benjamin.neal.225@gmail.com, 557, Benjamin Neal, 330-317-7431
+"Lee, Abram", Abram, Lee, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, etwagne@yahoo.com, 9027, Elizabeth Lee, 419-575-6351
+"Lutmer, Beck", Beck, Lutmer, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, paigeralbright@gmail.com, 473, Paige Lutmer, 330-606-7340
+"Ronschke, Levi", Levi, Ronschke, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, joelronschke@gmail.com, 640, Joel Ronschke, 614-519-9349
+"Bichsel, Bodhi", Bodhi, Bichsel, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, josieakrause@gmail.com, 649, Josie Bichsel, 614-940-1059
+"Wadenstierna, Knox", Knox, Wadenstierna, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 7, M, jwadenstierna@gmail.com, 654, Jill Wadenstierna, 614-746-5968
+"Hardin, Jason", Jason, Hardin, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, jeremyhardin13@gmail.com, 443, Jeremy Hardin, 614-638-3288
+"Beringer, Jack", Jack, Beringer, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, kyle.beringer@gmail.com, 616, Kyle Beringer, 614-205-0809
+"McEntire, Sammy", Sammy, McEntire, Pedal Bike, 7-8 M, Wave 14 (7-8 M), 8, M, meesh9@gmail.com, 336, Michelle McEntire, 614-638-5176
+"Jarvis, Zachary", Zachary, Jarvis, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, christopher.w.jarvis@gmail.com, 637, Christopher Jarvis, 614-439-4283
+"Kirch, Ellis", Ellis, Kirch, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, andy.kirch@gmail.com, 317, Andrew Kirch, 614-500-3183
+"Pastore, Jonah", Jonah, Pastore, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 7, M, sarapastore1004@gmail.com, 514, Sara Pastore, 614-595-8492
+"McLoughlin, Davis", Davis, McLoughlin, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, eric@aacolpa.com, 551, Eric McLoughlin, 614-266-5569
+"Hall, Maddox", Maddox, Hall, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, jilliankellbach@gmail.com, 301, Jillian Hall, 740-815-1540
+"Williams, Tucker", Tucker, Williams, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, williams.spencer@gmail.com, 628, Spencer Williams, 614-595-0574
+"Mowry, Cameron", Cameron, Mowry, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, financecommand@themowrys.net, 343, Alicia Mowry, 614-506-2829
+"Glenn-Applegate, Samuel", Samuel, Glenn-Applegate, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, peteapplegate@hotmail.com, 394, Peter Glenn-Applegate, 615-804-2755
+"Cirker, Evan", Evan, Cirker, Pedal Bike, 7-8 M, Wave 15 (7-8 M), 8, M, starrynews@yahoo.com, 525, Marissa Cirker, 513-253-8543
+"Montee, Tighe", Tighe, Montee, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, mark.montee@gmail.com, 441, Mark Montee, 614-809-4660
+"Parker, Wyatt", Wyatt, Parker, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 8, M, lauramparker78@gmail.com, 618, Laura Parker, 386-747-8362
+"Walcott, Dakar", Dakar, Walcott, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, twalco@hotmail.com, 402, Taro Walcott, 440-522-3678
+"Serfass, Enzo", Enzo, Serfass, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, luzano.2@osu.edu, 376, Emma Serfass, 614-312-2386
+"Davlin, Levi", Levi, Davlin, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, sarah.davlin@gmail.com, 529, Sarah Davlin, 614-619-4033
+"Bovid, Clayton", Clayton, Bovid, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, coachjamibovid@gmail.com, 522, Jami Bovid, 989-751-0159
+"Ward, Paxton", Paxton, Ward, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 8, M, timwardjr@gmail.com, 405, Timothy Ward, 614-226-3244
+"Manning, Jace", Jace, Manning, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 8, M, manning.joe@live.com, 329, Joe Manning, 614-312-7819
+"Cresencia, Liam", Liam, Cresencia, Pedal Bike, 7-8 M, Wave 16 (7-8 M), 7, M, jcresencia@gmail.com, 634, John Cresencia, 937-524-5646
+"Schira, Jacob", Jacob, Schira, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 8, M, tommyschira@gmail.com, 459, Thomas Schira, 614-648-8822
+"Schmitt, Hayden", Hayden, Schmitt, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 8, M, careyschmitt@yahoo.com, 476, Carey Schmitt, 614-439-1193
+"Sheldon, Conway", Conway, Sheldon, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 7, M, lsheldon15@gmail.com, 580, Conway Sheldon, 614-425-6137
+"Tebben, Lincoln", Lincoln, Tebben, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 8, M, emtebben@gmail.com, 395, Erin Tebben, 614-598-1882
+"McAllister, Jonathon", Jonathon, McAllister, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 8, M, melissamcallister13@gmail.com, 9029, Melissa McAllister, 724-825-0397
+"Wetzel, Isaac", Isaac, Wetzel, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 7, M, jeremiesmith77@gmail.com, 590, Jeremie Smith, 217-621-5523
+"Pogue, Will", Will, Pogue, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 8, M, deannarizek@gmail.com, 354, Deanna Pogue, 614-296-0640
+"Shutts, Kenny", Kenny, Shutts, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 7, M, maureenshutts@gmail.com, 635, Jared Shutts, 720-505-9172
+"RUSSELL, HENRIK", HENRIK, RUSSELL, Pedal Bike, 7-8 M, Wave 17 (7-8 M), 7, M, silentj327@gmail.com, 9066, JEREMY RUSSELL, 614-314-6112
+"Potts, Elias", Elias, Potts, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 7, M, eric.r.potts.1@ohio.edu, 446, Eric Potts, 740-288-5269
+"Georgeff, Jack", Jack, Georgeff, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 7, M, pgeorgeff@protonmail.com, 536, Peter Georgeff, 360-567-9513
+"Gray, Thomas", Thomas, Gray, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 8, M, tg340398@hotmail.com, 632, Thomas Gray, 614-365-0981
+"Bednarz, Logan", Logan, Bednarz, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 7, M, kbednarzpt@gmail.com, 269, Kristin Bednarz, 4196020410
+"Blank, Oliver", Oliver, Blank, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 8, M, nsantuzzi@gmail.com, 9000, Nicole Blank, 16148933694
+"Haas, Oliver", Oliver, Haas, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 8, M, rachel@deaninsurancegroup.com, 630, Rachel Dean-Haas, 6145065538
+"Lanning, Bo", Bo, Lanning, Pedal Bike, 7-8 M, Wave 18 (7-8 M), 7, M, 3lannings@gmail.com, 9021, Shandi Lanning, 7406448207
+"Crist, Elona", Elona, Crist, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 10, F, mjcrist@gmail.com, 9009, Sarah Crist, 330-907-5591
+"Williams, Adria", Adria, Williams, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 9, F, mwilliams2561@gmail.com, 9049, Mike Williams, 330-224-2071
+"Seidel, Olive", Olive, Seidel, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 9, F, brenden.seidel@icloud.com, 9040, Brenden Seidel, 614-596-5281
+"Lee, Berkeley", Berkeley, Lee, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 9, F, etwagne@yahoo.com, 9026, Elizabeth Lee, 419-575-6351
+"Kowaleski, Evie", Evie, Kowaleski, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 10, F, allyson.kowaleski@gmail.com, 9062, allyson kowaleski, 419-656-3511
+"Birrer, Nora", Nora, Birrer, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 10, F, anyarenee@gmail.com, 625, Anya Gugliemotto, 6143099584
+"Jewell, Olivia", Olivia, Jewell, Pedal Bike, 9-10 F, Wave 19 (9-10 F), 9, F, jmjewell02@gmail.com, 546, Jessica Jewell, 440-396-6027
+"Feeney, Raegan", Raegan, Feeney, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, rwnotredame4@gmail.com, 287, Rachel Feeney, 614-440-8538
+"Knierim, Ellis", Ellis, Knierim, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, srknierim@outlook.com, 547, Steve Knierim, 517-403-5684
+"Serfass, Leilani", Leilani, Serfass, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 10, F, luzano.2@osu.edu, 221, Emma Serfass, 614-312-2386
+"Wyckoff, Dylan", Dylan, Wyckoff, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, climbhills@aol.com, 622, Brett Wyckoff, 609-335-0512
+"Wakefield, Hattie", Hattie, Wakefield, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, jbrodywakefield@gmail.com, 479, Brody Wakefield, 614-599-0791
+"Sharp, Wren", Wren, Sharp, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, pamdquigley@gmail.com, 601, Pamela Quigley, 614-330-4776
+"Pace, Avery", Avery, Pace, Pedal Bike, 9-10 F, Wave 20 (9-10 F), 9, F, lauren.pace.9613@gmail.com, 346, Lauren Pace, 330-808-1376
+"Hierro, Haddy", Haddy, Hierro, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 10, F, jaymee.hierro@gmail.com, 542, Jaymee Hierro, 614-381-2286
+"Turner, Elizabeth", Elizabeth, Turner, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 9, F, twesturner@gmail.com, 586, Thomas Turner, 614-282-7644
+"Turner, Claire", Claire, Turner, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 9, F, twesturner@gmail.com, 585, Thomas Turner, 614-282-7644
+"Qin, Mikayla", Mikayla, Qin, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 10, F, qinke84pp@gmail.com, 620, Ke Qin, 937-823-6033
+"West, Ava", Ava, West, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 10, F, westfamily1149@gmail.com, 251, Christy West, 614-313-1687
+"Bailey, Emma", Emma, Bailey, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 10, F, orprotary@yahoo.com, 606, Luke Bailey, 614-483-9031
+"Burgess, Bella", Bella, Burgess, Pedal Bike, 9-10 F, Wave 21 (9-10 F), 10, F, callielburgess@gmail.com, 523, Callie Burgess, 614-805-4461
+"Forsythe, Kailey", Kailey, Forsythe, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 9, F, lisa.c.forsythe@gmail.com, 290, Lisa Forsythe, 614-581-9435
+"Little, Charlotte", Charlotte, Little, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, aim17us@gmail.com, 323, Aimee Little, 614-530-0534
+"Crnarich, Riley", Riley, Crnarich, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, bstats31@gmail.com, 164, Bryan Crnarich, 330-774-3837
+"Hood, Lauren", Lauren, Hood, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, hood.211@osu.edu, 176, Jim Hood, 651-925-7292
+"Panzner, Ramona", Ramona, Panzner, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, trembling_blue_stars@yahoo.com, 347, Wendy Panzner, 614-915-6210
+"Pogue, Victoria", Victoria, Pogue, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, deannarizek@gmail.com, 353, Deanna Pogue, 614-296-0640
+"Marshall, Isobel", Isobel, Marshall, Pedal Bike, 9-10 F, Wave 22 (9-10 F), 10, F, nicmarsh77@gmail.com, 507, Nicole Marshall, 380-204-3681
+"Lawrence, Alex", Alex, Lawrence, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, lauralawrence35@gmail.com, 9025, Laura Lawrence, 614-203-4538
+"Kelley, Owen", Owen, Kelley, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, brad.weaver2@gmail.com, 9020, Brad Weaver, 740-851-0620
+"Renner, Paxton", Paxton, Renner, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, brad.weaver2@gmail.com, 9035, Brad Weaver, 740-851-0620
+"Kong, Titus", Titus, Kong, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, dekong@gmail.com, 9061, Darlene Kong, 614-579-9908
+"Wright, James", James, Wright, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, wright21088@gmail.com, 9075, James Wright, 614-419-8633
+"Holtzlander, Grayson", Grayson, Holtzlander, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, holtzlanderm@yahoo.com, 9059, Matt Holtzlander, 614-395-1259
+"RUSSELL, WATSON", WATSON, RUSSELL, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 10, M, silentj327@gmail.com, 9068, JEREMY RUSSELL, 614-314-6112
+"Hromco, Maxwell", Maxwell, Hromco, Pedal Bike, 9-10 M, Wave 23 (9-10 M), 9, M, hromcod@gmail.com, 9017, Douglas Hromco, 7405918540
+"Lanning, Ryder", Ryder, Lanning, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 9, M, 3lannings@gmail.com, 9022, Shandi Lanning, 7406448207
+"Skocik, Joshua", Joshua, Skocik, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 10, M, kristina.e.bennett@gmail.com, 387, Kristina Skocik, 412-445-1174
+"Rengel, Owen", Owen, Rengel, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 9, M, suzeslater@gmail.com, 363, Susan Rengel, 614-581-7442
+"McEntire, Jacob", Jacob, McEntire, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 10, M, meesh9@gmail.com, 335, Michelle McEntire, 614-638-5176
+"Bird, Hudson", Hudson, Bird, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 10, M, justinbird7@gmail.com, 627, Justin Bird, 614-214-2358
+"Koegler, Caleb", Caleb, Koegler, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 9, M, meghankoegler@gmail.com, 548, Meghan Koegler, 740-815-8699
+"Anderson, Julian", Julian, Anderson, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 9, M, anne_rebman@hotmail.com, 360, Anne Rebman, 614-595-6954
+"Holmes, Joseph", Joseph, Holmes, Pedal Bike, 9-10 M, Wave 24 (9-10 M), 10, M, thedoughyone72@gmail.com, 544, Doug Holmes, 614-204-0939
+"Ewald, Chase", Chase, Ewald, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, rcw1984@gmail.com, 531, Rachel Ewald, 973-670-3866
+"Canterbury, Collin", Collin, Canterbury, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, james.canterbury.3@gmail.com, 458, James Canterbury, 419-450-6260
+"Raymond, Bryce", Bryce, Raymond, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, liz.h.raymond@gmail.com, 475, Liz Raymond, 740-571-1886
+"Gillogly, Granville", Granville, Gillogly, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, erin.gillogly@gmail.com, 291, Erin Gillogly, 614-361-0204
+"Weckesser, Leo", Leo, Weckesser, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, rose.weckesser@gmail.com, 406, Rose Weckesser, 614-783-9430
+"Esber, Wells", Wells, Esber, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, kelsey.esber@yahoo.com, 617, Kelsey Esber, 614-565-1498
+"Williams, Zeke", Zeke, Williams, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 10, M, williams.spencer@gmail.com, 614, Spencer Williams, 614-595-0574
+"Todd, Griffin", Griffin, Todd, Pedal Bike, 9-10 M, Wave 25 (9-10 M), 9, M, stef.todd13@gmail.com, 584, Stefanie Todd, 614-406-8463
+"Burke, Cameron", Cameron, Burke, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, kellydburke@yahoo.com, 607, Kelly Burke, 614-599-2702
+"Burke, Finley", Finley, Burke, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, kellydburke@yahoo.com, 608, Kelly Burke, 614-599-2702
+"Longazel, George Kaden", George Kaden, Longazel, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, jmcclory4@gmail.com, 334, Jessica McClory, 937-903-9277
+"Kubli, Braxton", Braxton, Kubli, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, lindseysjensen@yahoo.com, 319, Lindsey Kubli, 614-203-4854
+"Wollenburg, Maxwell", Maxwell, Wollenburg, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, nate.wollenburg@gmail.com, 412, Nathan Wollenburg, 440-781-9567
+"Downs, Oliver", Oliver, Downs, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, ashley.downs@gmail.com, 165, Ashley Downs, 937-269-2779
+"Logan, Ben", Ben, Logan, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 10, M, ejcorvi@hotmail.com, 487, Erica Logan, 614-439-6930
+"Gassman, Hudson", Hudson, Gassman, Pedal Bike, 9-10 M, Wave 26 (9-10 M), 9, M, justin.gassman@gmail.com, 610, Justin Gassman, 614-499-9141
+"Hallahan, Drew", Drew, Hallahan, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, randomann@gmail.com, 486, Ann Shroyer, 773-308-6794
+"Georgeff, Ezekiel", Ezekiel, Georgeff, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 9, M, pgeorgeff@protonmail.com, 535, Peter Georgeff, 360-567-9513
+"Suckow, Grayson", Grayson, Suckow, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, leighfender@gmail.com, 488, Leigh Fenderbosch, 614-507-4359
+"Davis, Elliot", Elliot, Davis, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, mrsamydavis@gmail.com, 485, Amy Davis, 614-561-8090
+"Arden, Ben", Ben, Arden, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, douglasarden@yahoo.com, 150, Doug Arden, 614-804-6436
+"Walcott, Targa", Targa, Walcott, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, twalco@hotmail.com, 245, Taro Walcott, 440-522-3678
+"Ward, Brooks", Brooks, Ward, Pedal Bike, 9-10 M, Wave 27 (9-10 M), 10, M, timwardjr@gmail.com, 404, Timothy Ward, 614-226-3244
+"Kruder, Maddie", Maddie, Kruder, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, akruder@gmail.com, 9063, Allison Kruder, 513-226-0281
+"Pastore, Emma", Emma, Pastore, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, sarapastore1004@gmail.com, 349, Sara Pastore, 614-595-8492
+"McLoughlin, Marin", Marin, McLoughlin, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, eric@aacolpa.com, 623, Eric McLoughlin, 614-266-5569
+"Bovid, Harper", Harper, Bovid, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, coachjamibovid@gmail.com, 273, Jami Bovid, 989-751-0159
+"Serfass, Mahala", Mahala, Serfass, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, luzano.2@osu.edu, 222, Emma Serfass, 614-312-2386
+"hickman-filipow, penelope", penelope, hickman-filipow, Pedal Bike, 11-12 F, Wave 28 (11-12 F), 11, F, bethanyfilipow@gmail.com, 491, Bethany Filipow, 614-302-7340
+"Hughes, Caroline", Caroline, Hughes, Pedal Bike, 11-12 F, Wave 29 (11-12 F), 11, F, ryanghughes.614@gmail.com, 309, Ryan Hughes, 614-581-3937
+"Forsythe, Samantha", Samantha, Forsythe, Pedal Bike, 11-12 F, Wave 29 (11-12 F), 12, F, lisa.c.forsythe@gmail.com, 87, Lisa Forsythe, 614-581-9435
+"Skocik, Samantha", Samantha, Skocik, Pedal Bike, 11-12 F, Wave 29 (11-12 F), 12, F, kristina.e.bennett@gmail.com, 388, Kristina Skocik, 412-445-1174
+"Walcott, Carrera", Carrera, Walcott, Pedal Bike, 11-12 F, Wave 29 (11-12 F), 12, F, twalco@hotmail.com, 244, Taro Walcott, 440-522-3678
+"Marshall, Amelia", Amelia, Marshall, Pedal Bike, 11-12 F, Wave 29 (11-12 F), 12, F, nicmarsh77@gmail.com, 508, Nicole Marshall, 380-204-3681
+"Crist, Silas", Silas, Crist, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 11, M, mjcrist@gmail.com, 9008, Sarah Crist, 330-907-5591
+"Essex, Cy", Cy, Essex, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 12, M, chazman42287@yahoo.com, 9077, Charles Essex, 614-571-9370
+"Haverkamp, Louis", Louis, Haverkamp, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 12, M, haverkamp.laura@gmail.com, 304, Laura Haverkamp, 614-738-0207
+"Mowry, Gabriel", Gabriel, Mowry, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 12, M, financecommand@themowrys.net, 344, Alicia Mowry, 614-506-2829
+"Pierson, Ben", Ben, Pierson, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 11, M, mjpierson@gmail.com, 351, Michael Pierson, 513-325-7949
+"Stiles, Connor", Connor, Stiles, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 11, M, patpstiles@gmail.com, 392, Patrick Stiles, 614-316-1986
+"Young, Evan", Evan, Young, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 12, M, kmmolnar@yahoo.com, 592, Kristin Young, 614-403-8348
+"Lawrence, Donovan", Donovan, Lawrence, Pedal Bike, 11-12 M, Wave 30 (11-12 M), 11, M, sweeneymg@yahoo.com, 99, Meghan Lawrence, 614-937-4203
+"Glenn-Applegate, Edward", Edward, Glenn-Applegate, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 11, M, peteapplegate@hotmail.com, 293, Peter Glenn-Applegate, 615-804-2755
+"Vozza, Oliver", Oliver, Vozza, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 11, M, brittany.vozza@gmail.com, 400, Brittany Vozza, 412-719-7545
+"Aldridge, Grant", Grant, Aldridge, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 12, M, aldridgefamilyfive@gmail.com, 144, Kim Aldridge, 937-367-9335
+"Davis, Andrew", Andrew, Davis, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 12, M, jldavis0414@outlook.com, 20, Jamie Davis, 614-738-0688
+"Gibson, Julian", Julian, Gibson, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 12, M, gibsonkati@yahoo.com, 611, Nancy Gibson, 740-815-7214
+"Cook, Bear", Bear, Cook, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 12, M, scooksc1@gmail.com, 75, Scott Cook, 614-582-3228
+"Hickman-Filipow, Corwin", Corwin, Hickman-Filipow, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 11, M, bethanyfilipow@gmail.com, 493, Bethany Filipow, 614-302-7340
+"Mason, Cameron", Cameron, Mason, Pedal Bike, 11-12 M, Wave 31 (11-12 M), 12, M, chadmmason@gmail.com, 390, Chad M Mason, 614-378-7049
+"Lai, Andy", Andy, Lai, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 12, M, nlaiod@hotmail.com, 188, Nicky Lai, 614-352-5167
+"Robenstine, Fletcher", Fletcher, Robenstine, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 12, M, robenstine@gmail.com, 11, Kyle Robenstine, 740-707-1404
+"Anderson, Lucas", Lucas, Anderson, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 12, M, anne_rebman@hotmail.com, 263, Anne Rebman, 614-595-6954
+"Sharp, Keir", Keir, Sharp, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 11, M, pamdquigley@gmail.com, 224, Pamela Quigley, 614-330-4776
+"West, Parker", Parker, West, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 11, M, westfamily1149@gmail.com, 64, Christy West, 614-313-1687
+"Coleman, Jaden", Jaden, Coleman, Pedal Bike, 11-12 M, Wave 32 (11-12 M), 12, M, catoiii@yahoo.com, 162, Cato Coleman, 614-633-5361
+"Anicio, Megan", Megan, Anicio, Pedal Bike, 13+ F, Wave 33 (13+ F), 13, F, elizangelaanicio@hotmail.com, 264, Elizangela Anicio, 614-774-8665
+"Vozza, Stella", Stella, Vozza, Pedal Bike, 13+ F, Wave 33 (13+ F), 13, F, brittany.vozza@gmail.com, 401, Brittany Vozza, 412-719-7545
+"Robenstine, Lola", Lola, Robenstine, Pedal Bike, 13+ F, Wave 33 (13+ F), 14, F, robenstine@gmail.com, 12, Kyle Robenstine, 740-707-1404
+"Daniel, Nick", Nick, Daniel, Pedal Bike, 13+ M, Wave 34 (13+ M), 14, M, vince_daniel@hotmail.com, 9011, Vincent Daniel, 410-302-3820
+"Schultz, Grant", Grant, Schultz, Pedal Bike, 13+ M, Wave 34 (13+ M), 14, M, rkdjc@hotmail.com, 512, Dana Schultz, 6143538877
+"Radliff, Alexander", Alexander, Radliff, Pedal Bike, 13+ M, Wave 34 (13+ M), 13, M, pradliff@gmail.com, 518, Phil Radliff, 614-701-6432
+"Davis, Samuel", Samuel, Davis, Pedal Bike, 13+ M, Wave 34 (13+ M), 14, M, jldavis0414@outlook.com, 21, Jamie Davis, 614-738-0688
+"Panzner, Joseph", Joseph, Panzner, Pedal Bike, 13+ M, Wave 34 (13+ M), 13, M, trembling_blue_stars@yahoo.com, 23, Wendy Panzner, 614-915-6210
+"Yetman, Milo", Milo, Yetman, Pedal Bike, 13+ M, Wave 34 (13+ M), 13, M, cyetman3@yahoo.com, 694, Chris Yetman, 614-425-0178
+"Deblasis, Owen", Owen, Deblasis, Pedal Bike, 13+ M, Wave 34 (13+ M), 13, M, jendeblasis@gmail.com, 499, Jen Deblasis, 614-323-2890
+"Harshbarger, Greyson", Greyson, Harshbarger, Pedal Bike, 13+ M, Wave 35 (13+ M), 13, M, jennifer_fairburn@yahoo.com, 511, Jennifer Harshbarger, 304-638-4353
+"Kruder, Evan", Evan, Kruder, Pedal Bike, 13+ M, Wave 35 (13+ M), 13, M, akruder@gmail.com, 316, Allison Kruder, 513-226-0281
+"Downs, Nolan", Nolan, Downs, Pedal Bike, 13+ M, Wave 35 (13+ M), 13, M, ashley.downs@gmail.com, 80, Ashley Downs, 937-269-2779
+"Arden, Jack", Jack, Arden, Pedal Bike, 13+ M, Wave 35 (13+ M), 13, M, douglasarden@yahoo.com, 115, Doug Arden, 614-804-6436
+"Armstrong, Kraig", Kraig, Armstrong, Pedal Bike, 13+ M, Wave 35 (13+ M), 16, M, llarmstrong@me.com, 2, Lori Armstrong, 614-595-9894
+"Armstrong, Brody", Brody, Armstrong, Pedal Bike, 13+ M, Wave 35 (13+ M), 14, M, llarmstrong@me.com, 3, Lori Armstrong, 614-595-9894
+"MacGregor, Lachlan", Lachlan, MacGregor, Pedal Bike, 13+ M, Wave 35 (13+ M), 13, M, ianandstacy@gmail.com, 326, Stacy MacGregor, 614-499-6864

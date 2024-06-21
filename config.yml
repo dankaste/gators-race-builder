@@ -1,70 +1,82 @@
-rosterFilePath: ./files/All Players.csv
-raceRegistrationFilePath: ./files/Subscriptions Export.csv
+rosterFilePath: ./files/all-players.csv
+raceRegistrationFilePath: ./files/SubscriptionsExport.csv
 webscorerRegistrationFilePath: ./files/Webscorer Registrations No Dupes.csv
 raceDate: 2024-06-22
 categories:
-  - name: Balance M
-    gender: M
-    ages: [1, 2, 3, 4, 5, 6]
-    maxSize: 100
-    distance: Balance Bike
   - name: Balance F
     gender: F
+    sorted: false
     ages: [ 1, 2, 3, 4, 5, 6]
+    maxSize: 100
+    distance: Balance Bike
+  - name: Balance M
+    gender: M
+    sorted: false
+    ages: [1, 2, 3, 4, 5, 6]
     maxSize: 100
     distance: Balance Bike
   - name: 3-4
     gender: [M, F]
+    sorted: false
     ages: [3, 4]
     maxSize: 100
     distance: Pedal Bike
-  - name: 5-6 M
-    gender: M
-    ages: [5, 6]
-    maxSize: 10
-    distance: Pedal Bike
   - name: 5-6 F
     gender: F
+    sorted: false
     ages: [5, 6]
     maxSize: 10
     distance: Pedal Bike
-  - name: 7-8 M
+  - name: 5-6 M
     gender: M
-    ages: [7,8]
-    maxSize: 9
+    sorted: false
+    ages: [5, 6]
+    maxSize: 10
     distance: Pedal Bike
   - name: 7-8 F
     gender: F
+    sorted: false
     ages: [7,8]
     maxSize: 9
     distance: Pedal Bike
-  - name: 9-10 M
+  - name: 7-8 M
     gender: M
-    ages: [9,10]
+    sorted: false
+    ages: [7,8]
     maxSize: 9
     distance: Pedal Bike
   - name: 9-10 F
     gender: F
+    sorted: true
     ages: [9,10]
     maxSize: 9
     distance: Pedal Bike
-  - name: 11-12 M
+  - name: 9-10 M
     gender: M
-    ages: [11,12]
+    sorted: true
+    ages: [9,10]
     maxSize: 9
     distance: Pedal Bike
   - name: 11-12 F
     gender: F
+    sorted: true
     ages: [11,12]
     maxSize: 9
     distance: Pedal Bike
-  - name: 13+ M
+  - name: 11-12 M
     gender: M
-    ages: [13,14,15,16,17,18]
+    sorted: true
+    ages: [11,12]
     maxSize: 9
     distance: Pedal Bike
   - name: 13+ F
     gender: F
+    sorted: true
+    ages: [13,14,15,16,17,18]
+    maxSize: 9
+    distance: Pedal Bike
+  - name: 13+ M
+    gender: M
     sorted: true
     ages: [13,14,15,16,17,18]
     maxSize: 9

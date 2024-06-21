@@ -49,10 +49,10 @@ async function main() {
     });
 
     console.log("Building CSV");
-    const csvOutput = ["Name, First Name, Last Name, Distance, Category, Wave, Age, Gender, Email, Bib"];
+    const csvOutput = ["Name, First Name, Last Name, Distance, Category, Wave, Age, Gender, Email, Bib, Parent, Phone"];
     waves.forEach((wave, index) => {
         wave.riders.forEach(r => {
-            const row = `\"${r.lastName}, ${r.firstName}\", ${r.firstName}, ${r.lastName}, ${r.distance}, ${r.category}, Wave ${index + 1} (${r.category}), ${r.age}, ${r.gender}, ${r.email}, ${r.plateNumber}`
+            const row = `\"${r.lastName}, ${r.firstName}\", ${r.firstName}, ${r.lastName}, ${r.distance}, ${r.category}, Wave ${index + 1} (${r.category}), ${r.age}, ${r.gender}, ${r.email}, ${r.plateNumber}, ${r.parent}, ${r.phone}`
             csvOutput.push(row);
         });
     });

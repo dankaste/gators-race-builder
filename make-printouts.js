@@ -10,13 +10,11 @@ async function main() {
         plate: entry["Bib"],
         wave: entry["Wave"],
         gender: entry["Gender"],
-        category: entry["Category"]
+        category: entry["Category"],
+        phone: entry["Phone"],
+        parent: entry["Parent"]
     }));
-    const rosterRiders = [...await helper.getRoster(config), ...await helper.getWebscorerRegistrations(config)];
     riders.forEach( r => {
-        const rosterRider = rosterRiders.find( rr => r.name === `${rr.lastName}, ${rr.firstName}`);
-        r.phone = rosterRider.phone;
-        r.parent = rosterRider.parent;
         const start = 5;
         const end = r.wave.indexOf('(') - 1;
         r.waveNumber = Number(r.wave.slice(start, end));
