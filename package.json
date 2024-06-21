@@ -4,7 +4,7 @@
   "description": "",
   "main": "race-wave-builder.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-start-list": "node race-wave-builder.js"
   },
   "author": "",
   "license": "ISC",
