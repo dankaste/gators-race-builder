@@ -13,6 +13,7 @@ import { handoutsToPdf } from "@/lib/render/pdf";
 import { downloadBlob, downloadText } from "@/lib/download";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
+import { WaveEditor } from "./WaveEditor";
 
 export function IndividualReview({
   event,
@@ -31,6 +32,9 @@ export function IndividualReview({
   const [startTime, setStartTime] = useState("09:30");
   const [minutesPerWave, setMinutesPerWave] = useState(5);
   const [busy, setBusy] = useState(false);
+  const [view, setView] = useState<"table" | "waves">("table");
+  // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
+  const [waveEpoch, setWaveEpoch] = useState(0);
 
   const editRider = useCallback(
     (index: number, patch: Partial<Rider>) => {
@@ -55,6 +59,7 @@ export function IndividualReview({
     const clone = riders.map((r) => ({ ...r }));
     buildWaves(clone, event.categories);
     onChange(clone);
+    setWaveEpoch((n) => n + 1); // re-seed the wave editor from the fresh suggestion
   }
 
   async function downloadExcel() {
@@ -101,8 +106,30 @@ export function IndividualReview({
           How to upload to WebScorer →
         </Link>
       </div>
-      <div className="mt-4">
-        <ReviewTable riders={riders} categories={event.categories} onEdit={editRider} />
+      <div className="mt-4 inline-flex rounded-lg border border-border bg-surface p-0.5 text-sm font-semibold">
+        {(["table", "waves"] as const).map((v) => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`rounded-md px-3 py-1.5 ${
+              view === v ? "bg-brand text-foreground" : "text-muted hover:text-foreground"
+            }`}
+          >
+            {v === "table" ? "Review by rider" : "Manage waves"}
+          </button>
+        ))}
+      </div>
+      <div className="mt-3">
+        {view === "table" ? (
+          <ReviewTable riders={riders} categories={event.categories} onEdit={editRider} />
+        ) : (
+          <WaveEditor
+            key={waveEpoch}
+            riders={riders}
+            categories={event.categories}
+            onChange={onChange}
+          />
+        )}
       </div>
 
       <div className="mt-6 rounded-xl border border-border bg-surface p-5">
