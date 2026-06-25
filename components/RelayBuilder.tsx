@@ -27,6 +27,21 @@ export function RelayBuilder({
   const [pendingRegs, setPendingRegs] = useState<Rider[] | null>(null);
   const [customFields, setCustomFields] = useState<string[]>([]);
 
+  // Group assigned riders by cup -> character for display. (Declared before any
+  // early return so hooks run in a stable order.)
+  const grouped = useMemo(() => {
+    const byCup = new Map<string, Map<string, { rider: Rider; index: number }[]>>();
+    riders.forEach((r, index) => {
+      if (!r.relay) return;
+      const cup = byCup.get(r.relay.cup) ?? new Map();
+      const team = cup.get(r.relay.character) ?? [];
+      team.push({ rider: r, index });
+      cup.set(r.relay.character, team);
+      byCup.set(r.relay.cup, cup);
+    });
+    return byCup;
+  }, [riders]);
+
   if (!relay) return <p className="text-muted">This event has no relay configuration.</p>;
 
   // Step 1: import → parse → transform (no categories) → collect custom fields for friend mapping.
@@ -74,20 +89,6 @@ export function RelayBuilder({
       team.forEach((r, i) => (r.relay!.leg = i + 1));
     }
   }
-
-  // Group assigned riders by cup -> character for display.
-  const grouped = useMemo(() => {
-    const byCup = new Map<string, Map<string, { rider: Rider; index: number }[]>>();
-    riders.forEach((r, index) => {
-      if (!r.relay) return;
-      const cup = byCup.get(r.relay.cup) ?? new Map();
-      const team = cup.get(r.relay.character) ?? [];
-      team.push({ rider: r, index });
-      cup.set(r.relay.character, team);
-      byCup.set(r.relay.cup, cup);
-    });
-    return byCup;
-  }, [riders]);
 
   if (riders.length === 0) {
     return (
