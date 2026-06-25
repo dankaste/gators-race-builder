@@ -1,0 +1,1514 @@
+[
+{
+"package": "Novice",
+"gender": "M",
+"age": 12,
+"label": "Novice 11+ M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 10,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 2 Lap 9-10M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 14,
+"label": "Adv 2 Lap 13+F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 4,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 4,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 2,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 4,
+"label": "Novice 2-4 F",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 5,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 11,
+"label": "Novice 11+ M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 15,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 13,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 12,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 10,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 10,
+"label": "Novice 9-10 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 13,
+"label": "Adv 2 Lap 13+F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 10,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 10,
+"label": "Adv 2 Lap 9-10M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 10,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 9,
+"label": "Novice 9-10 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 13,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 9,
+"label": "Adv 1 Lap 9-10F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 12,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 9,
+"label": "Adv 1 Lap 9-10F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 10,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 5,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 4,
+"label": "Novice 2-4 F",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 9,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 10,
+"label": "Novice 9-10 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 4,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 5,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 11,
+"label": "Novice 11+ M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 9,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 3,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "F",
+"age": 4,
+"label": "Balance F",
+"distance": "Balance"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 12,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 12,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 10,
+"label": "Adv 1 Lap 9-10F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 9,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 1 Lap 13+ M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 4,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 10,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 3,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 13,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 15,
+"label": "Adv 2 Lap 15+F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 9,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 5,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 15,
+"label": "Adv 2 Lap 15+M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 11,
+"label": "Adv 1 Lap 11+F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 12,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 12,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 9,
+"label": "Novice 9-10 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 11,
+"label": "Novice 11+ F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 12,
+"label": "Adv 2 Lap 11-12F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 12,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 13,
+"label": "Adv 2 Lap 13+F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 10,
+"label": "Adv 1 Lap 9-10F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 10,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 4,
+"label": "Novice 2-4 F",
+"distance": "Novice 0.4 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 10,
+"label": "Novice 9-10 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 10,
+"label": "Novice 9-10 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 11,
+"label": "Novice 11+ F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 6,
+"label": "Novice 5-6 F",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 13,
+"label": "Adv 2 Lap 13+F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 5,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 9,
+"label": "Adv 1 Lap 9-10M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "F",
+"age": 9,
+"label": "Adv 1 Lap 9-10F",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 7,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 6,
+"label": "Novice 5-6 M",
+"distance": "Novice 0.5 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 8,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 12,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Balance Bike",
+"gender": "M",
+"age": 3,
+"label": "Balance M",
+"distance": "Balance"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 1 Lap (2.7 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 1 Lap 11-12M",
+"distance": "Adv 1 Lap 3.3 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 12,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 10,
+"label": "Adv 2 Lap 9-10F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 11,
+"label": "Adv 2 Lap 11-12M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "F",
+"age": 8,
+"label": "Novice 7-8 F",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "F",
+"age": 10,
+"label": "Adv 2 Lap 9-10F",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Advanced 2 Lap (5.4 miles)",
+"gender": "M",
+"age": 14,
+"label": "Adv 2 Lap 13-14M",
+"distance": "Adv 2 Lap 6.6 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 7,
+"label": "Novice 7-8 M",
+"distance": "Novice 1.1 mi"
+},
+{
+"package": "Novice",
+"gender": "M",
+"age": 4,
+"label": "Novice 2-4 M",
+"distance": "Novice 0.4 mi"
+}
+]

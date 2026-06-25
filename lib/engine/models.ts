@@ -97,8 +97,12 @@ export interface CategoryDef {
 }
 
 export interface RelayConfig {
+  /** Target riders per character-team within a cup (e.g. 4). */
   teamSize: number;
-  cupNaming?: string;
+  /** Cups = time-staggered heats riders are distributed across (e.g. "Mushroom Cup #1"). */
+  cups: string[];
+  /** Character teams that compete within each cup (e.g. "Link", "Mario"). */
+  characters: string[];
   /** Export header of the registration question capturing a friend/teammate request. */
   friendRequestField?: string;
 }

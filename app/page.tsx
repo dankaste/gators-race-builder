@@ -50,13 +50,13 @@ export default function Home() {
 
       <section className="mt-12">
         <Link
-          href="/projects"
+          href="/config"
           className="inline-flex items-center rounded-lg bg-brand px-5 py-3 font-semibold text-foreground transition-colors hover:bg-brand-strong"
         >
-          Open race projects →
+          View race configurations →
         </Link>
         <p className="mt-3 text-sm text-muted">
-          Skeleton deploy — projects, import, and review come in the next milestones.
+          Race projects, import, and review come in the next milestones.
         </p>
       </section>
     </main>
