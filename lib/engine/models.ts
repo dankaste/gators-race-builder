@@ -64,6 +64,8 @@ export interface Rider {
   /** Seed rank from GBP team placement (lower = more beginner/slower). Null = unseeded. */
   seedLevel: number | null;
   wave: number | null;
+  /** Relay assignment (relay events only): cup heat, character team, and leg order. */
+  relay?: { cup: string; character: string; leg: number } | null;
   custom?: Record<string, string>;
   /** Non-fatal issues surfaced for director review (e.g. "no bib match"). */
   warnings: string[];

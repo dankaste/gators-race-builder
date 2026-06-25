@@ -75,3 +75,37 @@ export function serialize(
 export function toWebScorerCsv(riders: Rider[], event: RaceEvent): string {
   return serialize(toWebScorerRows(riders, event), ",");
 }
+
+export const WEBSCORER_RELAY_HEADERS = [
+  "Team name",
+  "Name",
+  "Leg",
+  "Distance",
+  "Bib",
+  "Age",
+  "Gender",
+  "Email",
+] as const;
+
+/** Relay rows: one per rider, with the character as Team name and cup as Distance. */
+export function toRelayWebScorerRows(
+  riders: Rider[],
+  event: RaceEvent,
+): Record<string, string>[] {
+  return riders
+    .filter((r) => r.relay)
+    .map((r) => ({
+      "Team name": r.relay!.character,
+      Name: formatName(r, event.nameFormat),
+      Leg: String(r.relay!.leg),
+      Distance: r.relay!.cup,
+      Bib: r.bib == null ? "" : String(r.bib),
+      Age: r.ageOnRaceDay == null ? "" : String(r.ageOnRaceDay),
+      Gender: String(r.gender ?? ""),
+      Email: r.email ?? "",
+    }));
+}
+
+export function toRelayWebScorerCsv(riders: Rider[], event: RaceEvent): string {
+  return serialize(toRelayWebScorerRows(riders, event), ",", WEBSCORER_RELAY_HEADERS);
+}
