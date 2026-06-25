@@ -147,6 +147,33 @@ export interface HandoutTemplate {
   filter?: "all" | "hasWave";
 }
 
+/** A fixed pause inserted into the wave timeline (e.g. lunch, course reset). */
+export interface ScheduleBreak {
+  /** Insert the break immediately after this global wave number. */
+  afterWave: number;
+  /** Break length in minutes. */
+  minutes: number;
+  /** Optional label shown in the schedule (e.g. "Lunch"). */
+  label?: string;
+}
+
+/**
+ * Wave-timing defaults for an event's schedule handout: when the first wave
+ * starts, how many minutes each wave gets, and any fixed breaks. Optional —
+ * absent means {@link DEFAULT_SCHEDULE}.
+ */
+export interface ScheduleConfig {
+  /** First wave start, "HH:MM" 24h (e.g. "09:30"). */
+  startTime: string;
+  /** Minutes allotted per wave. */
+  minutesPerWave: number;
+  /** Fixed breaks inserted into the timeline. */
+  breaks?: ScheduleBreak[];
+}
+
+/** Fallback when an event has no `schedule` configured. */
+export const DEFAULT_SCHEDULE: ScheduleConfig = { startTime: "09:30", minutesPerWave: 5 };
+
 /** One race event. SDR has two (a relay and a standard individual pedal race). */
 export interface RaceEvent {
   id: string;
@@ -156,6 +183,8 @@ export interface RaceEvent {
   nameFormat: string; // e.g. "{last} ,{first}" — replicates the existing convention
   categories: CategoryDef[];
   relay?: RelayConfig;
+  /** Wave-timing defaults; falls back to DEFAULT_SCHEDULE when absent. */
+  schedule?: ScheduleConfig;
   /** Editable handout layouts; falls back to defaults when absent. */
   handoutTemplates?: HandoutTemplate[];
 }

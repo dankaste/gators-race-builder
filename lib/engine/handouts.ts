@@ -4,6 +4,7 @@ import type {
   HandoutTemplate,
   RaceEvent,
   Rider,
+  ScheduleBreak,
 } from "./models";
 
 /** A renderable handout table — title + headers + rows, agnostic of Excel/PDF. */
@@ -18,6 +19,8 @@ export interface ScheduleOptions {
   startTime: string;
   /** Minutes allotted per wave. */
   minutesPerWave: number;
+  /** Fixed breaks inserted into the timeline. */
+  breaks?: ScheduleBreak[];
 }
 
 function fullName(r: Rider): string {
@@ -101,12 +104,18 @@ function podiumValue(c: CategorySummary, source: HandoutFieldSource): string | n
 }
 
 interface ScheduleRow {
-  wave: number;
+  kind: "wave" | "break";
+  wave: number | null;
   time: string;
   label: string;
-  count: number;
+  count: number | null;
 }
 
+/**
+ * Per-wave schedule rows with fixed breaks interleaved. Each wave consumes
+ * `minutesPerWave`; a break after wave W emits its own row and pushes every
+ * later row's time out by the break's length.
+ */
 function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
   const info = new Map<number, { label: string; count: number }>();
   for (const r of riders) {
@@ -115,23 +124,58 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
     i.count += 1;
     info.set(r.wave, i);
   }
-  return [...info.keys()]
-    .sort((a, b) => a - b)
-    .map((wave, i) => ({
+  const waveNums = [...info.keys()].sort((a, b) => a - b);
+  const lastWave = waveNums[waveNums.length - 1] ?? 0;
+
+  const breaksByWave = new Map<number, ScheduleBreak[]>();
+  for (const b of opts.breaks ?? []) {
+    const arr = breaksByWave.get(b.afterWave) ?? [];
+    arr.push(b);
+    breaksByWave.set(b.afterWave, arr);
+  }
+  const breakRow = (b: ScheduleBreak, time: string): ScheduleRow => ({
+    kind: "break",
+    wave: null,
+    time,
+    label: `${b.label?.trim() || "Break"} — ${b.minutes} min`,
+    count: null,
+  });
+
+  const rows: ScheduleRow[] = [];
+  let offset = 0; // minutes elapsed from startTime
+  for (const wave of waveNums) {
+    rows.push({
+      kind: "wave",
       wave,
-      time: addMinutes(opts.startTime, i * opts.minutesPerWave),
+      time: addMinutes(opts.startTime, offset),
       label: info.get(wave)!.label,
       count: info.get(wave)!.count,
-    }));
+    });
+    offset += opts.minutesPerWave;
+    for (const b of breaksByWave.get(wave) ?? []) {
+      rows.push(breakRow(b, addMinutes(opts.startTime, offset)));
+      offset += b.minutes;
+    }
+  }
+  // Breaks pointing past the last wave still show, appended in order.
+  const trailing = [...breaksByWave.entries()]
+    .filter(([aw]) => aw > lastWave)
+    .sort((a, b) => a[0] - b[0])
+    .flatMap(([, bs]) => bs);
+  for (const b of trailing) {
+    rows.push(breakRow(b, addMinutes(opts.startTime, offset)));
+    offset += b.minutes;
+  }
+  return rows;
 }
 
 function scheduleValue(row: ScheduleRow, source: HandoutFieldSource): string | number {
   switch (source) {
-    case "wave": return `Wave ${row.wave}`;
+    case "wave": return row.kind === "break" ? "" : `Wave ${row.wave}`;
     case "scheduleTime": return row.time;
     case "categoryLabel":
     case "category": return row.label;
-    case "count": return row.count;
+    case "count": return row.count ?? "";
     default: return "";
   }
 }

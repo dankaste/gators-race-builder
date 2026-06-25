@@ -61,4 +61,30 @@ describe("scheduleTable", () => {
     expect(t.rows[0][1]).toBe("9:30 AM");
     expect(t.rows[1][1]).toBe("9:40 AM");
   });
+
+  it("inserts a break row and pushes later waves out by its length", () => {
+    const t = scheduleTable(
+      [
+        rider({ wave: 1, categoryLabel: "5-6 M" }),
+        rider({ wave: 2, categoryLabel: "9-10 M" }),
+      ],
+      event,
+      { startTime: "09:30", minutesPerWave: 10, breaks: [{ afterWave: 1, minutes: 20, label: "Lunch" }] },
+    );
+    // Columns: Wave | Approx. start | Category | Riders
+    expect(t.rows[0]).toEqual(["Wave 1", "9:30 AM", "5-6 M", 1]);
+    // break row: no wave/count, starts when wave 1's slot ends
+    expect(t.rows[1]).toEqual(["", "9:40 AM", "Lunch — 20 min", ""]);
+    // wave 2 shoved from 9:40 to 10:00 by the 20-min break
+    expect(t.rows[2]).toEqual(["Wave 2", "10:00 AM", "9-10 M", 1]);
+  });
+
+  it("appends breaks pointing past the last wave", () => {
+    const t = scheduleTable(
+      [rider({ wave: 1, categoryLabel: "5-6 M" })],
+      event,
+      { startTime: "09:30", minutesPerWave: 10, breaks: [{ afterWave: 9, minutes: 15 }] },
+    );
+    expect(t.rows[1]).toEqual(["", "9:40 AM", "Break — 15 min", ""]);
+  });
 });

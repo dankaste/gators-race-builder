@@ -11,9 +11,10 @@ import { allHandouts } from "@/lib/engine/handouts";
 import { handoutsToXlsx } from "@/lib/render/excel";
 import { handoutsToPdf } from "@/lib/render/pdf";
 import { downloadBlob, downloadText } from "@/lib/download";
-import type { RaceEvent, Rider } from "@/lib/engine/models";
+import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
+import { ScheduleControls } from "./ScheduleControls";
 
 export function IndividualReview({
   event,
@@ -29,8 +30,8 @@ export function IndividualReview({
   onChange: (riders: Rider[]) => void;
 }) {
   const [importError, setImportError] = useState<string | null>(null);
-  const [startTime, setStartTime] = useState("09:30");
-  const [minutesPerWave, setMinutesPerWave] = useState(5);
+  // Seeded from the race template's defaults; editable per race-day run.
+  const [schedule, setSchedule] = useState<ScheduleConfig>(() => event.schedule ?? DEFAULT_SCHEDULE);
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<"table" | "waves">("table");
   // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
@@ -65,7 +66,7 @@ export function IndividualReview({
   async function downloadExcel() {
     setBusy(true);
     try {
-      const blob = await handoutsToXlsx(allHandouts(riders, event, { startTime, minutesPerWave }));
+      const blob = await handoutsToXlsx(allHandouts(riders, event, schedule));
       downloadBlob(blob, `${slug}-${event.id}-handouts.xlsx`);
     } finally {
       setBusy(false);
@@ -73,7 +74,7 @@ export function IndividualReview({
   }
 
   function downloadPdf() {
-    const blob = handoutsToPdf(allHandouts(riders, event, { startTime, minutesPerWave }), event.name);
+    const blob = handoutsToPdf(allHandouts(riders, event, schedule), event.name);
     downloadBlob(blob, `${slug}-${event.id}-handouts.pdf`);
   }
 
@@ -137,26 +138,10 @@ export function IndividualReview({
         <p className="mt-1 text-sm text-muted">
           Check-in, wave stager, podium, and schedule — generated from the reviewed roster above.
         </p>
-        <div className="mt-4 flex flex-wrap items-end gap-4">
-          <label className="text-sm font-semibold text-muted">
-            First wave start
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="ml-2 rounded-lg border border-border bg-background px-2 py-1 text-foreground"
-            />
-          </label>
-          <label className="text-sm font-semibold text-muted">
-            Minutes per wave
-            <input
-              type="number"
-              min={1}
-              value={minutesPerWave}
-              onChange={(e) => setMinutesPerWave(Number(e.target.value) || 1)}
-              className="ml-2 w-20 rounded-lg border border-border bg-background px-2 py-1 text-foreground"
-            />
-          </label>
+        <div className="mt-4">
+          <ScheduleControls value={schedule} onChange={setSchedule} />
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           <button
             onClick={downloadExcel}
             disabled={busy}

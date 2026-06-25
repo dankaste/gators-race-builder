@@ -28,6 +28,18 @@ export const categorySchema = z.object({
   ordering: z.enum(["isolate-slow-heat", "seed-ascending", "registration", "manual"]),
 });
 
+export const scheduleBreakSchema = z.object({
+  afterWave: z.number().int().positive(),
+  minutes: z.number().int().positive(),
+  label: z.string().optional(),
+});
+
+export const scheduleConfigSchema = z.object({
+  startTime: z.string().regex(/^\d{1,2}:\d{2}$/, "use HH:MM, e.g. 09:30"),
+  minutesPerWave: z.number().int().positive(),
+  breaks: z.array(scheduleBreakSchema).optional(),
+});
+
 export const relaySchema = z.object({
   teamSize: z.number().int().positive(),
   cups: z.array(z.string().min(1)).min(1),
@@ -43,6 +55,7 @@ export const eventSchema = z.object({
   nameFormat: z.string().min(1),
   categories: z.array(categorySchema),
   relay: relaySchema.optional(),
+  schedule: scheduleConfigSchema.optional(),
   handoutTemplates: z.array(handoutTemplateSchema).optional(),
 });
 

@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { CategoryDef, Gender, RaceConfig, RaceEvent, WaveOrdering } from "@/lib/engine/models";
+import { DEFAULT_SCHEDULE, type CategoryDef, type Gender, type RaceConfig, type RaceEvent, type WaveOrdering } from "@/lib/engine/models";
+import { ScheduleControls } from "./ScheduleControls";
 
 const ORDERINGS: WaveOrdering[] = ["isolate-slow-heat", "seed-ascending", "registration", "manual"];
 
@@ -139,16 +140,25 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
           {event.type === "relay" && event.relay ? (
             <RelayEditor event={event} ei={ei} patch={patch} input={input} label={label} />
           ) : (
-            <CategoryEditor
-              event={event}
-              ei={ei}
-              setCat={setCat}
-              addCat={addCat}
-              removeCat={removeCat}
-              moveCat={moveCat}
-              toggleGender={toggleGender}
-              input={input}
-            />
+            <>
+              <CategoryEditor
+                event={event}
+                ei={ei}
+                setCat={setCat}
+                addCat={addCat}
+                removeCat={removeCat}
+                moveCat={moveCat}
+                toggleGender={toggleGender}
+                input={input}
+              />
+              <div className="mt-5 border-t border-border pt-4">
+                <h3 className="mb-3 text-sm font-bold text-foreground">Wave schedule</h3>
+                <ScheduleControls
+                  value={event.schedule ?? DEFAULT_SCHEDULE}
+                  onChange={(next) => patch((c) => { c.events[ei].schedule = next; })}
+                />
+              </div>
+            </>
           )}
         </section>
       ))}
