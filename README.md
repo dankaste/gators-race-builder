@@ -27,7 +27,10 @@ and correct, then export the upload file and handouts.
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in DATABASE_URL
+docker compose up -d         # local Postgres + Neon HTTP proxy
+cp .env.example .env.local   # DATABASE_URL is already set for local docker
+npm run db:migrate           # apply schema to the local DB
+npm run db:seed              # load the 4 race configs
 npm run dev                  # http://localhost:3000
 npm test                     # engine unit tests
 npm run build                # production build
@@ -35,10 +38,19 @@ npm run build                # production build
 
 ## Database
 
+Local dev uses a Dockerized Postgres fronted by `local-neon-http-proxy`, so the
+same `@neondatabase/serverless` HTTP driver runs locally and in production — no
+cloud account needed offline. `DATABASE_URL` for local:
+`postgres://postgres:postgres@db.localtest.me:5432/main`.
+
 ```bash
 npm run db:generate          # generate SQL migrations from db/schema.ts
-npm run db:push              # apply schema to the Neon database
+npm run db:migrate           # apply migrations via the HTTP driver (local or Neon)
+npm run db:seed              # upsert the 4 race configs
 ```
+
+In production, point `DATABASE_URL` at your Neon database and run the same
+`db:migrate` / `db:seed`.
 
 ## Deploy (Vercel + Neon)
 
