@@ -109,6 +109,44 @@ export interface RelayConfig {
   friendRequestField?: string;
 }
 
+/**
+ * Editable handout templates. A template describes which columns appear (and in
+ * what order), how rows are generated (one per rider / category / wave), and how
+ * to sort — so directors can customize handouts without code changes.
+ */
+export type HandoutKind = "roster" | "podium" | "schedule";
+
+/**
+ * Where a column's value comes from. Roster sources read a rider field; podium
+ * sources read a per-category summary; schedule sources read a per-wave row.
+ * `blank` is an empty fill-in cell. `custom:<header>` reads a registration
+ * custom field.
+ */
+export type HandoutFieldSource =
+  // roster (per rider)
+  | "bib" | "name" | "firstName" | "lastName" | "gender" | "age"
+  | "category" | "distance" | "wave" | "seed" | "phone" | "email" | "parentName" | "team"
+  // podium (per category) / schedule (per wave)
+  | "categoryLabel" | "waves" | "count" | "scheduleTime"
+  // shared
+  | "blank"
+  | `custom:${string}`;
+
+export interface HandoutColumn {
+  header: string;
+  source: HandoutFieldSource;
+}
+
+export interface HandoutTemplate {
+  key: string;
+  title: string;
+  kind: HandoutKind;
+  columns: HandoutColumn[];
+  /** roster only: sort order and optional filter. */
+  sort?: "name" | "wave" | "category" | "none";
+  filter?: "all" | "hasWave";
+}
+
 /** One race event. SDR has two (a relay and a standard individual pedal race). */
 export interface RaceEvent {
   id: string;
@@ -118,6 +156,8 @@ export interface RaceEvent {
   nameFormat: string; // e.g. "{last} ,{first}" — replicates the existing convention
   categories: CategoryDef[];
   relay?: RelayConfig;
+  /** Editable handout layouts; falls back to defaults when absent. */
+  handoutTemplates?: HandoutTemplate[];
 }
 
 export interface RaceConfig {

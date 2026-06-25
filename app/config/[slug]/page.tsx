@@ -29,7 +29,15 @@ export default async function ConfigDetailPage({
       <Link href="/config" className="text-sm text-muted hover:text-foreground">
         ← All races
       </Link>
-      <h1 className="mt-2 text-3xl font-black text-foreground">{cfg.name}</h1>
+      <div className="mt-2 flex items-center justify-between gap-4">
+        <h1 className="text-3xl font-black text-foreground">{cfg.name}</h1>
+        <Link
+          href={`/config/${slug}/handouts`}
+          className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-muted hover:text-foreground hover:border-brand-strong"
+        >
+          Edit handout templates →
+        </Link>
+      </div>
 
       {cfg.events.map((event) => (
         <section key={event.id} className="mt-8">
