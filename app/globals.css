@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
+/*
+ * Trail Gators dark theme.
+ * Brand palette extracted from thetrailgators.org (WordPress "Ascend" theme):
+ *   primary green   #4e7b36   (dominant brand color)
+ *   deep green      #496921
+ *   mid green       #628f4a
+ *   lime accent     #a7cf38
+ *   alert red       #cf2e2e
+ * Rendered as a dark UI (charcoal bg, green accents) per design direction.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0e120f; /* near-black, faint green tint */
+  --surface: #161c17;
+  --surface-2: #1f271f;
+  --border: #2c352c;
+  --foreground: #e7ece6;
+  --muted: #9aa79a;
+
+  --brand: #4e7b36;
+  --brand-strong: #628f4a; /* hover/interactive on dark */
+  --brand-deep: #496921;
+  --accent: #a7cf38; /* lime highlight / CTA */
+  --danger: #cf2e2e;
+  --warning: #e0a52e;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-deep: var(--brand-deep);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }

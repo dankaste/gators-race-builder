@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gators Race Director
 
-## Getting Started
+Turns a **PlayMetrics registration export** into a **WebScorer start list** and
+**race-day handouts** for the Gators Race Series (Swamp Dash, John Bryan,
+Chestnut Scorcher, and the Swamp Dash Relay).
 
-First, run the development server:
+Neither PlayMetrics nor WebScorer has an API, so the app automates everything
+*between* the exports and the manual WebScorer upload: compute age on race day,
+assign Category + Distance, resolve bibs from the PlayMetrics player export, seed
+and group riders into waves (or build relay teams), let the director team review
+and correct, then export the upload file and handouts.
+
+## Stack
+
+- **Next.js 16 + TypeScript** (App Router), deployed to **Vercel** (hobby tier).
+- **Transform engine** (`lib/engine/`): pure, framework-agnostic TS — runs in the
+  browser so registration PII never leaves the client during processing. Unit
+  tested with **Vitest**.
+- **Neon Postgres + Drizzle** (`db/`): stores team-shared race configs (non-PII)
+  and persisted project state. Configs live as the engine's `RaceConfig` type in
+  a `jsonb` column.
+- **Auth.js (Google)** with a director email allowlist — added in a later milestone.
+- Theme matches [thetrailgators.org](https://thetrailgators.org) (dark UI, green
+  brand accents, Source Sans).
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in DATABASE_URL
+npm run dev                  # http://localhost:3000
+npm test                     # engine unit tests
+npm run build                # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run db:generate          # generate SQL migrations from db/schema.ts
+npm run db:push              # apply schema to the Neon database
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy (Vercel + Neon)
 
-## Learn More
+1. Push this repo to GitHub.
+2. In Vercel, **New Project → import the repo**.
+3. Add a **Neon** Postgres store (Vercel → Storage) or paste a `neon.tech`
+   connection string as the `DATABASE_URL` env var.
+4. Deploy. (Auth + the director allowlist are wired in a later milestone before
+   any real rider data is stored.)
 
-To learn more about Next.js, take a look at the following resources:
+## Privacy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Project state contains minors' PII. Access is director-only (allowlist auth),
+the database is encrypted at rest (Neon) and in transit (TLS), raw uploads are
+never stored, and there is a per-season purge policy. Never log PII.
