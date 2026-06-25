@@ -12,10 +12,18 @@ export default async function ConfigListPage() {
         <Link href="/" className="text-sm text-muted hover:text-foreground">
           ← Home
         </Link>
-        <h1 className="mt-2 text-3xl font-black text-foreground">Race configurations</h1>
+        <div className="mt-2 flex items-center justify-between gap-4">
+          <h1 className="text-3xl font-black text-foreground">Race configurations</h1>
+          <Link
+            href="/config/new"
+            className="rounded-lg bg-brand px-4 py-2 font-semibold text-foreground transition-colors hover:bg-brand-strong"
+          >
+            + New race
+          </Link>
+        </div>
         <p className="mt-2 text-muted">
           The category, distance, and wave rules for each race. Seeded with the four
-          GRS races; edit per-race in the config editor.
+          GRS races; click a race to view or edit it.
         </p>
         <p className="mt-3 inline-block rounded-md border border-border bg-surface px-3 py-1 text-sm">
           {live ? (

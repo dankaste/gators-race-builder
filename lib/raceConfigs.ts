@@ -1,8 +1,9 @@
 import "server-only";
+import { eq } from "drizzle-orm";
 import { races } from "@/db/schema";
 import { getDb, hasDatabase } from "@/db";
 import type { HandoutTemplate, RaceConfig } from "@/lib/engine/models";
-import { SEED_CONFIGS } from "@/lib/configs";
+import { SEED_CONFIGS, getSeedConfig } from "@/lib/configs";
 
 /**
  * Source of race configs for the app. Reads from Neon when DATABASE_URL is set
@@ -26,28 +27,59 @@ export async function getRaceConfig(slug: string): Promise<RaceConfig | undefine
 }
 
 /**
+ * Upsert a full race config by slug (seed configs get materialized into the DB
+ * on first edit). Requires a DB.
+ */
+export async function saveRaceConfig(config: RaceConfig): Promise<RaceConfig> {
+  if (!hasDatabase()) throw new Error("No database connected");
+  await getDb()
+    .insert(races)
+    .values({ slug: config.slug, name: config.name, raceDate: config.raceDate ?? null, config })
+    .onConflictDoUpdate({
+      target: races.slug,
+      set: { name: config.name, raceDate: config.raceDate ?? null, config, updatedAt: new Date() },
+    });
+  return config;
+}
+
+/** Create a new race config; throws if the slug is already taken. */
+export async function createRaceConfig(config: RaceConfig): Promise<RaceConfig> {
+  if (await getRaceConfig(config.slug)) {
+    throw new Error(`A race with slug "${config.slug}" already exists`);
+  }
+  return saveRaceConfig(config);
+}
+
+export async function deleteRaceConfig(slug: string): Promise<boolean> {
+  if (!hasDatabase()) throw new Error("No database connected");
+  const rows = await getDb().delete(races).where(eq(races.slug, slug)).returning({ slug: races.slug });
+  return rows.length > 0;
+}
+
+/** Restore a seeded race to its built-in default; throws for non-seeded slugs. */
+export async function resetRaceConfig(slug: string): Promise<RaceConfig> {
+  const seed = getSeedConfig(slug);
+  if (!seed) throw new Error(`No built-in default for "${slug}"`);
+  return saveRaceConfig(seed);
+}
+
+/**
  * Persist edited handout templates for one event of a race. Upserts the race
- * row (seed configs get materialized into the DB on first edit). Requires a DB.
+ * row. Requires a DB.
  */
 export async function updateEventHandoutTemplates(
   slug: string,
   eventId: string,
   templates: HandoutTemplate[],
 ): Promise<RaceConfig> {
-  if (!hasDatabase()) throw new Error("No database connected");
   const current = await getRaceConfig(slug);
   if (!current) throw new Error(`Unknown race: ${slug}`);
-  const next: RaceConfig = {
+  return saveRaceConfig({
     ...current,
     events: current.events.map((e) =>
       e.id === eventId ? { ...e, handoutTemplates: templates } : e,
     ),
-  };
-  await getDb()
-    .insert(races)
-    .values({ slug: next.slug, name: next.name, raceDate: next.raceDate ?? null, config: next })
-    .onConflictDoUpdate({ target: races.slug, set: { config: next, updatedAt: new Date() } });
-  return next;
+  });
 }
 
 /** Whether configs are coming from the live database vs. the in-code seeds. */

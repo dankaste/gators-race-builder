@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
@@ -96,6 +97,9 @@ export function IndividualReview({
         >
           Re-import
         </button>
+        <Link href="/guide#webscorer" className="text-sm text-brand-strong hover:underline">
+          How to upload to WebScorer →
+        </Link>
       </div>
       <div className="mt-4">
         <ReviewTable riders={riders} categories={event.categories} onEdit={editRider} />
@@ -162,7 +166,8 @@ function ImportPanel({
     <div className="rounded-xl border border-border bg-surface p-6">
       <h2 className="text-lg font-bold text-foreground">Import registration</h2>
       <p className="mt-1 text-sm text-muted">
-        Files are parsed in your browser — registration data never leaves your machine until you save.
+        Files are parsed in your browser — registration data never leaves your machine until you save.{" "}
+        <Link href="/guide#exports" className="text-brand-strong hover:underline">Where do I get these files? →</Link>
       </p>
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>

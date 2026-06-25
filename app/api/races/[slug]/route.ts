@@ -1,25 +1,22 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { updateEventHandoutTemplates } from "@/lib/raceConfigs";
+import type { RaceConfig } from "@/lib/engine/models";
+import {
+  deleteRaceConfig,
+  resetRaceConfig,
+  saveRaceConfig,
+  updateEventHandoutTemplates,
+} from "@/lib/raceConfigs";
+import { handoutTemplateSchema, raceConfigSchema } from "@/lib/raceConfigSchema";
 
-const columnSchema = z.object({
-  header: z.string(),
-  source: z.string(),
-});
-
-const templateSchema = z.object({
-  key: z.string().min(1),
-  title: z.string().min(1),
-  kind: z.enum(["roster", "podium", "schedule"]),
-  columns: z.array(columnSchema).min(1),
-  sort: z.enum(["name", "wave", "category", "none"]).optional(),
-  filter: z.enum(["all", "hasWave"]).optional(),
-});
-
-const patchSchema = z.object({
-  eventId: z.string().min(1),
-  templates: z.array(templateSchema),
-});
+const patchSchema = z.union([
+  // Full race-config save (slug must match the URL).
+  z.object({ config: raceConfigSchema }),
+  // Restore a seeded race to its built-in default.
+  z.object({ reset: z.literal(true) }),
+  // Handout-template-only update (used by the handout editor).
+  z.object({ eventId: z.string().min(1), templates: z.array(handoutTemplateSchema) }),
+]);
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -27,16 +24,37 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
+
   try {
-    // The Zod-validated templates structurally match HandoutTemplate[].
-    const config = await updateEventHandoutTemplates(
-      slug,
-      parsed.data.eventId,
-      parsed.data.templates as Parameters<typeof updateEventHandoutTemplates>[2],
+    if ("config" in parsed.data) {
+      if (parsed.data.config.slug !== slug) {
+        return NextResponse.json({ error: "Slug cannot be changed" }, { status: 400 });
+      }
+      // Zod validates structure; `source` strings are intentionally looser than the union.
+      return NextResponse.json(await saveRaceConfig(parsed.data.config as RaceConfig));
+    }
+    if ("reset" in parsed.data) {
+      return NextResponse.json(await resetRaceConfig(slug));
+    }
+    return NextResponse.json(
+      await updateEventHandoutTemplates(
+        slug,
+        parsed.data.eventId,
+        parsed.data.templates as Parameters<typeof updateEventHandoutTemplates>[2],
+      ),
     );
-    return NextResponse.json(config);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to save";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed to save" }, { status: 400 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  try {
+    const ok = await deleteRaceConfig(slug);
+    if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ deleted: true });
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 400 });
   }
 }

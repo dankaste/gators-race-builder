@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
@@ -135,6 +136,9 @@ export function RelayBuilder({
         >
           Re-import
         </button>
+        <Link href="/guide#webscorer" className="text-sm text-brand-strong hover:underline">
+          How to upload to WebScorer →
+        </Link>
       </div>
 
       <div className="mt-5 space-y-6">
@@ -211,7 +215,8 @@ function RelayImportPanel(props: {
       <h2 className="text-lg font-bold text-foreground">Build relay teams</h2>
       <p className="mt-1 text-sm text-muted">
         Riders are distributed across {props.cups.length} cups into {props.characters.length} character
-        teams (~{props.teamSize} each), keeping requested friends together. Files are parsed in your browser.
+        teams (~{props.teamSize} each), keeping requested friends together. Files are parsed in your browser.{" "}
+        <Link href="/guide#exports" className="text-brand-strong hover:underline">Where do I get these files? →</Link>
       </p>
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>

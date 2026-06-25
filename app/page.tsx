@@ -34,7 +34,10 @@ export default function Home() {
         <ul className="grid gap-4 sm:grid-cols-2">
           {RACES.map((race) => (
             <li key={race.code}>
-              <div className="group flex items-start gap-4 rounded-xl border border-border bg-surface p-5 transition-colors hover:border-brand-strong">
+              <Link
+                href={`/config/${race.code.toLowerCase()}`}
+                className="group flex items-start gap-4 rounded-xl border border-border bg-surface p-5 transition-colors hover:border-brand-strong"
+              >
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-brand-deep font-black text-foreground">
                   {race.code}
                 </span>
@@ -42,7 +45,7 @@ export default function Home() {
                   <h3 className="font-bold text-foreground">{race.name}</h3>
                   <p className="text-sm text-muted">{race.note}</p>
                 </div>
-              </div>
+              </Link>
             </li>
           ))}
         </ul>
@@ -60,6 +63,12 @@ export default function Home() {
           className="inline-flex items-center rounded-lg border border-border px-5 py-3 font-semibold text-muted transition-colors hover:text-foreground hover:border-brand-strong"
         >
           Race configurations
+        </Link>
+        <Link
+          href="/guide"
+          className="inline-flex items-center rounded-lg border border-border px-5 py-3 font-semibold text-muted transition-colors hover:text-foreground hover:border-brand-strong"
+        >
+          Guide
         </Link>
       </section>
     </main>
