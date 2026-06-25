@@ -6,7 +6,10 @@ import { transformEvent } from "@/lib/engine/transform";
 import { buildWaves } from "@/lib/engine/waves";
 import { validate } from "@/lib/engine/validate";
 import { toWebScorerCsv } from "@/lib/engine/export_webscorer";
-import { downloadText } from "@/lib/download";
+import { allHandouts } from "@/lib/engine/handouts";
+import { handoutsToXlsx } from "@/lib/render/excel";
+import { handoutsToPdf } from "@/lib/render/pdf";
+import { downloadBlob, downloadText } from "@/lib/download";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 
@@ -24,6 +27,9 @@ export function IndividualReview({
   onChange: (riders: Rider[]) => void;
 }) {
   const [importError, setImportError] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState("09:30");
+  const [minutesPerWave, setMinutesPerWave] = useState(5);
+  const [busy, setBusy] = useState(false);
 
   const editRider = useCallback(
     (index: number, patch: Partial<Rider>) => {
@@ -48,6 +54,21 @@ export function IndividualReview({
     const clone = riders.map((r) => ({ ...r }));
     buildWaves(clone, event.categories);
     onChange(clone);
+  }
+
+  async function downloadExcel() {
+    setBusy(true);
+    try {
+      const blob = await handoutsToXlsx(allHandouts(riders, event, { startTime, minutesPerWave }));
+      downloadBlob(blob, `${slug}-${event.id}-handouts.xlsx`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function downloadPdf() {
+    const blob = handoutsToPdf(allHandouts(riders, event, { startTime, minutesPerWave }), event.name);
+    downloadBlob(blob, `${slug}-${event.id}-handouts.pdf`);
   }
 
   if (riders.length === 0) {
@@ -78,6 +99,47 @@ export function IndividualReview({
       </div>
       <div className="mt-4">
         <ReviewTable riders={riders} categories={event.categories} onEdit={editRider} />
+      </div>
+
+      <div className="mt-6 rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-bold text-foreground">Handouts</h2>
+        <p className="mt-1 text-sm text-muted">
+          Check-in, wave stager, podium, and schedule — generated from the reviewed roster above.
+        </p>
+        <div className="mt-4 flex flex-wrap items-end gap-4">
+          <label className="text-sm font-semibold text-muted">
+            First wave start
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              className="ml-2 rounded-lg border border-border bg-background px-2 py-1 text-foreground"
+            />
+          </label>
+          <label className="text-sm font-semibold text-muted">
+            Minutes per wave
+            <input
+              type="number"
+              min={1}
+              value={minutesPerWave}
+              onChange={(e) => setMinutesPerWave(Number(e.target.value) || 1)}
+              className="ml-2 w-20 rounded-lg border border-border bg-background px-2 py-1 text-foreground"
+            />
+          </label>
+          <button
+            onClick={downloadExcel}
+            disabled={busy}
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-strong disabled:opacity-50"
+          >
+            {busy ? "Generating…" : "Download Excel"}
+          </button>
+          <button
+            onClick={downloadPdf}
+            className="rounded-lg border border-border bg-surface-2 px-4 py-2 text-sm font-semibold hover:border-brand-strong"
+          >
+            Download PDF
+          </button>
+        </div>
       </div>
     </>
   );
