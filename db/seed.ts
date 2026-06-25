@@ -1,11 +1,20 @@
 /**
- * Seed the four race configurations into the database.
- * Run after provisioning Neon: `npm run db:push && npm run db:seed`.
- * Idempotent — upserts by slug, so re-running refreshes configs in place.
+ * Seed the four race configurations and the bootstrap director allowlist.
+ * Run after provisioning Neon: `npm run db:migrate && npm run db:seed`.
+ * Idempotent — upserts configs by slug; inserts bootstrap directors if absent.
  */
 import { SEED_CONFIGS } from "../lib/configs";
-import { races } from "./schema";
+import { directors, races } from "./schema";
 import { getDb } from "./index";
+
+/** Bootstrap emails from the env (matches lib/directors#bootstrapEmails). */
+function bootstrapEmails(): string[] {
+  const raw = process.env.DIRECTOR_BOOTSTRAP ?? process.env.DIRECTOR_ALLOWLIST ?? "";
+  return raw
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
 
 async function main() {
   const db = getDb();
@@ -20,6 +29,16 @@ async function main() {
     console.log(`seeded ${cfg.slug} (${cfg.name}) — ${cfg.events.length} event(s)`);
   }
   console.log(`Done. ${SEED_CONFIGS.length} race configs seeded.`);
+
+  const emails = bootstrapEmails();
+  for (const email of emails) {
+    await db.insert(directors).values({ email }).onConflictDoNothing();
+  }
+  console.log(
+    emails.length
+      ? `Seeded ${emails.length} bootstrap director(s): ${emails.join(", ")}`
+      : "No DIRECTOR_BOOTSTRAP set — skipping director seed (set it before deploying with real data).",
+  );
 }
 
 main().catch((e) => {

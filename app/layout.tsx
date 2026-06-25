@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { AppHeader } from "@/components/AppHeader";
 
 // Source Sans Pro (the team site's body font) is published on Google Fonts as "Source Sans 3".
 const sourceSans = Source_Sans_3({
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${sourceSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AppHeader />
+        {children}
+      </body>
     </html>
   );
 }

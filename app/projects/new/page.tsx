@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { getRaceConfigs } from "@/lib/raceConfigs";
 import { NewProjectForm } from "@/components/NewProjectForm";
+import { requireDirector } from "@/lib/auth-dal";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewProjectPage() {
+  await requireDirector();
   const configs = await getRaceConfigs();
   const races = configs.map((c) => ({ slug: c.slug, name: c.name }));
 

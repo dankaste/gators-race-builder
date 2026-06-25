@@ -8,6 +8,7 @@ import {
   updateEventHandoutTemplates,
 } from "@/lib/raceConfigs";
 import { handoutTemplateSchema, raceConfigSchema } from "@/lib/raceConfigSchema";
+import { apiRequireDirector } from "@/lib/auth-dal";
 
 const patchSchema = z.union([
   // Full race-config save (slug must match the URL).
@@ -19,6 +20,9 @@ const patchSchema = z.union([
 ]);
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const { slug } = await params;
   const parsed = patchSchema.safeParse(await request.json());
   if (!parsed.success) {
@@ -49,6 +53,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const { slug } = await params;
   try {
     const ok = await deleteRaceConfig(slug);

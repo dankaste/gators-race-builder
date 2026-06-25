@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { RaceConfig } from "@/lib/engine/models";
 import { createRaceConfig, getRaceConfig, getRaceConfigs } from "@/lib/raceConfigs";
+import { apiRequireDirector } from "@/lib/auth-dal";
 
 export async function GET() {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   return NextResponse.json(await getRaceConfigs());
 }
 
@@ -15,6 +19,9 @@ const cloneSchema = z.object({
 
 /** Create a new race by cloning an existing one (regenerating event ids). */
 export async function POST(request: Request) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const parsed = cloneSchema.safeParse(await request.json());
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });

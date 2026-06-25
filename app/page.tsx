@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireDirector } from "@/lib/auth-dal";
 
 const RACES = [
   { code: "SD", name: "Swamp Dash", note: "Individual · age-band categories" },
@@ -7,7 +8,8 @@ const RACES = [
   { code: "SDR", name: "Swamp Dash Relay", note: "Relay + standard pedal race" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  await requireDirector();
   return (
     <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-16">
       <header className="mb-12">

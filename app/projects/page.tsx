@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { hasDatabase } from "@/db";
 import { listProjects } from "@/lib/projects";
-import { AuthWarning } from "@/components/AuthWarning";
+import { requireDirector } from "@/lib/auth-dal";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
+  await requireDirector();
   if (!hasDatabase()) {
     return (
       <main className="flex-1 mx-auto w-full max-w-5xl px-6 py-12">
@@ -36,7 +37,6 @@ export default async function ProjectsPage() {
           + New project
         </Link>
       </div>
-      <AuthWarning />
 
       {projects.length === 0 ? (
         <p className="mt-8 text-muted">No projects yet. Create one to import a registration export.</p>

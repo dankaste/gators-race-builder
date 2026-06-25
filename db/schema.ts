@@ -56,5 +56,22 @@ export const projects = pgTable(
   (table) => [index("projects_race_slug_idx").on(table.raceSlug)],
 );
 
+/**
+ * Directors permitted to sign in (team-shared allowlist, NON-PII). The signed-in
+ * director team manages this list in-app; an env `DIRECTOR_BOOTSTRAP` list seeds
+ * the first entries and is always allowed even if absent here (can't lock out).
+ * Email is the primary key, stored lowercased.
+ */
+export const directors = pgTable("directors", {
+  email: text("email").primaryKey(),
+  name: text("name"),
+  image: text("image"),
+  addedByEmail: text("added_by_email"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type Race = typeof races.$inferSelect;
 export type Project = typeof projects.$inferSelect;
+export type Director = typeof directors.$inferSelect;

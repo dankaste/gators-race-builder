@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireDirector } from "@/lib/auth-dal";
 
 export const metadata = { title: "Guide — Gators Race Director" };
 
@@ -11,7 +12,8 @@ function Step({ n, children }: { n: number; children: React.ReactNode }) {
   );
 }
 
-export default function GuidePage() {
+export default async function GuidePage() {
+  await requireDirector();
   return (
     <main className="flex-1 mx-auto w-full max-w-3xl px-6 py-12">
       <Link href="/" className="text-sm text-muted hover:text-foreground">← Home</Link>

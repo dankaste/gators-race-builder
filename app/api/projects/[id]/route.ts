@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { deleteProject, getProject, updateProject } from "@/lib/projects";
+import { apiRequireDirector } from "@/lib/auth-dal";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const { id } = await params;
   const project = await getProject(id);
   if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -13,21 +17,27 @@ const patchSchema = z.object({
   // state is the project working data (jsonb); validated structurally at the edge only.
   state: z.record(z.string(), z.unknown()).optional(),
   status: z.string().optional(),
-  lastEditedBy: z.string().optional(),
 });
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const { id } = await params;
   const parsed = patchSchema.safeParse(await request.json());
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
-  const updated = await updateProject(id, parsed.data);
+  // `lastEditedBy` is stamped from the authenticated director, not the client.
+  const updated = await updateProject(id, { ...parsed.data, lastEditedBy: director.email });
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(updated);
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const { id } = await params;
   const ok = await deleteProject(id);
   if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 });

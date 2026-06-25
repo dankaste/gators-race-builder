@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getRaceConfig } from "@/lib/raceConfigs";
 import { defaultHandoutTemplates } from "@/lib/engine/handouts";
 import { HandoutTemplateEditor, type EditorEvent } from "@/components/HandoutTemplateEditor";
+import { requireDirector } from "@/lib/auth-dal";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,7 @@ export default async function HandoutTemplatesPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await requireDirector();
   const { slug } = await params;
   const config = await getRaceConfig(slug);
   if (!config) notFound();

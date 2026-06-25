@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { CategoryDef } from "@/lib/engine/models";
 import { getRaceConfig } from "@/lib/raceConfigs";
+import { requireDirector } from "@/lib/auth-dal";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export default async function ConfigDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await requireDirector();
   const { slug } = await params;
   const cfg = await getRaceConfig(slug);
   if (!cfg) notFound();

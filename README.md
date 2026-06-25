@@ -19,7 +19,9 @@ and correct, then export the upload file and handouts.
 - **Neon Postgres + Drizzle** (`db/`): stores team-shared race configs (non-PII)
   and persisted project state. Configs live as the engine's `RaceConfig` type in
   a `jsonb` column.
-- **Auth.js (Google)** with a director email allowlist — added in a later milestone.
+- **Auth.js (Google)** with a DB-managed director allowlist — only signed-in,
+  allowlisted directors can reach any page or API. Directors manage each other
+  in-app at `/directors`; an env bootstrap list seeds the first one(s).
 - Theme matches [thetrailgators.org](https://thetrailgators.org) (dark UI, green
   brand accents, Source Sans).
 
@@ -58,8 +60,7 @@ In production, point `DATABASE_URL` at your Neon database and run the same
 2. In Vercel, **New Project → import the repo**.
 3. Add a **Neon** Postgres store (Vercel → Storage) or paste a `neon.tech`
    connection string as the `DATABASE_URL` env var.
-4. Deploy. (Auth + the director allowlist are wired in a later milestone before
-   any real rider data is stored.)
+4. Set the **auth** env vars (see "Authentication" below) and deploy.
 
 ## Privacy
 
@@ -68,21 +69,27 @@ the database is encrypted at rest (Neon) and in transit (TLS), raw uploads are
 never stored (only derived state), and there is a per-season purge policy. PII is
 never logged, the app is `noindex`, and error pages never render data details.
 
-## Before production (REQUIRED)
+## Authentication
 
-The app ships with **no access control** for local development — a warning banner
-shows on data pages until auth is configured. Before deploying with real data,
-set up **Auth.js (Google) with a director allowlist**:
+The whole app is gated behind **Auth.js (Google) sign-in with a director
+allowlist** — every page and API (except the sign-in page and `/api/auth/**`)
+requires a signed-in, allowlisted director. `proxy.ts` redirects unauthenticated
+visitors; the authoritative check is the Data Access Layer (`lib/auth-dal.ts`),
+which re-verifies the allowlist on every request so removing a director takes
+effect immediately.
 
-1. `npm install next-auth@beta`
-2. Create a Google OAuth client; set env vars: `AUTH_SECRET` (run `npx auth secret`),
-   `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `DIRECTOR_ALLOWLIST` (comma-separated
-   emails).
-3. Add `auth.ts` with the Google provider and a `signIn` callback that rejects any
-   email not in `DIRECTOR_ALLOWLIST`.
-4. Protect routes (App Router `proxy`/middleware or per-page `auth()` checks) so
-   `/projects/**` and `/api/**` require a signed-in allowlisted director.
+The allowlist is the `directors` table (team-managed in-app at **`/directors`**).
+An env **bootstrap** list seeds the first director(s) and can never be locked out.
 
-Once `AUTH_SECRET` + `AUTH_GOOGLE_ID` are set, the warning banner disappears
-(`lib/security.ts#authConfigured`). Also set a **retention job** to purge old
-seasons' projects.
+To run with auth locally or in production, set:
+
+1. `AUTH_SECRET` — run `npx auth secret`.
+2. `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — from a Google OAuth client
+   (https://console.cloud.google.com → Credentials; add your callback
+   `https://<host>/api/auth/callback/google`).
+3. `DIRECTOR_BOOTSTRAP` — comma-separated emails always allowed; `npm run db:seed`
+   inserts them into the `directors` table. After signing in, add/remove other
+   directors at `/directors`.
+
+Non-allowlisted Google accounts are rejected at sign-in with an "not authorized"
+message. Also set a **retention job** to purge old seasons' projects.

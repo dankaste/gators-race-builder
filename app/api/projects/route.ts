@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createProject, listProjects } from "@/lib/projects";
 import { getRaceConfig } from "@/lib/raceConfigs";
+import { apiRequireDirector } from "@/lib/auth-dal";
 
 export async function GET() {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const all = await listProjects();
   return NextResponse.json(all);
 }
@@ -15,6 +19,9 @@ const createSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const director = await apiRequireDirector();
+  if (director instanceof NextResponse) return director;
+
   const parsed = createSchema.safeParse(await request.json());
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
