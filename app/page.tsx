@@ -48,16 +48,19 @@ export default function Home() {
         </ul>
       </section>
 
-      <section className="mt-12">
+      <section className="mt-12 flex flex-wrap items-center gap-3">
         <Link
-          href="/config"
+          href="/projects"
           className="inline-flex items-center rounded-lg bg-brand px-5 py-3 font-semibold text-foreground transition-colors hover:bg-brand-strong"
         >
-          View race configurations →
+          Open race projects →
         </Link>
-        <p className="mt-3 text-sm text-muted">
-          Race projects, import, and review come in the next milestones.
-        </p>
+        <Link
+          href="/config"
+          className="inline-flex items-center rounded-lg border border-border px-5 py-3 font-semibold text-muted transition-colors hover:text-foreground hover:border-brand-strong"
+        >
+          Race configurations
+        </Link>
       </section>
     </main>
   );

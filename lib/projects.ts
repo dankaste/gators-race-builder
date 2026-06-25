@@ -2,19 +2,9 @@ import "server-only";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { projects, type Project } from "@/db/schema";
-import type { Rider } from "@/lib/engine/models";
+import type { ProjectState } from "@/lib/engine/models";
 
-/**
- * The shared, persisted working state of a race project. Holds the computed
- * roster per event plus director edits. Stored as jsonb. NOTE: contains minors'
- * PII — director-only access, encrypted at rest, never logged.
- */
-export interface ProjectState {
-  /** Per-event rider lists keyed by RaceEvent.id. */
-  events?: Record<string, { riders: Rider[] }>;
-}
-
-export type { Project };
+export type { Project, ProjectState };
 
 export async function listProjects(): Promise<Project[]> {
   return getDb().select().from(projects).orderBy(desc(projects.updatedAt));

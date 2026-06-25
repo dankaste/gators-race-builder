@@ -124,3 +124,18 @@ export interface RaceConfig {
   raceDate?: string;
   events: RaceEvent[];
 }
+
+/** Per-event working data inside a persisted project. */
+export interface ProjectEventState {
+  riders: Rider[];
+}
+
+/**
+ * The shared, persisted working state of a race project (stored as jsonb).
+ * Holds the race date and the computed/edited roster per event. Contains
+ * minors' PII — director-only access.
+ */
+export interface ProjectState {
+  raceDate?: string;
+  events?: Record<string, ProjectEventState>;
+}
