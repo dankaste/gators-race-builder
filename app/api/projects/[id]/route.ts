@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getProject, updateProject } from "@/lib/projects";
+import { deleteProject, getProject, updateProject } from "@/lib/projects";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -25,4 +25,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const updated = await updateProject(id, parsed.data);
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(updated);
+}
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const ok = await deleteProject(id);
+  if (!ok) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json({ deleted: true });
 }

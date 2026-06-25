@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   title: "Gators Race Director",
   description:
     "Turn PlayMetrics registration into WebScorer start lists and race-day handouts for the Gators Race Series.",
+  // This app handles minors' PII — never let it be indexed.
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

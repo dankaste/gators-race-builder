@@ -27,6 +27,11 @@ export async function createProject(input: {
   return rows[0];
 }
 
+export async function deleteProject(id: string): Promise<boolean> {
+  const rows = await getDb().delete(projects).where(eq(projects.id, id)).returning({ id: projects.id });
+  return rows.length > 0;
+}
+
 export async function updateProject(
   id: string,
   patch: { state?: ProjectState; status?: string; lastEditedBy?: string },

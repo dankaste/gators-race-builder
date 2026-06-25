@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { hasDatabase } from "@/db";
 import { listProjects } from "@/lib/projects";
+import { AuthWarning } from "@/components/AuthWarning";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,7 @@ export default async function ProjectsPage() {
           + New project
         </Link>
       </div>
+      <AuthWarning />
 
       {projects.length === 0 ? (
         <p className="mt-8 text-muted">No projects yet. Create one to import a registration export.</p>

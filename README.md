@@ -65,4 +65,24 @@ In production, point `DATABASE_URL` at your Neon database and run the same
 
 Project state contains minors' PII. Access is director-only (allowlist auth),
 the database is encrypted at rest (Neon) and in transit (TLS), raw uploads are
-never stored, and there is a per-season purge policy. Never log PII.
+never stored (only derived state), and there is a per-season purge policy. PII is
+never logged, the app is `noindex`, and error pages never render data details.
+
+## Before production (REQUIRED)
+
+The app ships with **no access control** for local development — a warning banner
+shows on data pages until auth is configured. Before deploying with real data,
+set up **Auth.js (Google) with a director allowlist**:
+
+1. `npm install next-auth@beta`
+2. Create a Google OAuth client; set env vars: `AUTH_SECRET` (run `npx auth secret`),
+   `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `DIRECTOR_ALLOWLIST` (comma-separated
+   emails).
+3. Add `auth.ts` with the Google provider and a `signIn` callback that rejects any
+   email not in `DIRECTOR_ALLOWLIST`.
+4. Protect routes (App Router `proxy`/middleware or per-page `auth()` checks) so
+   `/projects/**` and `/api/**` require a signed-in allowlisted director.
+
+Once `AUTH_SECRET` + `AUTH_GOOGLE_ID` are set, the warning banner disappears
+(`lib/security.ts#authConfigured`). Also set a **retention job** to purge old
+seasons' projects.
