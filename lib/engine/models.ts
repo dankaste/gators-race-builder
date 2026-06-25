@@ -5,6 +5,9 @@
  * export plus a race config, it produces categorized/seeded/waved riders (or relay
  * teams) ready for WebScorer export and handouts. Everything that differs between
  * races lives in {@link RaceConfig}, not in code.
+ *
+ * The {@link CategoryDef} shape (classification predicate + wave settings in one
+ * object) follows the proven 2024 prototype's config model.
  */
 
 export type Gender = "M" | "F";
@@ -18,7 +21,8 @@ export interface RegistrationRow {
   lastName: string;
   gender: Gender | string;
   birthDate: string; // raw value as exported (e.g. "4/26/2021")
-  packageName: string;
+  packageName: string; // PlayMetrics package, e.g. "Balance Bike" / "Novice" / "Advanced 1 Lap (2.x)"
+  status?: string; // "Completed" / "Canceled" — canceled rows are dropped
   accountFirstName?: string;
   accountLastName?: string;
   accountEmail?: string;
@@ -27,32 +31,42 @@ export interface RegistrationRow {
   custom?: Record<string, string>;
 }
 
+/** A roster (PlayMetrics player export) entry — source of bibs, team, and contact. */
+export interface RosterEntry {
+  id: string;
+  firstName: string;
+  lastName: string;
+  bib: number | string | null; // PlayMetrics "number" column = plate/bib
+  gender: Gender | string;
+  birthDate: string;
+  team?: string; // GBP team name — drives seed level
+  email?: string;
+  parentName?: string;
+  phone?: string;
+}
+
 /** A rider after the engine has computed derived fields. */
-export interface Rider extends RegistrationRow {
+export interface Rider {
+  playerId: string;
+  firstName: string;
+  lastName: string;
+  gender: Gender | string;
+  birthDate: string;
   ageOnRaceDay: number | null;
+  packageName: string;
   bib: number | string | null;
+  email?: string;
+  parentName?: string;
+  phone?: string;
+  team?: string;
   categoryLabel: string | null;
   distanceLabel: string | null;
-  /** Seed rank within category from prior-year results; lower = faster. Null = unseeded. */
-  seedRank: number | null;
+  /** Seed rank from GBP team placement (lower = more beginner/slower). Null = unseeded. */
+  seedLevel: number | null;
   wave: number | null;
+  custom?: Record<string, string>;
   /** Non-fatal issues surfaced for director review (e.g. "no bib match"). */
   warnings: string[];
-}
-
-/** A condition under which a category rule applies. */
-export interface CategoryWhen {
-  package?: string;
-  gender?: Gender;
-  ageMin?: number;
-  ageMax?: number;
-}
-
-/** Ordered rule mapping a rider to a WebScorer category + distance label. */
-export interface CategoryRule {
-  when: CategoryWhen;
-  categoryLabel: string; // exact char-limited WebScorer string, e.g. "Adv 1 Lap 9-10F"
-  distanceLabel: string; // e.g. "Balance", "Novice 0.5", "3.3"
 }
 
 export type WaveOrdering =
@@ -61,9 +75,23 @@ export type WaveOrdering =
   | "registration"
   | "manual";
 
-export interface WaveRule {
-  /** Category label (or pattern) this rule governs. */
-  category: string;
+/**
+ * A category: both the classification predicate (who belongs) and the wave
+ * settings (how to split them). Ordered; the first matching category wins.
+ * `label` is the exact char-limited WebScorer string (e.g. "Adv 1 Lap 9-10F").
+ */
+export interface CategoryDef {
+  label: string;
+  distanceLabel: string;
+  /** Classification predicate. */
+  genders: Gender[];
+  /** Inclusive age list OR min/max range. */
+  ages?: number[];
+  ageMin?: number;
+  ageMax?: number;
+  /** Optional PlayMetrics package substrings this category applies to (e.g. ["Novice"]). */
+  packages?: string[];
+  /** Wave settings. */
   maxSize: number;
   ordering: WaveOrdering;
 }
@@ -82,8 +110,7 @@ export interface RaceEvent {
   type: EventType;
   order: number;
   nameFormat: string; // e.g. "{last} ,{first}" — replicates the existing convention
-  categoryRules: CategoryRule[];
-  waveRules: WaveRule[];
+  categories: CategoryDef[];
   relay?: RelayConfig;
 }
 
