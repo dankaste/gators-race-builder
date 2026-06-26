@@ -25,6 +25,23 @@ function orderRiders(riders: Rider[], ordering: WaveOrdering): Rider[] {
     .map((x) => x.r);
 }
 
+/**
+ * The highest existing wave number among riders already in a category, or null
+ * if the category has none yet. Used to drop a manually-added rider into the
+ * last wave of its category without disturbing the other waves.
+ */
+export function lastWaveForCategory(
+  riders: Rider[],
+  categoryLabel: string,
+): number | null {
+  let max: number | null = null;
+  for (const r of riders) {
+    if (r.categoryLabel !== categoryLabel || r.wave == null) continue;
+    if (max === null || r.wave > max) max = r.wave;
+  }
+  return max;
+}
+
 /** Number of waves needed for a category given its max size. */
 export function waveCountFor(n: number, maxSize: number): number {
   if (n <= 0) return 0;

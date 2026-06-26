@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
-import { buildWaves } from "@/lib/engine/waves";
+import { buildWaves, lastWaveForCategory } from "@/lib/engine/waves";
+import { createManualRider } from "@/lib/engine/manualRider";
 import { validate } from "@/lib/engine/validate";
 import { toPlayMetricsBibCsv } from "@/lib/engine/export_playmetrics";
 import { allHandouts } from "@/lib/engine/handouts";
@@ -15,6 +16,7 @@ import { downloadBlob, downloadText } from "@/lib/download";
 import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
+import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
 
 export function IndividualReview({
   event,
@@ -41,6 +43,7 @@ export function IndividualReview({
   const [bibStart, setBibStart] = useState<number>(highestBib + 1);
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<"table" | "waves">("table");
+  const [adding, setAdding] = useState(false);
   // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
   const [waveEpoch, setWaveEpoch] = useState(0);
 
@@ -50,6 +53,14 @@ export function IndividualReview({
     },
     [riders, onChange],
   );
+
+  /** Append a hand-entered rider, dropping it into the last wave of its category. */
+  function addRider(fields: AddRiderFields) {
+    const rider = createManualRider({ id: `manual-${crypto.randomUUID()}`, ...fields }, event);
+    rider.wave = rider.categoryLabel ? lastWaveForCategory(riders, rider.categoryLabel) : null;
+    onChange([...riders, rider]);
+    setAdding(false);
+  }
 
   async function handleImport(regFile: File, rosterFile: File | null) {
     setImportError(null);
@@ -145,6 +156,12 @@ export function IndividualReview({
           Export bibs → PlayMetrics CSV
         </button>
         <button
+          onClick={() => setAdding((v) => !v)}
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background hover:opacity-90"
+        >
+          + Add rider
+        </button>
+        <button
           onClick={() => { if (confirm("Clear this roster and re-import?")) onChange([]); }}
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
@@ -177,6 +194,12 @@ export function IndividualReview({
           {highestBib > 0 && <> → next available {highestBib + 1}</>}
         </span>
       </div>
+      {adding && (
+        <div className="mt-4">
+          <AddRiderForm variant="individual" event={event} onAdd={addRider} onCancel={() => setAdding(false)} />
+        </div>
+      )}
+
       <div className="mt-4 inline-flex rounded-lg border border-border bg-surface p-0.5 text-sm font-semibold">
         {(["table", "waves"] as const).map((v) => (
           <button

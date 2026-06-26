@@ -115,6 +115,11 @@ export function ReviewTable({
                 </td>
                 <td className={`${td} font-medium text-foreground whitespace-nowrap`}>
                   {r.lastName}, {r.firstName}
+                  {r.playerId.startsWith("manual-") && (
+                    <span className="ml-2 rounded-full bg-brand-deep px-1.5 py-0.5 align-middle text-[10px] font-bold uppercase tracking-wide text-foreground">
+                      manual
+                    </span>
+                  )}
                 </td>
                 <td className={td}>
                   <select

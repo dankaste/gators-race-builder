@@ -5,9 +5,11 @@ import { useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
 import { buildRelayTeams } from "@/lib/engine/relay";
+import { createManualRider } from "@/lib/engine/manualRider";
 import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { downloadBlob } from "@/lib/download";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
+import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
 
 export function RelayBuilder({
   event,
@@ -27,6 +29,7 @@ export function RelayBuilder({
   const [friendField, setFriendField] = useState<string>(relay?.friendRequestField ?? "");
   const [pendingRegs, setPendingRegs] = useState<Rider[] | null>(null);
   const [customFields, setCustomFields] = useState<string[]>([]);
+  const [adding, setAdding] = useState(false);
 
   // Group assigned riders by cup -> character for display. (Declared before any
   // early return so hooks run in a stable order.)
@@ -68,6 +71,15 @@ export function RelayBuilder({
     const clone = pendingRegs.map((r) => ({ ...r }));
     buildRelayTeams(clone, { ...relay!, friendRequestField: friendField || undefined });
     onChange(clone);
+  }
+
+  /** Append a hand-entered rider onto a chosen cup/character team and renumber legs. */
+  function addRider(fields: AddRiderFields) {
+    const rider = createManualRider({ id: `manual-${crypto.randomUUID()}`, ...fields }, event);
+    const next = [...riders, rider];
+    renumberLegs(next);
+    onChange(next);
+    setAdding(false);
   }
 
   function reassign(index: number, cup: string, character: string) {
@@ -131,6 +143,12 @@ export function RelayBuilder({
           Export relay WebScorer file
         </button>
         <button
+          onClick={() => setAdding((v) => !v)}
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background hover:opacity-90"
+        >
+          + Add rider
+        </button>
+        <button
           onClick={() => { if (confirm("Clear relay teams and re-import?")) onChange([]); }}
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
@@ -140,6 +158,12 @@ export function RelayBuilder({
           How to upload to WebScorer →
         </Link>
       </div>
+
+      {adding && (
+        <div className="mt-4">
+          <AddRiderForm variant="relay" event={event} onAdd={addRider} onCancel={() => setAdding(false)} />
+        </div>
+      )}
 
       <div className="mt-5 space-y-6">
         {relay.cups.map((cup) => {
@@ -162,7 +186,14 @@ export function RelayBuilder({
                         {team.sort((a, b) => a.rider.relay!.leg - b.rider.relay!.leg).map(({ rider, index }) => (
                           <li key={index} className="flex items-center gap-1 text-sm">
                             <span className="w-5 text-muted">{rider.relay!.leg}.</span>
-                            <span className="flex-1 truncate text-foreground">{rider.firstName} {rider.lastName}</span>
+                            <span className="flex-1 truncate text-foreground">
+                              {rider.firstName} {rider.lastName}
+                              {rider.playerId.startsWith("manual-") && (
+                                <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                                  manual
+                                </span>
+                              )}
+                            </span>
                             <select
                               className="rounded border border-border bg-background px-1 py-0.5 text-xs"
                               value={`${cup}||${character}`}

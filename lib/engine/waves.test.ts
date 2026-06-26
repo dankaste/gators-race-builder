@@ -4,6 +4,7 @@ import {
   buildWaves,
   flattenWaveGroups,
   groupRidersIntoWaves,
+  lastWaveForCategory,
   rebalanceCategoryWaves,
   splitEvenly,
   waveCountFor,
@@ -87,6 +88,31 @@ describe("buildWaves", () => {
     expect(waves.map((w) => [w.wave, w.categoryLabel])).toEqual([
       [1, "A"], [2, "B"], [3, "B"],
     ]);
+  });
+});
+
+describe("lastWaveForCategory", () => {
+  it("returns null when the category has no riders yet", () => {
+    const riders = [rider({ categoryLabel: "A", wave: 1 })];
+    expect(lastWaveForCategory(riders, "B")).toBeNull();
+  });
+
+  it("returns the highest wave number among that category's riders", () => {
+    const riders = [
+      rider({ categoryLabel: "A", wave: 1 }),
+      rider({ categoryLabel: "A", wave: 3 }),
+      rider({ categoryLabel: "A", wave: 2 }),
+      rider({ categoryLabel: "B", wave: 9 }), // other category ignored
+    ];
+    expect(lastWaveForCategory(riders, "A")).toBe(3);
+  });
+
+  it("ignores riders in the category that are not yet waved", () => {
+    const riders = [
+      rider({ categoryLabel: "A", wave: null }),
+      rider({ categoryLabel: "A", wave: 2 }),
+    ];
+    expect(lastWaveForCategory(riders, "A")).toBe(2);
   });
 });
 
