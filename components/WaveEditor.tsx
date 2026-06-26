@@ -158,10 +158,17 @@ export function WaveEditor({
     commit(next);
   }
 
-  function combineUp(wave: WaveView) {
+  /** Merge `source`'s blocks into `target`'s wave (any wave, not just the one above). */
+  function combineInto(source: WaveView, target: WaveView) {
     const next = clone();
-    next[wave.blocks[0].gi].combinedWithPrev = true; // share the previous wave's number
-    commit(next);
+    const srcRefs = source.blocks.map((b) => next[b.gi]);
+    const tgtLast = next[target.blocks[target.blocks.length - 1].gi];
+    const srcSet = new Set(srcRefs);
+    const remaining = next.filter((b) => !srcSet.has(b));
+    const insertAt = remaining.indexOf(tgtLast) + 1; // sit right after the target wave
+    srcRefs.forEach((b) => (b.combinedWithPrev = true));
+    remaining.splice(insertAt, 0, ...srcRefs);
+    commit(remaining);
   }
   function splitApart(wave: WaveView) {
     const next = clone();
@@ -305,7 +312,7 @@ export function WaveEditor({
           });
           const singleMax = !combined ? catDefs.get(leadCat)?.maxSize : undefined;
           const catLabel = combined ? wave.blocks.map((b) => b.group.categoryLabel).join(" + ") : leadCat;
-          const isFirstWave = idx === 0 || !items.slice(0, idx).some((it) => it.kind === "wave" && it.wave.no != null);
+          const combineTargets = waves.filter((w) => w.key !== wave.key && w.no != null);
           const canDrop = drag != null && drag.gi !== -1;
 
           return (
@@ -354,8 +361,24 @@ export function WaveEditor({
                   />
                 </label>
                 <span className="flex gap-1.5">
-                  {!isFirstWave && !combined && (
-                    <button className={`${mini} border-accent text-accent`} onClick={() => combineUp(wave)} title="Merge this wave into the one above">↑ Combine up</button>
+                  {!combined && combineTargets.length > 0 && (
+                    <select
+                      className={`${mini} border-accent text-accent`}
+                      value=""
+                      onChange={(e) => {
+                        const t = waves.find((w) => w.key === e.target.value);
+                        if (t) combineInto(wave, t);
+                        e.target.value = "";
+                      }}
+                      title="Merge this wave into another wave"
+                    >
+                      <option value="">Combine into…</option>
+                      {combineTargets.map((w) => (
+                        <option key={w.key} value={w.key}>
+                          Wave {w.no} ({w.blocks.map((b) => b.group.categoryLabel).join(" + ")})
+                        </option>
+                      ))}
+                    </select>
                   )}
                   {combined && (
                     <button className={`${mini} border-accent text-accent`} onClick={() => splitApart(wave)} title="Split this combined wave back into separate waves">⤢ Split apart</button>
