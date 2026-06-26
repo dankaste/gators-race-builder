@@ -29,7 +29,9 @@ export function validate(riders: Rider[], event: RaceEvent): ValidationSummary {
   let missingBib = 0;
   const catCounts = new Map<string, number>();
   const bibSeen = new Map<string | number, number>();
-  const waveGroups = new Map<number, { label: string; size: number }>();
+  // Per wave, per category — so a combined (multi-category) wave is checked
+  // against each category's own maxSize rather than the whole wave's total.
+  const waveCatCounts = new Map<number, Map<string, number>>();
 
   for (const r of riders) {
     if (r.categoryLabel) {
@@ -40,18 +42,20 @@ export function validate(riders: Rider[], event: RaceEvent): ValidationSummary {
     else bibSeen.set(r.bib, (bibSeen.get(r.bib) ?? 0) + 1);
 
     if (r.wave != null && r.categoryLabel) {
-      const g = waveGroups.get(r.wave) ?? { label: r.categoryLabel, size: 0 };
-      g.size += 1;
-      waveGroups.set(r.wave, g);
+      const byCat = waveCatCounts.get(r.wave) ?? new Map<string, number>();
+      byCat.set(r.categoryLabel, (byCat.get(r.categoryLabel) ?? 0) + 1);
+      waveCatCounts.set(r.wave, byCat);
     }
   }
 
   const waveWarnings: WaveWarning[] = [];
-  for (const [wave, g] of waveGroups) {
-    const max = maxByLabel.get(g.label) ?? Infinity;
-    if (g.size > max) waveWarnings.push({ wave, categoryLabel: g.label, size: g.size, max });
+  for (const [wave, byCat] of waveCatCounts) {
+    for (const [label, size] of byCat) {
+      const max = maxByLabel.get(label) ?? Infinity;
+      if (size > max) waveWarnings.push({ wave, categoryLabel: label, size, max });
+    }
   }
-  waveWarnings.sort((a, b) => a.wave - b.wave);
+  waveWarnings.sort((a, b) => a.wave - b.wave || a.categoryLabel.localeCompare(b.categoryLabel));
 
   return {
     total: riders.length,

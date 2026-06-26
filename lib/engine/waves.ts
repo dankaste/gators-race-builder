@@ -107,18 +107,27 @@ export function buildWaves(
   return assignments;
 }
 
-/** A single wave as shown in the wave editor: one category, ordered riders. */
+/**
+ * A single category-block as shown in the wave editor: one category, ordered
+ * riders. When `combinedWithPrev` is set, this block shares the previous block's
+ * global wave number — i.e. two categories started together in one wave.
+ */
 export interface WaveGroup {
   categoryLabel: string;
   riders: Rider[];
+  /** Share the previous block's wave number (multi-category combined wave). */
+  combinedWithPrev?: boolean;
 }
 
 /**
  * Reconstruct the current wave layout from riders' existing `wave` values
- * (respecting manual edits) rather than recomputing from scratch. Categories
- * are ordered per config (unknown labels sort last, alphabetically); within a
- * category, riders are grouped by their current wave number (nulls last). The
- * inverse of {@link flattenWaveGroups}. Uncategorized riders are excluded.
+ * (respecting manual edits) rather than recomputing from scratch. Blocks are
+ * ordered by wave number; when one wave holds riders from multiple categories
+ * (a combined wave), each category becomes its own block and the 2nd+ are
+ * marked `combinedWithPrev`. Within a wave, categories sort by config order
+ * (unknown labels last, alphabetically). Categorized riders with no wave yet
+ * sort to the end. The inverse of {@link flattenWaveGroups}; uncategorized
+ * riders are excluded.
  */
 export function groupRidersIntoWaves(
   riders: Rider[],
@@ -126,45 +135,55 @@ export function groupRidersIntoWaves(
 ): WaveGroup[] {
   const order = new Map<string, number>();
   categories.forEach((c, i) => order.set(c.label, i));
+  const catRank = (label: string) =>
+    order.has(label) ? order.get(label)! : Number.MAX_SAFE_INTEGER;
 
-  const byLabel = new Map<string, Rider[]>();
+  const byWave = new Map<number, Rider[]>();
+  const noWave: Rider[] = [];
   for (const r of riders) {
     if (!r.categoryLabel) continue;
-    const arr = byLabel.get(r.categoryLabel) ?? [];
+    if (r.wave == null) {
+      noWave.push(r);
+      continue;
+    }
+    const arr = byWave.get(r.wave) ?? [];
     arr.push(r);
-    byLabel.set(r.categoryLabel, arr);
+    byWave.set(r.wave, arr);
   }
-
-  const labels = [...byLabel.keys()].sort((a, b) => {
-    const ia = order.has(a) ? order.get(a)! : Number.MAX_SAFE_INTEGER;
-    const ib = order.has(b) ? order.get(b)! : Number.MAX_SAFE_INTEGER;
-    return ia !== ib ? ia - ib : a.localeCompare(b);
-  });
 
   const groups: WaveGroup[] = [];
-  for (const label of labels) {
-    const byWave = new Map<number | null, Rider[]>();
-    for (const r of byLabel.get(label)!) {
-      const key = r.wave ?? null;
-      const arr = byWave.get(key) ?? [];
+
+  // Split one wave's riders into category blocks (config order); mark combined.
+  const pushWaveBlocks = (waveRiders: Rider[]) => {
+    const byCat = new Map<string, Rider[]>();
+    for (const r of waveRiders) {
+      const arr = byCat.get(r.categoryLabel!) ?? [];
       arr.push(r);
-      byWave.set(key, arr);
+      byCat.set(r.categoryLabel!, arr);
     }
-    const keys = [...byWave.keys()].sort((a, b) => {
-      if (a === null) return 1;
-      if (b === null) return -1;
-      return a - b;
-    });
-    for (const k of keys) groups.push({ categoryLabel: label, riders: byWave.get(k)! });
+    const labels = [...byCat.keys()].sort(
+      (a, b) => catRank(a) - catRank(b) || a.localeCompare(b),
+    );
+    labels.forEach((label, i) =>
+      groups.push({ categoryLabel: label, riders: byCat.get(label)!, combinedWithPrev: i > 0 }),
+    );
+  };
+
+  for (const wave of [...byWave.keys()].sort((a, b) => a - b)) {
+    pushWaveBlocks(byWave.get(wave)!);
   }
+  if (noWave.length) pushWaveBlocks(noWave);
+
   return groups;
 }
 
 /**
- * Project edited wave groups back onto a flat rider list, assigning contiguous
- * global wave numbers (1..N) in group order and skipping empty waves. Returns
- * fresh rider objects (no mutation). `otherRiders` (e.g. uncategorized) are
- * appended unchanged. The inverse of {@link groupRidersIntoWaves}.
+ * Project edited wave blocks back onto a flat rider list, assigning contiguous
+ * global wave numbers (1..N) in block order and skipping empty blocks. A block
+ * marked `combinedWithPrev` shares the prior block's number rather than taking a
+ * new one (multi-category combined wave). Returns fresh rider objects (no
+ * mutation). `otherRiders` (e.g. uncategorized) are appended unchanged. The
+ * inverse of {@link groupRidersIntoWaves}.
  */
 export function flattenWaveGroups(
   groups: WaveGroup[],
@@ -174,7 +193,7 @@ export function flattenWaveGroups(
   let waveNo = 0;
   for (const g of groups) {
     if (g.riders.length === 0) continue;
-    waveNo += 1;
+    if (!g.combinedWithPrev || waveNo === 0) waveNo += 1;
     for (const r of g.riders) out.push({ ...r, wave: waveNo });
   }
   for (const r of otherRiders) out.push(r);
