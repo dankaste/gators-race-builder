@@ -44,7 +44,7 @@ export default async function GuidePage() {
       <section id="webscorer" className="mt-12">
         <h2 className="text-xl font-bold text-foreground">Uploading to WebScorer</h2>
         <ol className="mt-3 space-y-2">
-          <Step n={1}>In a project here, review the riders and waves, then click <strong>Export WebScorer CSV</strong>.</Step>
+          <Step n={1}>In a project here, review the riders and waves, then click <strong>Export WebScorer file</strong> (an <strong>.xlsx</strong> — WebScorer&rsquo;s importer is unreliable with CSV).</Step>
           <Step n={2}>Sign in to your <strong>WebScorer</strong> account.</Step>
           <Step n={3}>Go to <strong>My Start Lists</strong>, open last year&rsquo;s race, and choose <strong>&ldquo;Use as Template&rdquo;</strong>.</Step>
           <Step n={4}>Upload the file you exported and work through any <strong>warning messages</strong>.</Step>

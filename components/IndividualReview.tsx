@@ -6,10 +6,10 @@ import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
 import { buildWaves } from "@/lib/engine/waves";
 import { validate } from "@/lib/engine/validate";
-import { toWebScorerCsv } from "@/lib/engine/export_webscorer";
 import { toPlayMetricsBibCsv } from "@/lib/engine/export_playmetrics";
 import { allHandouts } from "@/lib/engine/handouts";
 import { handoutsToXlsx } from "@/lib/render/excel";
+import { toWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { handoutsToPdf } from "@/lib/render/pdf";
 import { downloadBlob, downloadText } from "@/lib/download";
 import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
@@ -103,6 +103,16 @@ export function IndividualReview({
     }
   }
 
+  async function downloadWebScorer() {
+    setBusy(true);
+    try {
+      const blob = await toWebScorerXlsx(riders, event);
+      downloadBlob(blob, `${slug}-${event.id}-webscorer.xlsx`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   function downloadPdf() {
     const blob = handoutsToPdf(allHandouts(riders, event, effSchedule), event.name);
     downloadBlob(blob, `${slug}-${event.id}-handouts.pdf`);
@@ -122,10 +132,11 @@ export function IndividualReview({
           Re-suggest waves
         </button>
         <button
-          onClick={() => downloadText(toWebScorerCsv(riders, event), `${slug}-${event.id}-webscorer.csv`)}
-          className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-strong"
+          onClick={downloadWebScorer}
+          disabled={busy}
+          className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-strong disabled:opacity-60"
         >
-          Export WebScorer CSV
+          Export WebScorer file
         </button>
         <button
           onClick={() => downloadText(toPlayMetricsBibCsv(riders), `${slug}-${event.id}-playmetrics-bibs.csv`)}

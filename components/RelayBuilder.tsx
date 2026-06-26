@@ -5,8 +5,8 @@ import { useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
 import { buildRelayTeams } from "@/lib/engine/relay";
-import { toRelayWebScorerCsv } from "@/lib/engine/export_webscorer";
-import { downloadText } from "@/lib/download";
+import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
+import { downloadBlob } from "@/lib/download";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
 
 export function RelayBuilder({
@@ -125,10 +125,10 @@ export function RelayBuilder({
           {riders.length} riders · {teamSizes.size} teams · sizes {minS}–{maxS}
         </span>
         <button
-          onClick={() => downloadText(toRelayWebScorerCsv(riders, event), `${slug}-relay-webscorer.csv`)}
+          onClick={async () => downloadBlob(await toRelayWebScorerXlsx(riders, event), `${slug}-relay-webscorer.xlsx`)}
           className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-strong"
         >
-          Export relay WebScorer CSV
+          Export relay WebScorer file
         </button>
         <button
           onClick={() => { if (confirm("Clear relay teams and re-import?")) onChange([]); }}
