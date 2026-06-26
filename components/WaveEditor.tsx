@@ -397,6 +397,7 @@ export function WaveEditor({
                                 {r.lastName}, {r.firstName}
                                 <span className="ml-2 text-xs text-muted">
                                   {r.bib != null && r.bib !== "" ? `#${r.bib}` : "no bib"}
+                                  {` · ${String(r.gender) || "?"} · age ${r.ageOnRaceDay ?? "—"}`}
                                   {r.seedLevel != null && ` · seed ${r.seedLevel}`}
                                 </span>
                               </span>
