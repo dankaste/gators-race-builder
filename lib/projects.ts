@@ -10,6 +10,31 @@ export async function listProjects(): Promise<Project[]> {
   return getDb().select().from(projects).orderBy(desc(projects.updatedAt));
 }
 
+/**
+ * Highest numeric bib assigned across ALL projects — the bib plates are one
+ * physical stack shared across every race, so the next available plate is this
+ * + 1. Non-numeric bibs are ignored. Returns 0 when nothing is assigned yet.
+ */
+export async function getHighestBib(): Promise<number> {
+  const all = await listProjects();
+  let max = 0;
+  for (const p of all) {
+    const state = (p.state ?? {}) as ProjectState;
+    for (const ev of Object.values(state.events ?? {})) {
+      for (const r of ev.riders ?? []) {
+        const n =
+          typeof r.bib === "number"
+            ? r.bib
+            : typeof r.bib === "string" && /^\d+$/.test(r.bib)
+              ? Number(r.bib)
+              : null;
+        if (n != null && n > max) max = n;
+      }
+    }
+  }
+  return max;
+}
+
 export async function getProject(id: string): Promise<Project | undefined> {
   const rows = await getDb().select().from(projects).where(eq(projects.id, id)).limit(1);
   return rows[0];

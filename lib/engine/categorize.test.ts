@@ -30,9 +30,19 @@ describe("matchCategory (Swamp Dash)", () => {
     expect(m?.label).toBe("3-4");
   });
 
-  it("returns null when nothing matches (age out of range)", () => {
+  it("routes an older pedal rider to the open-ended 15+ band", () => {
+    expect(matchCategory({ gender: "M", ageOnRaceDay: 16, packageName: "Pedal Bike" }, cats)?.label).toBe("15+ M");
+    expect(matchCategory({ gender: "F", ageOnRaceDay: 25, packageName: "Pedal Bike" }, cats)?.label).toBe("15+ F");
+  });
+
+  it("keeps 13-14 distinct from 15+", () => {
+    expect(matchCategory({ gender: "M", ageOnRaceDay: 14, packageName: "Pedal Bike" }, cats)?.label).toBe("13-14 M");
+    expect(matchCategory({ gender: "M", ageOnRaceDay: 15, packageName: "Pedal Bike" }, cats)?.label).toBe("15+ M");
+  });
+
+  it("returns null when nothing matches (age below the pedal minimum)", () => {
     const c = matchCategory(
-      { gender: "M", ageOnRaceDay: 25, packageName: "Pedal Bike" },
+      { gender: "M", ageOnRaceDay: 2, packageName: "Pedal Bike" },
       cats,
     );
     expect(c).toBeNull();

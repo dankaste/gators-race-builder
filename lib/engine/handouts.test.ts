@@ -38,6 +38,19 @@ describe("waveStagerTable", () => {
     ]);
     expect(t.rows.map((r) => r[0])).toEqual(["Wave 1", "Wave 1", "Wave 2"]);
   });
+
+  it("emits per-row wave+category groups for stager separators", () => {
+    const t = waveStagerTable([
+      rider({ wave: 1, categoryLabel: "5-6 M", lastName: "A" }),
+      rider({ wave: 1, categoryLabel: "9-10 M", lastName: "B" }),
+      rider({ wave: 2, categoryLabel: "9-10 M", lastName: "C" }),
+    ]);
+    expect(t.rowGroups).toEqual([
+      { wave: 1, category: "5-6 M" },
+      { wave: 1, category: "9-10 M" },
+      { wave: 2, category: "9-10 M" },
+    ]);
+  });
 });
 
 describe("podiumTable", () => {
@@ -86,5 +99,19 @@ describe("scheduleTable", () => {
       { startTime: "09:30", minutesPerWave: 10, breaks: [{ afterWave: 9, minutes: 15 }] },
     );
     expect(t.rows[1]).toEqual(["", "9:40 AM", "Break — 15 min", ""]);
+  });
+
+  it("honors per-category minutes-per-wave overrides, falling back to the default", () => {
+    const t = scheduleTable(
+      [
+        rider({ wave: 1, categoryLabel: "5-6 M" }),
+        rider({ wave: 2, categoryLabel: "9-10 M" }),
+        rider({ wave: 3, categoryLabel: "9-10 M" }),
+      ],
+      event,
+      { startTime: "09:30", minutesPerWave: 10, minutesPerWaveByCategory: { "5-6 M": 5 } },
+    );
+    // wave 1 (5-6 M) consumes its 5-min override; 9-10 M falls back to the 10-min default.
+    expect(t.rows.map((r) => r[1])).toEqual(["9:30 AM", "9:35 AM", "9:45 AM"]);
   });
 });

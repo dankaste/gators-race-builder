@@ -23,8 +23,10 @@ const categories: CategoryDef[] = [
   { label: "9-10 M", distanceLabel: PEDAL, genders: ["M"], ages: [9, 10], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
   { label: "11-12 F", distanceLabel: PEDAL, genders: ["F"], ages: [11, 12], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
   { label: "11-12 M", distanceLabel: PEDAL, genders: ["M"], ages: [11, 12], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
-  { label: "13+ F", distanceLabel: PEDAL, genders: ["F"], ages: [13, 14, 15, 16, 17, 18], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
-  { label: "13+ M", distanceLabel: PEDAL, genders: ["M"], ages: [13, 14, 15, 16, 17, 18], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
+  { label: "13-14 F", distanceLabel: PEDAL, genders: ["F"], ages: [13, 14], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
+  { label: "13-14 M", distanceLabel: PEDAL, genders: ["M"], ages: [13, 14], packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
+  { label: "15+ F", distanceLabel: PEDAL, genders: ["F"], ageMin: 15, packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
+  { label: "15+ M", distanceLabel: PEDAL, genders: ["M"], ageMin: 15, packages: [PEDAL], maxSize: 9, ordering: "isolate-slow-heat" },
 ];
 
 export const swampDashConfig: RaceConfig = {

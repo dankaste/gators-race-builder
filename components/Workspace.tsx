@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ProjectState, RaceConfig, Rider } from "@/lib/engine/models";
+import type { ProjectState, RaceConfig, Rider, ScheduleConfig } from "@/lib/engine/models";
 import { IndividualReview } from "./IndividualReview";
 import { RelayBuilder } from "./RelayBuilder";
 
@@ -11,15 +11,24 @@ export function Workspace({
   projectId,
   config,
   initialState,
+  highestBib,
 }: {
   projectId: string;
   config: RaceConfig;
   initialState: ProjectState;
+  highestBib: number;
 }) {
   const [raceDate, setRaceDate] = useState(initialState.raceDate ?? config.raceDate ?? "");
   const [eventsState, setEventsState] = useState<Record<string, Rider[]>>(() => {
     const m: Record<string, Rider[]> = {};
     for (const e of config.events) m[e.id] = initialState.events?.[e.id]?.riders ?? [];
+    return m;
+  });
+  // Per-event wave schedule (start time, default + per-category minutes, breaks).
+  // Seeded from the saved project state, falling back to the race template default.
+  const [schedulesState, setSchedulesState] = useState<Record<string, ScheduleConfig | undefined>>(() => {
+    const m: Record<string, ScheduleConfig | undefined> = {};
+    for (const e of config.events) m[e.id] = initialState.events?.[e.id]?.schedule ?? e.schedule;
     return m;
   });
   const [activeId, setActiveId] = useState(config.events[0]?.id);
@@ -34,7 +43,7 @@ export function Workspace({
     setSave("saving");
     const handle = setTimeout(async () => {
       const events = Object.fromEntries(
-        Object.entries(eventsState).map(([id, riders]) => [id, { riders }]),
+        Object.entries(eventsState).map(([id, riders]) => [id, { riders, schedule: schedulesState[id] }]),
       );
       const anyRiders = Object.values(eventsState).some((r) => r.length > 0);
       try {
@@ -52,10 +61,14 @@ export function Workspace({
       }
     }, 800);
     return () => clearTimeout(handle);
-  }, [eventsState, raceDate, projectId]);
+  }, [eventsState, schedulesState, raceDate, projectId]);
 
   const setEventRiders = useCallback((eventId: string, riders: Rider[]) => {
     setEventsState((prev) => ({ ...prev, [eventId]: riders }));
+  }, []);
+
+  const setEventSchedule = useCallback((eventId: string, schedule: ScheduleConfig) => {
+    setSchedulesState((prev) => ({ ...prev, [eventId]: schedule }));
   }, []);
 
   const activeEvent = config.events.find((e) => e.id === activeId) ?? config.events[0];
@@ -114,6 +127,9 @@ export function Workspace({
             raceDate={raceDate}
             riders={eventsState[activeEvent.id] ?? []}
             onChange={(r) => setEventRiders(activeEvent.id, r)}
+            schedule={schedulesState[activeEvent.id]}
+            onScheduleChange={(s) => setEventSchedule(activeEvent.id, s)}
+            highestBib={highestBib}
           />
         )}
       </div>

@@ -86,8 +86,8 @@ describe("transformEvent (Swamp Dash pipeline)", () => {
 
   it("flags riders that match no category", () => {
     const { uncategorized } = transformEvent({
-      registrations: [reg({ playerId: "1", birthDate: "1/1/2000" })], // age 25
-      roster: [roster({ id: "1", birthDate: "1/1/2000" })],
+      registrations: [reg({ playerId: "1", packageName: "Sideline Helper" })], // package matches nothing
+      roster: [roster({ id: "1" })],
       event,
       raceDate: RACE_DATE,
     });

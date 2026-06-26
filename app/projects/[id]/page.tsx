@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, type ProjectState } from "@/lib/projects";
+import { getProject, getHighestBib, type ProjectState } from "@/lib/projects";
 import { getRaceConfig } from "@/lib/raceConfigs";
 import { Workspace } from "@/components/Workspace";
 import { DeleteProjectButton } from "@/components/DeleteProjectButton";
@@ -15,6 +15,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   if (!project) notFound();
   const config = await getRaceConfig(project.raceSlug);
   if (!config) notFound();
+  const highestBib = await getHighestBib();
 
   return (
     <main className="flex-1 mx-auto w-full max-w-6xl px-6 py-10">
@@ -32,6 +33,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         projectId={project.id}
         config={config}
         initialState={(project.state ?? {}) as ProjectState}
+        highestBib={highestBib}
       />
     </main>
   );

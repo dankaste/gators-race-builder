@@ -7,6 +7,7 @@ import { transformEvent } from "@/lib/engine/transform";
 import { buildWaves } from "@/lib/engine/waves";
 import { validate } from "@/lib/engine/validate";
 import { toWebScorerCsv } from "@/lib/engine/export_webscorer";
+import { toPlayMetricsBibCsv } from "@/lib/engine/export_playmetrics";
 import { allHandouts } from "@/lib/engine/handouts";
 import { handoutsToXlsx } from "@/lib/render/excel";
 import { handoutsToPdf } from "@/lib/render/pdf";
@@ -14,7 +15,6 @@ import { downloadBlob, downloadText } from "@/lib/download";
 import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
-import { ScheduleControls } from "./ScheduleControls";
 
 export function IndividualReview({
   event,
@@ -22,16 +22,23 @@ export function IndividualReview({
   raceDate,
   riders,
   onChange,
+  schedule,
+  onScheduleChange,
+  highestBib,
 }: {
   event: RaceEvent;
   slug: string;
   raceDate: string;
   riders: Rider[];
   onChange: (riders: Rider[]) => void;
+  schedule?: ScheduleConfig;
+  onScheduleChange: (next: ScheduleConfig) => void;
+  highestBib: number;
 }) {
   const [importError, setImportError] = useState<string | null>(null);
-  // Seeded from the race template's defaults; editable per race-day run.
-  const [schedule, setSchedule] = useState<ScheduleConfig>(() => event.schedule ?? DEFAULT_SCHEDULE);
+  // Effective schedule for handouts; the wave editor edits it via onScheduleChange.
+  const effSchedule: ScheduleConfig = schedule ?? event.schedule ?? DEFAULT_SCHEDULE;
+  const [bibStart, setBibStart] = useState<number>(highestBib + 1);
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<"table" | "waves">("table");
   // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
@@ -63,10 +70,33 @@ export function IndividualReview({
     setWaveEpoch((n) => n + 1); // re-seed the wave editor from the fresh suggestion
   }
 
+  const blankBibCount = riders.filter((r) => r.bib == null || r.bib === "").length;
+
+  /** Assign sequential bibs (from `bibStart`) to bib-less riders in wave order. */
+  function assignBibs() {
+    if (blankBibCount === 0) return;
+    if (!confirm(`Assign ${blankBibCount} bib${blankBibCount === 1 ? "" : "s"} starting at ${bibStart}? Existing bibs are left untouched.`)) return;
+    const nameOf = (r: Rider) => `${r.lastName}, ${r.firstName}`;
+    const order = riders
+      .map((r, i) => ({ r, i }))
+      .filter(({ r }) => r.bib == null || r.bib === "")
+      .sort((a, b) => (a.r.wave ?? 1e9) - (b.r.wave ?? 1e9) || nameOf(a.r).localeCompare(nameOf(b.r)));
+    const bibByIndex = new Map<number, number>();
+    let n = bibStart;
+    for (const { i } of order) bibByIndex.set(i, n++);
+    onChange(
+      riders.map((r, i) =>
+        bibByIndex.has(i)
+          ? { ...r, bib: bibByIndex.get(i)!, warnings: r.warnings.filter((w) => !w.includes("assign manually")) }
+          : r,
+      ),
+    );
+  }
+
   async function downloadExcel() {
     setBusy(true);
     try {
-      const blob = await handoutsToXlsx(allHandouts(riders, event, schedule));
+      const blob = await handoutsToXlsx(allHandouts(riders, event, effSchedule));
       downloadBlob(blob, `${slug}-${event.id}-handouts.xlsx`);
     } finally {
       setBusy(false);
@@ -74,7 +104,7 @@ export function IndividualReview({
   }
 
   function downloadPdf() {
-    const blob = handoutsToPdf(allHandouts(riders, event, schedule), event.name);
+    const blob = handoutsToPdf(allHandouts(riders, event, effSchedule), event.name);
     downloadBlob(blob, `${slug}-${event.id}-handouts.pdf`);
   }
 
@@ -98,6 +128,12 @@ export function IndividualReview({
           Export WebScorer CSV
         </button>
         <button
+          onClick={() => downloadText(toPlayMetricsBibCsv(riders), `${slug}-${event.id}-playmetrics-bibs.csv`)}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold hover:border-brand-strong"
+        >
+          Export bibs → PlayMetrics CSV
+        </button>
+        <button
           onClick={() => { if (confirm("Clear this roster and re-import?")) onChange([]); }}
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
@@ -106,6 +142,29 @@ export function IndividualReview({
         <Link href="/guide#webscorer" className="text-sm text-brand-strong hover:underline">
           How to upload to WebScorer →
         </Link>
+      </div>
+
+      {/* Bulk bib assignment — bibs are one physical plate stack shared across all races. */}
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-semibold text-muted">Start bibs from</span>
+        <input
+          type="number"
+          min={1}
+          value={bibStart}
+          onChange={(e) => setBibStart(Math.max(1, Number(e.target.value) || 1))}
+          className="w-24 rounded border border-border bg-surface px-2 py-1 text-foreground"
+        />
+        <button
+          onClick={assignBibs}
+          disabled={blankBibCount === 0}
+          className="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-40"
+        >
+          Assign {blankBibCount} blank{blankBibCount === 1 ? "" : "s"}
+        </button>
+        <span className="text-xs text-muted">
+          Highest plate used across all races: <b className="text-foreground">{highestBib || "—"}</b>
+          {highestBib > 0 && <> → next available {highestBib + 1}</>}
+        </span>
       </div>
       <div className="mt-4 inline-flex rounded-lg border border-border bg-surface p-0.5 text-sm font-semibold">
         {(["table", "waves"] as const).map((v) => (
@@ -129,6 +188,8 @@ export function IndividualReview({
             riders={riders}
             categories={event.categories}
             onChange={onChange}
+            schedule={effSchedule}
+            onScheduleChange={onScheduleChange}
           />
         )}
       </div>
@@ -137,10 +198,8 @@ export function IndividualReview({
         <h2 className="text-lg font-bold text-foreground">Handouts</h2>
         <p className="mt-1 text-sm text-muted">
           Check-in, wave stager, podium, and schedule — generated from the reviewed roster above.
+          Wave times come from the schedule set in <span className="text-foreground">Manage waves</span>.
         </p>
-        <div className="mt-4">
-          <ScheduleControls value={schedule} onChange={setSchedule} />
-        </div>
         <div className="mt-4 flex flex-wrap items-center gap-4">
           <button
             onClick={downloadExcel}

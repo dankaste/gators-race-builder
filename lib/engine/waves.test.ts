@@ -163,3 +163,39 @@ describe("groupRidersIntoWaves / flattenWaveGroups round-trip", () => {
     ]);
   });
 });
+
+describe("combined (multi-category) waves", () => {
+  const cats: CategoryDef[] = [
+    { label: "A", distanceLabel: "x", genders: ["M"], maxSize: 9, ordering: "manual" },
+    { label: "B", distanceLabel: "x", genders: ["M"], maxSize: 9, ordering: "manual" },
+    { label: "C", distanceLabel: "x", genders: ["M"], maxSize: 9, ordering: "manual" },
+  ];
+
+  it("combinedWithPrev shares the previous wave number and renumbers downstream", () => {
+    const out = flattenWaveGroups([
+      { categoryLabel: "A", riders: [rider({ categoryLabel: "A", firstName: "a" })] },
+      { categoryLabel: "B", riders: [rider({ categoryLabel: "B", firstName: "b" })], combinedWithPrev: true },
+      { categoryLabel: "C", riders: [rider({ categoryLabel: "C", firstName: "c" })] },
+    ]);
+    // A & B share wave 1; C drops to wave 2 (renumbered down from 3).
+    expect(out.map((r) => [r.firstName, r.wave])).toEqual([
+      ["a", 1], ["b", 1], ["c", 2],
+    ]);
+  });
+
+  it("reconstructs a combined wave from shared wave numbers and round-trips", () => {
+    const riders = [
+      rider({ categoryLabel: "A", wave: 1, firstName: "a" }),
+      rider({ categoryLabel: "B", wave: 1, firstName: "b" }),
+      rider({ categoryLabel: "C", wave: 2, firstName: "c" }),
+    ];
+    const groups = groupRidersIntoWaves(riders, cats);
+    expect(groups.map((g) => [g.categoryLabel, g.combinedWithPrev ?? false])).toEqual([
+      ["A", false], ["B", true], ["C", false],
+    ]);
+    const out = flattenWaveGroups(groups);
+    expect(out.map((r) => [r.firstName, r.wave])).toEqual([
+      ["a", 1], ["b", 1], ["c", 2],
+    ]);
+  });
+});

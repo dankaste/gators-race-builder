@@ -165,8 +165,14 @@ export interface ScheduleBreak {
 export interface ScheduleConfig {
   /** First wave start, "HH:MM" 24h (e.g. "09:30"). */
   startTime: string;
-  /** Minutes allotted per wave. */
+  /** Default minutes allotted per wave (used when a category has no override). */
   minutesPerWave: number;
+  /**
+   * Optional per-category minutes-per-wave overrides, keyed by category label.
+   * A wave uses its category's value, falling back to {@link minutesPerWave}.
+   * Keyed by category (stable) rather than wave number (renumbers).
+   */
+  minutesPerWaveByCategory?: Record<string, number>;
   /** Fixed breaks inserted into the timeline. */
   breaks?: ScheduleBreak[];
 }
@@ -199,6 +205,8 @@ export interface RaceConfig {
 /** Per-event working data inside a persisted project. */
 export interface ProjectEventState {
   riders: Rider[];
+  /** Editable wave-timing schedule for this event; falls back to the event/template default. */
+  schedule?: ScheduleConfig;
 }
 
 /**

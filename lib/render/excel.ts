@@ -16,6 +16,24 @@ export async function handoutsToXlsx(tables: HandoutTable[]): Promise<Blob> {
 
     for (const row of table.rows) ws.addRow(row);
 
+    // Wave stager: rule between waves (medium top border) and between categories
+    // within a combined wave (dashed top border), mirroring the PDF.
+    const groups = table.rowGroups;
+    if (groups && groups.length === table.rows.length) {
+      for (let i = 1; i < groups.length; i++) {
+        const style =
+          groups[i].wave !== groups[i - 1].wave
+            ? ("medium" as const)
+            : groups[i].category !== groups[i - 1].category
+              ? ("dashed" as const)
+              : null;
+        if (!style) continue;
+        ws.getRow(i + 2).eachCell((cell) => {
+          cell.border = { ...cell.border, top: { style } };
+        });
+      }
+    }
+
     table.headers.forEach((h, i) => {
       const maxCell = Math.max(
         h.length,

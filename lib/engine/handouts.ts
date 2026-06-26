@@ -12,13 +12,21 @@ export interface HandoutTable {
   title: string;
   headers: string[];
   rows: (string | number)[][];
+  /**
+   * Optional per-row grouping (parallel to `rows`) for the wave stager: a bold
+   * rule is drawn where `wave` changes, a dashed rule where `category` changes
+   * within the same wave. Present only for wave-sorted roster handouts.
+   */
+  rowGroups?: { wave: number | string; category: string }[];
 }
 
 export interface ScheduleOptions {
   /** First wave start, "HH:MM" 24h (e.g. "09:30"). */
   startTime: string;
-  /** Minutes allotted per wave. */
+  /** Default minutes allotted per wave. */
   minutesPerWave: number;
+  /** Per-category minutes-per-wave overrides (keyed by category label). */
+  minutesPerWaveByCategory?: Record<string, number>;
   /** Fixed breaks inserted into the timeline. */
   breaks?: ScheduleBreak[];
 }
@@ -141,6 +149,9 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
     count: null,
   });
 
+  const minsFor = (label: string) =>
+    opts.minutesPerWaveByCategory?.[label] ?? opts.minutesPerWave;
+
   const rows: ScheduleRow[] = [];
   let offset = 0; // minutes elapsed from startTime
   for (const wave of waveNums) {
@@ -151,7 +162,7 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
       label: info.get(wave)!.label,
       count: info.get(wave)!.count,
     });
-    offset += opts.minutesPerWave;
+    offset += minsFor(info.get(wave)!.label);
     for (const b of breaksByWave.get(wave) ?? []) {
       rows.push(breakRow(b, addMinutes(opts.startTime, offset)));
       offset += b.minutes;
@@ -189,6 +200,7 @@ export function renderHandout(
 ): HandoutTable {
   const headers = template.columns.map((c: HandoutColumn) => c.header);
   let rows: (string | number)[][] = [];
+  let rowGroups: { wave: number | string; category: string }[] | undefined;
 
   if (template.kind === "roster") {
     let list = [...riders];
@@ -197,13 +209,18 @@ export function renderHandout(
     else if (template.sort === "wave") list.sort((a, b) => (a.wave ?? 1e9) - (b.wave ?? 1e9) || byName(a, b));
     else if (template.sort === "category") list.sort((a, b) => (a.categoryLabel ?? "").localeCompare(b.categoryLabel ?? "") || byName(a, b));
     rows = list.map((r) => template.columns.map((c) => rosterValue(r, c.source)));
+    // Wave-sorted rosters (the stager) carry grouping so the renderer can rule
+    // between waves (bold) and between categories within a wave (dashed).
+    if (template.sort === "wave") {
+      rowGroups = list.map((r) => ({ wave: r.wave ?? "", category: r.categoryLabel ?? "" }));
+    }
   } else if (template.kind === "podium") {
     rows = categorySummary(riders, event).map((c) => template.columns.map((col) => podiumValue(c, col.source)));
   } else {
     rows = scheduleRows(riders, opts).map((row) => template.columns.map((col) => scheduleValue(row, col.source)));
   }
 
-  return { title: template.title, headers, rows };
+  return { title: template.title, headers, rows, rowGroups };
 }
 
 // --- default templates (reproduce the original hardcoded handouts) ---
