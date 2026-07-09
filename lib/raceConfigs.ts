@@ -2,8 +2,31 @@ import "server-only";
 import { eq } from "drizzle-orm";
 import { races } from "@/db/schema";
 import { getDb, hasDatabase } from "@/db";
-import type { HandoutTemplate, RaceConfig } from "@/lib/engine/models";
+import type { HandoutTemplate, RaceConfig, WaveOrdering } from "@/lib/engine/models";
 import { SEED_CONFIGS, getSeedConfig } from "@/lib/configs";
+
+/**
+ * Maps `ordering` values from renamed/removed WaveOrdering variants to their
+ * current equivalent, so configs saved to the DB before a rename still load
+ * (and re-save) cleanly instead of failing the current zod schema.
+ */
+const LEGACY_ORDERING: Record<string, WaveOrdering> = {
+  "isolate-slow-heat": "seed-ascending",
+  "isolate-fast-heat": "seed-descending",
+};
+
+function migrateLegacyOrdering(config: RaceConfig): RaceConfig {
+  return {
+    ...config,
+    events: config.events.map((event) => ({
+      ...event,
+      categories: event.categories.map((cat) => {
+        const mapped = LEGACY_ORDERING[cat.ordering as string];
+        return mapped ? { ...cat, ordering: mapped } : cat;
+      }),
+    })),
+  };
+}
 
 /**
  * Source of race configs for the app. Reads from Neon when DATABASE_URL is set
@@ -15,7 +38,7 @@ export async function getRaceConfigs(): Promise<RaceConfig[]> {
   try {
     const rows = await getDb().select().from(races);
     if (rows.length === 0) return SEED_CONFIGS;
-    return rows.map((r) => r.config);
+    return rows.map((r) => migrateLegacyOrdering(r.config));
   } catch {
     return SEED_CONFIGS;
   }
