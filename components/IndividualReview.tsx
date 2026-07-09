@@ -13,6 +13,7 @@ import { handoutsToXlsx } from "@/lib/render/excel";
 import { toWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { handoutsToPdf } from "@/lib/render/pdf";
 import { downloadBlob, downloadText } from "@/lib/download";
+import { normName } from "@/lib/engine/nameMatch";
 import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
@@ -28,6 +29,8 @@ export function IndividualReview({
   schedule,
   onScheduleChange,
   highestBib,
+  projectId,
+  season,
 }: {
   event: RaceEvent;
   slug: string;
@@ -37,12 +40,16 @@ export function IndividualReview({
   schedule?: ScheduleConfig;
   onScheduleChange: (next: ScheduleConfig) => void;
   highestBib: number;
+  projectId: string;
+  season: string;
 }) {
   const [importError, setImportError] = useState<string | null>(null);
   // Effective schedule for handouts; the wave editor edits it via onScheduleChange.
   const effSchedule: ScheduleConfig = schedule ?? event.schedule ?? DEFAULT_SCHEDULE;
   const [bibStart, setBibStart] = useState<number>(highestBib + 1);
   const [busy, setBusy] = useState(false);
+  const [matching, setMatching] = useState(false);
+  const [bibMessage, setBibMessage] = useState<string | null>(null);
   const [view, setView] = useState<"table" | "waves">("table");
   const [adding, setAdding] = useState(false);
   // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
@@ -84,24 +91,111 @@ export function IndividualReview({
 
   const blankBibCount = riders.filter((r) => r.bib == null || r.bib === "").length;
 
-  /** Assign sequential bibs (from `bibStart`) to bib-less riders in wave order. */
-  function assignBibs() {
-    if (blankBibCount === 0) return;
-    const nameOf = (r: Rider) => `${r.lastName}, ${r.firstName}`;
-    const order = riders
-      .map((r, i) => ({ r, i }))
-      .filter(({ r }) => r.bib == null || r.bib === "")
-      .sort((a, b) => (a.r.wave ?? 1e9) - (b.r.wave ?? 1e9) || nameOf(a.r).localeCompare(nameOf(b.r)));
-    const bibByIndex = new Map<number, number>();
-    let n = bibStart;
-    for (const { i } of order) bibByIndex.set(i, n++);
-    onChange(
-      riders.map((r, i) =>
-        bibByIndex.has(i)
-          ? { ...r, bib: bibByIndex.get(i)!, warnings: r.warnings.filter((w) => !w.includes("assign manually")) }
-          : r,
-      ),
-    );
+  function bibAsNumber(bib: number | string | null): number | null {
+    if (typeof bib === "number") return bib;
+    if (typeof bib === "string" && /^\d+$/.test(bib)) return Number(bib);
+    return null;
+  }
+
+  /**
+   * Assign bibs to bib-less riders: first try to match each one, by name,
+   * against a rider with an existing bib from another race this season (the
+   * physical plate stack is shared across races) — anyone left over gets a
+   * fresh sequential number from `bibStart`, in wave order, same as before.
+   */
+  async function assignBibs() {
+    if (blankBibCount === 0 || matching) return;
+    setMatching(true);
+    setBibMessage(null);
+    try {
+      const blanks = riders.map((r, i) => ({ r, i })).filter(({ r }) => r.bib == null || r.bib === "");
+
+      // Only trust a historical match when this name is unique among this
+      // race's own bib-less riders — otherwise two same-name riders here
+      // (e.g. twins) could both land on the same reused plate.
+      const localKey = (r: Rider) => normName(`${r.firstName} ${r.lastName}`);
+      const nameCounts = new Map<string, number>();
+      for (const { r } of blanks) nameCounts.set(localKey(r), (nameCounts.get(localKey(r)) ?? 0) + 1);
+
+      type Matched = { bib: number | string; raceSlug: string; conflict?: { raceSlug: string; bib: number | string } };
+      const matchByIndex = new Map<number, Matched>();
+      try {
+        const res = await fetch("/api/projects/match-bibs", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            season,
+            candidates: blanks.map(({ r }) => ({ firstName: r.firstName, lastName: r.lastName, birthDate: r.birthDate })),
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          for (const m of data.matches as (Matched & { index: number })[]) {
+            const { r, i } = blanks[m.index];
+            if ((nameCounts.get(localKey(r)) ?? 0) > 1) continue; // ambiguous within this race — skip
+            matchByIndex.set(i, { bib: m.bib, raceSlug: m.raceSlug, conflict: m.conflict });
+          }
+        }
+      } catch {
+        // network/lookup failure — everyone falls through to sequential assignment below
+      }
+
+      // Numbers already in play (existing + this round's matches) so the
+      // sequential fallback never hands out a number that collides with a
+      // reused plate, even if `bibStart` was set below `highestBib`.
+      const usedBibs = new Set<number>();
+      for (const r of riders) {
+        const n = bibAsNumber(r.bib);
+        if (n != null) usedBibs.add(n);
+      }
+      for (const m of matchByIndex.values()) {
+        const n = bibAsNumber(m.bib);
+        if (n != null) usedBibs.add(n);
+      }
+
+      const nameOf = (r: Rider) => `${r.lastName}, ${r.firstName}`;
+      const remaining = blanks
+        .filter(({ i }) => !matchByIndex.has(i))
+        .sort((a, b) => (a.r.wave ?? 1e9) - (b.r.wave ?? 1e9) || nameOf(a.r).localeCompare(nameOf(b.r)));
+      const seqByIndex = new Map<number, number>();
+      let n = bibStart;
+      for (const { i } of remaining) {
+        while (usedBibs.has(n)) n++;
+        seqByIndex.set(i, n);
+        usedBibs.add(n);
+        n++;
+      }
+
+      onChange(
+        riders.map((r, i) => {
+          const matched = matchByIndex.get(i);
+          const seq = seqByIndex.get(i);
+          if (matched) {
+            const warnings = r.warnings.filter((w) => !w.includes("assign manually"));
+            if (matched.conflict) {
+              warnings.push(
+                `Bib matched from ${matched.raceSlug}; conflicting bib ${matched.conflict.bib} also found in ${matched.conflict.raceSlug}`,
+              );
+            }
+            return { ...r, bib: matched.bib, warnings };
+          }
+          if (seq != null) {
+            return { ...r, bib: seq, warnings: r.warnings.filter((w) => !w.includes("assign manually")) };
+          }
+          return r;
+        }),
+      );
+
+      const matchedCount = matchByIndex.size;
+      setBibMessage(
+        matchedCount > 0
+          ? `Matched ${matchedCount} bib${matchedCount === 1 ? "" : "s"} from other races, assigned ${remaining.length} new.`
+          : `Assigned ${remaining.length} new bib${remaining.length === 1 ? "" : "s"}.`,
+      );
+    } finally {
+      setMatching(false);
+    }
   }
 
   async function downloadExcel() {
@@ -139,7 +233,11 @@ export function IndividualReview({
     <>
       <ValidationPanel summary={summary} />
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <button onClick={resuggestWaves} className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold hover:border-brand-strong">
+        <button
+          onClick={resuggestWaves}
+          disabled={matching}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold hover:border-brand-strong disabled:opacity-60"
+        >
           Re-suggest waves
         </button>
         <button
@@ -157,7 +255,8 @@ export function IndividualReview({
         </button>
         <button
           onClick={() => setAdding((v) => !v)}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background hover:opacity-90"
+          disabled={matching}
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-60"
         >
           + Add rider
         </button>
@@ -165,6 +264,7 @@ export function IndividualReview({
           onConfirm={() => onChange([])}
           prompt="Clear this roster and re-import?"
           confirmLabel="Clear"
+          disabled={matching}
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
           Re-import
@@ -186,16 +286,17 @@ export function IndividualReview({
         />
         <button
           onClick={assignBibs}
-          disabled={blankBibCount === 0}
-          title={`Fills in bib-less riders starting at ${bibStart}, in wave order. Existing bibs are left untouched.`}
+          disabled={blankBibCount === 0 || matching}
+          title={`Checks other races this season for an existing plate by name, then fills any remainder starting at ${bibStart} in wave order. Existing bibs are left untouched.`}
           className="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-40"
         >
-          Assign {blankBibCount} blank{blankBibCount === 1 ? "" : "s"}
+          {matching ? "Checking…" : `Assign ${blankBibCount} blank${blankBibCount === 1 ? "" : "s"}`}
         </button>
         <span className="text-xs text-muted">
           Highest plate used across all races: <b className="text-foreground">{highestBib || "—"}</b>
           {highestBib > 0 && <> → next available {highestBib + 1}</>}
         </span>
+        {bibMessage && <span className="text-xs text-brand-strong">{bibMessage}</span>}
       </div>
       {adding && (
         <div className="mt-4">

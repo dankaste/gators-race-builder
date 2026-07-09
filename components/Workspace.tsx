@@ -9,11 +9,13 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 
 export function Workspace({
   projectId,
+  season,
   config,
   initialState,
   highestBib,
 }: {
   projectId: string;
+  season: string;
   config: RaceConfig;
   initialState: ProjectState;
   highestBib: number;
@@ -130,6 +132,8 @@ export function Workspace({
             schedule={schedulesState[activeEvent.id]}
             onScheduleChange={(s) => setEventSchedule(activeEvent.id, s)}
             highestBib={highestBib}
+            projectId={projectId}
+            season={season}
           />
         )}
       </div>

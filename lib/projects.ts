@@ -3,11 +3,18 @@ import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { projects, type Project } from "@/db/schema";
 import type { ProjectState } from "@/lib/engine/models";
+import { matchBibCandidates, type BibCandidate, type BibMatch, type BibSource } from "@/lib/engine/nameMatch";
 
 export type { Project, ProjectState };
+export type { BibCandidate, BibMatch };
 
 export async function listProjects(): Promise<Project[]> {
   return getDb().select().from(projects).orderBy(desc(projects.updatedAt));
+}
+
+/** Projects for one season only — used to scope PII-bearing rider data to what's needed. */
+export async function listProjectsBySeason(season: string): Promise<Project[]> {
+  return getDb().select().from(projects).where(eq(projects.season, season)).orderBy(desc(projects.updatedAt));
 }
 
 /**
@@ -33,6 +40,28 @@ export async function getHighestBib(): Promise<number> {
     }
   }
   return max;
+}
+
+/**
+ * Look up existing bibs for riders missing one in the current race, matched
+ * by name against every OTHER project in the same season (bibs are one
+ * physical plate stack per season — a rider who already raced this season
+ * keeps their plate rather than getting a fresh number). Excludes the
+ * current project so a race's bib-less riders never match each other.
+ */
+export async function findExistingBibs(
+  candidates: BibCandidate[],
+  opts: { excludeProjectId?: string; season: string },
+): Promise<Map<number, BibMatch>> {
+  const all = await listProjectsBySeason(opts.season);
+  const sources: BibSource[] = all
+    .filter((p) => p.id !== opts.excludeProjectId)
+    .map((p) => {
+      const state = (p.state ?? {}) as ProjectState;
+      const riders = Object.values(state.events ?? {}).flatMap((ev) => ev.riders ?? []);
+      return { raceSlug: p.raceSlug, projectName: p.name, updatedAt: p.updatedAt, riders };
+    });
+  return matchBibCandidates(candidates, sources);
 }
 
 export async function getProject(id: string): Promise<Project | undefined> {

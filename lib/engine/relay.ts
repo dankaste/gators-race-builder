@@ -1,4 +1,5 @@
 import type { RelayConfig, Rider } from "./models";
+import { normName, nameKeys as nameKeysOf } from "./nameMatch";
 
 /**
  * Relay team builder (Swamp Dash Relay).
@@ -25,15 +26,11 @@ export interface RelayResult {
   unmatchedFriends: { rider: string; requested: string }[];
 }
 
-function norm(s: string): string {
-  return s.trim().toLowerCase().replace(/\s+/g, " ");
-}
+const norm = normName;
 
 /** Candidate normalized name keys for a rider (handles "First Last" and "Last, First"). */
 function nameKeys(r: Rider): string[] {
-  const f = r.firstName?.trim() ?? "";
-  const l = r.lastName?.trim() ?? "";
-  return [norm(`${f} ${l}`), norm(`${l} ${f}`), norm(`${l}, ${f}`), norm(`${l} ,${f}`)].filter(Boolean);
+  return nameKeysOf(r.firstName, r.lastName);
 }
 
 // --- union-find over rider indices for friend grouping ---

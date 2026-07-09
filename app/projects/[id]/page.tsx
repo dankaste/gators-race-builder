@@ -31,6 +31,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
       </div>
       <Workspace
         projectId={project.id}
+        season={project.season}
         config={config}
         initialState={(project.state ?? {}) as ProjectState}
         highestBib={highestBib}
