@@ -132,10 +132,16 @@ interface ScheduleRow {
  * later row's time out by the break's length.
  */
 function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
-  const info = new Map<number, { label: string; count: number }>();
+  // `leadLabel` is the first category encountered for a wave — used only for
+  // the minutes-per-wave category fallback (matching the wave editor's own
+  // "lead" convention). `labels` collects every distinct category present,
+  // for display, so a combined wave (two categories sharing one wave number)
+  // shows all of them rather than just whichever rider came first.
+  const info = new Map<number, { leadLabel: string; labels: string[]; count: number }>();
   for (const r of riders) {
     if (r.wave == null || !r.categoryLabel) continue;
-    const i = info.get(r.wave) ?? { label: r.categoryLabel, count: 0 };
+    const i = info.get(r.wave) ?? { leadLabel: r.categoryLabel, labels: [], count: 0 };
+    if (!i.labels.includes(r.categoryLabel)) i.labels.push(r.categoryLabel);
     i.count += 1;
     info.set(r.wave, i);
   }
@@ -156,20 +162,21 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
     count: null,
   });
 
-  const minsFor = (wave: number, label: string) =>
-    opts.minutesPerWaveByWave?.[wave] ?? opts.minutesPerWaveByCategory?.[label] ?? opts.minutesPerWave;
+  const minsFor = (wave: number, leadLabel: string) =>
+    opts.minutesPerWaveByWave?.[wave] ?? opts.minutesPerWaveByCategory?.[leadLabel] ?? opts.minutesPerWave;
 
   const rows: ScheduleRow[] = [];
   let offset = 0; // minutes elapsed from startTime
   for (const wave of waveNums) {
+    const entry = info.get(wave)!;
     rows.push({
       kind: "wave",
       wave,
       time: addMinutes(opts.startTime, offset),
-      label: info.get(wave)!.label,
-      count: info.get(wave)!.count,
+      label: entry.labels.join(" + "),
+      count: entry.count,
     });
-    offset += minsFor(wave, info.get(wave)!.label);
+    offset += minsFor(wave, entry.leadLabel);
     for (const b of breaksByWave.get(wave) ?? []) {
       rows.push(breakRow(b, addMinutes(opts.startTime, offset)));
       offset += b.minutes;

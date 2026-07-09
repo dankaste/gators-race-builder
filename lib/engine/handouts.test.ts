@@ -115,6 +115,19 @@ describe("scheduleTable", () => {
     expect(t.rows.map((r) => r[1])).toEqual(["9:30 AM", "9:35 AM", "9:45 AM"]);
   });
 
+  it("shows every combined category for a wave, not just the first rider's", () => {
+    const t = scheduleTable(
+      [
+        rider({ wave: 1, categoryLabel: "5-6 M" }),
+        rider({ wave: 1, categoryLabel: "9-10 M" }),
+        rider({ wave: 1, categoryLabel: "5-6 M" }),
+      ],
+      event,
+      { startTime: "09:30", minutesPerWave: 10 },
+    );
+    expect(t.rows[0]).toEqual(["Wave 1", "9:30 AM", "5-6 M + 9-10 M", 3]);
+  });
+
   it("per-wave overrides one wave without affecting a sibling wave in the same category", () => {
     const t = scheduleTable(
       [
