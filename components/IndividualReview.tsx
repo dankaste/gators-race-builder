@@ -76,10 +76,75 @@ export function IndividualReview({
       const registrations = parseRegistrations(await regFile.text());
       const roster = rosterFile ? parseRoster(await rosterFile.text()) : [];
       const { riders: computed } = transformEvent({ registrations, roster, event, raceDate });
+
+      // Auto-fill bibs for riders who already raced this season under another
+      // race, so directors don't have to click "Assign blanks" for the common
+      // case — it's still there afterward for any genuine leftovers.
+      const blanks = computed.map((r, i) => ({ r, i })).filter(({ r }) => r.bib == null || r.bib === "");
+      if (blanks.length > 0) {
+        setMatching(true);
+        try {
+          const matches = await fetchBibMatches(blanks.map(({ r }) => r));
+          for (const [pos, m] of matches) {
+            const { i } = blanks[pos];
+            const warnings = computed[i].warnings.filter((w) => !w.includes("assign manually"));
+            if (m.conflict) {
+              warnings.push(`Bib matched from ${m.raceSlug}; conflicting bib ${m.conflict.bib} also found in ${m.conflict.raceSlug}`);
+            }
+            computed[i] = { ...computed[i], bib: m.bib, warnings };
+          }
+          if (matches.size > 0) {
+            setBibMessage(`Matched ${matches.size} bib${matches.size === 1 ? "" : "s"} from other races on import.`);
+          }
+        } finally {
+          setMatching(false);
+        }
+      }
+
       onChange(computed);
     } catch (err) {
       setImportError(err instanceof Error ? err.message : "Failed to import");
     }
+  }
+
+  type BibMatched = { bib: number | string; raceSlug: string; conflict?: { raceSlug: string; bib: number | string } };
+
+  /**
+   * Look up existing bibs (by name, this season, other races) for a batch of
+   * bib-less riders. Returns matches keyed by position in `blankRiders` —
+   * skips any name shared by more than one rider in the batch itself (e.g.
+   * twins), since we can't tell which one a historical match belongs to.
+   * Fails safe: returns an empty map on any network/server error.
+   */
+  async function fetchBibMatches(blankRiders: Rider[]): Promise<Map<number, BibMatched>> {
+    const result = new Map<number, BibMatched>();
+    if (blankRiders.length === 0) return result;
+    const localKey = (r: Rider) => normName(`${r.firstName} ${r.lastName}`);
+    const nameCounts = new Map<string, number>();
+    for (const r of blankRiders) nameCounts.set(localKey(r), (nameCounts.get(localKey(r)) ?? 0) + 1);
+
+    try {
+      const res = await fetch("/api/projects/match-bibs", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          projectId,
+          season,
+          candidates: blankRiders.map((r) => ({ firstName: r.firstName, lastName: r.lastName, birthDate: r.birthDate })),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        for (const m of data.matches as (BibMatched & { index: number })[]) {
+          const r = blankRiders[m.index];
+          if ((nameCounts.get(localKey(r)) ?? 0) > 1) continue; // ambiguous within this batch — skip
+          result.set(m.index, { bib: m.bib, raceSlug: m.raceSlug, conflict: m.conflict });
+        }
+      }
+    } catch {
+      // network/lookup failure — caller falls back to whatever it does without matches
+    }
+    return result;
   }
 
   function resuggestWaves() {
@@ -102,6 +167,8 @@ export function IndividualReview({
    * against a rider with an existing bib from another race this season (the
    * physical plate stack is shared across races) — anyone left over gets a
    * fresh sequential number from `bibStart`, in wave order, same as before.
+   * This runs automatically on import too; the button here is the manual
+   * catch-all for riders added afterward (or missed the first time).
    */
   async function assignBibs() {
     if (blankBibCount === 0 || matching) return;
@@ -109,37 +176,9 @@ export function IndividualReview({
     setBibMessage(null);
     try {
       const blanks = riders.map((r, i) => ({ r, i })).filter(({ r }) => r.bib == null || r.bib === "");
-
-      // Only trust a historical match when this name is unique among this
-      // race's own bib-less riders — otherwise two same-name riders here
-      // (e.g. twins) could both land on the same reused plate.
-      const localKey = (r: Rider) => normName(`${r.firstName} ${r.lastName}`);
-      const nameCounts = new Map<string, number>();
-      for (const { r } of blanks) nameCounts.set(localKey(r), (nameCounts.get(localKey(r)) ?? 0) + 1);
-
-      type Matched = { bib: number | string; raceSlug: string; conflict?: { raceSlug: string; bib: number | string } };
-      const matchByIndex = new Map<number, Matched>();
-      try {
-        const res = await fetch("/api/projects/match-bibs", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            projectId,
-            season,
-            candidates: blanks.map(({ r }) => ({ firstName: r.firstName, lastName: r.lastName, birthDate: r.birthDate })),
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          for (const m of data.matches as (Matched & { index: number })[]) {
-            const { r, i } = blanks[m.index];
-            if ((nameCounts.get(localKey(r)) ?? 0) > 1) continue; // ambiguous within this race — skip
-            matchByIndex.set(i, { bib: m.bib, raceSlug: m.raceSlug, conflict: m.conflict });
-          }
-        }
-      } catch {
-        // network/lookup failure — everyone falls through to sequential assignment below
-      }
+      const matchesByPos = await fetchBibMatches(blanks.map(({ r }) => r));
+      const matchByIndex = new Map<number, BibMatched>();
+      for (const [pos, m] of matchesByPos) matchByIndex.set(blanks[pos].i, m);
 
       // Numbers already in play (existing + this round's matches) so the
       // sequential fallback never hands out a number that collides with a
@@ -224,7 +263,7 @@ export function IndividualReview({
   }
 
   if (riders.length === 0) {
-    return <ImportPanel raceDate={raceDate} onImport={handleImport} error={importError} />;
+    return <ImportPanel raceDate={raceDate} onImport={handleImport} error={importError} busy={matching} />;
   }
 
   const summary = validate(riders, event);
@@ -362,10 +401,12 @@ function ImportPanel({
   raceDate,
   onImport,
   error,
+  busy,
 }: {
   raceDate: string;
   onImport: (reg: File, roster: File | null) => void;
   error: string | null;
+  busy: boolean;
 }) {
   const [reg, setReg] = useState<File | null>(null);
   const [roster, setRoster] = useState<File | null>(null);
@@ -394,10 +435,10 @@ function ImportPanel({
       {error && <p className="mt-4 text-danger">{error}</p>}
       <button
         onClick={() => reg && onImport(reg, roster)}
-        disabled={!reg || !raceDate}
+        disabled={!reg || !raceDate || busy}
         className="mt-5 rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong disabled:opacity-50"
       >
-        Compute categories &amp; waves
+        {busy ? "Checking other races for existing bibs…" : "Compute categories & waves"}
       </button>
     </div>
   );
