@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { DEFAULT_SCHEDULE, type CategoryDef, type Gender, type RaceConfig, type RaceEvent, type WaveOrdering } from "@/lib/engine/models";
+import { DEFAULT_SCHEDULE, type CategoryDef, type Gender, type RaceConfig, type RaceEvent, type ScheduleConfig, type WaveOrdering } from "@/lib/engine/models";
 import { ScheduleControls } from "./ScheduleControls";
 
 const ORDERINGS: WaveOrdering[] = ["seed-ascending", "seed-descending", "registration", "manual"];
@@ -53,6 +53,15 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
     patch((c) => {
       const cat = c.events[ei].categories[ci];
       cat.genders = cat.genders.includes(g) ? cat.genders.filter((x) => x !== g) : [...cat.genders, g];
+    });
+  const setCatMinutes = (ei: number, catLabel: string, v: string) =>
+    patch((c) => {
+      const sched = c.events[ei].schedule ?? { ...DEFAULT_SCHEDULE };
+      const map = { ...(sched.minutesPerWaveByCategory ?? {}) };
+      if (v.trim() === "") delete map[catLabel];
+      else map[catLabel] = Math.max(1, Number(v) || 1);
+      sched.minutesPerWaveByCategory = Object.keys(map).length ? map : undefined;
+      c.events[ei].schedule = sched;
     });
 
   async function save() {
@@ -149,6 +158,8 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
                 removeCat={removeCat}
                 moveCat={moveCat}
                 toggleGender={toggleGender}
+                setCatMinutes={setCatMinutes}
+                schedule={event.schedule ?? DEFAULT_SCHEDULE}
                 input={input}
               />
               <div className="mt-5 border-t border-border pt-4">
@@ -202,7 +213,7 @@ function newEvent(slug: string, i: number): RaceEvent {
 }
 
 function CategoryEditor({
-  event, ei, setCat, addCat, removeCat, moveCat, toggleGender, input,
+  event, ei, setCat, addCat, removeCat, moveCat, toggleGender, setCatMinutes, schedule, input,
 }: {
   event: RaceEvent;
   ei: number;
@@ -211,6 +222,8 @@ function CategoryEditor({
   removeCat: (ei: number, ci: number) => void;
   moveCat: (ei: number, ci: number, dir: -1 | 1) => void;
   toggleGender: (ei: number, ci: number, g: Gender) => void;
+  setCatMinutes: (ei: number, catLabel: string, v: string) => void;
+  schedule: ScheduleConfig;
   input: string;
 }) {
   return (
@@ -227,6 +240,7 @@ function CategoryEditor({
             <th className="px-2 py-1">Packages</th>
             <th className="px-2 py-1">Max wave</th>
             <th className="px-2 py-1">Wave order</th>
+            <th className="px-2 py-1">Min/wave</th>
             <th className="px-2 py-1"></th>
           </tr>
         </thead>
@@ -252,6 +266,17 @@ function CategoryEditor({
                   {ORDERINGS.map((o) => <option key={o} value={o}>{o}</option>)}
                 </select>
               </td>
+              <td className="px-2 py-1">
+                <input
+                  type="number"
+                  min={1}
+                  className={`${input} w-16`}
+                  placeholder={String(schedule.minutesPerWave)}
+                  value={schedule.minutesPerWaveByCategory?.[cat.label] ?? ""}
+                  onChange={(e) => setCatMinutes(ei, cat.label, e.target.value)}
+                  title="Minutes per wave for this category; blank uses the event default below"
+                />
+              </td>
               <td className="px-2 py-1 whitespace-nowrap">
                 <button onClick={() => moveCat(ei, ci, -1)} className="px-1 text-muted hover:text-foreground">↑</button>
                 <button onClick={() => moveCat(ei, ci, 1)} className="px-1 text-muted hover:text-foreground">↓</button>
@@ -263,6 +288,7 @@ function CategoryEditor({
       </table>
       <button onClick={() => addCat(ei)} className="mt-2 text-sm font-semibold text-brand-strong hover:underline">+ Add category</button>
       <p className="mt-2 text-xs text-muted">Use Min/Max for an age range, or the Ages list for specific ages (the list wins if set). Leave both blank to match any age.</p>
+      <p className="mt-1 text-xs text-muted">Min/wave sets this category&apos;s wave gap on the race-day schedule; blank falls back to the event&apos;s default minutes per wave.</p>
     </div>
   );
 }
