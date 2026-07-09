@@ -25,7 +25,7 @@ export const categorySchema = z.object({
   ageMax: z.number().int().optional(),
   packages: z.array(z.string()).optional(),
   maxSize: z.number().int().positive(),
-  ordering: z.enum(["isolate-slow-heat", "seed-ascending", "registration", "manual"]),
+  ordering: z.enum(["seed-ascending", "seed-descending", "registration", "manual"]),
 });
 
 export const scheduleBreakSchema = z.object({

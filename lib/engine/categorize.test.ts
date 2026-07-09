@@ -14,13 +14,13 @@ describe("matchCategory (Swamp Dash)", () => {
     expect(c?.label).toBe("Balance F");
   });
 
-  it("routes a 9yo pedal boy to 9-10 M (sorted/slow-heat)", () => {
+  it("routes a 9yo pedal boy to 9-10 M (seed-ascending, slowest first)", () => {
     const c = matchCategory(
       { gender: "M", ageOnRaceDay: 9, packageName: "Pedal Bike" },
       cats,
     );
     expect(c?.label).toBe("9-10 M");
-    expect(c?.ordering).toBe("isolate-slow-heat");
+    expect(c?.ordering).toBe("seed-ascending");
   });
 
   it("combines 3-4 across genders", () => {

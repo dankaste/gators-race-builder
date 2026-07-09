@@ -72,8 +72,8 @@ export interface Rider {
 }
 
 export type WaveOrdering =
-  | "isolate-slow-heat"
   | "seed-ascending"
+  | "seed-descending"
   | "registration"
   | "manual";
 

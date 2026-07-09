@@ -39,7 +39,7 @@ describe("waveCountFor", () => {
 
 describe("buildWaves", () => {
   const slowHeat: CategoryDef[] = [
-    { label: "9-10 M", distanceLabel: "Pedal Bike", genders: ["M"], ages: [9, 10], maxSize: 9, ordering: "isolate-slow-heat" },
+    { label: "9-10 M", distanceLabel: "Pedal Bike", genders: ["M"], ages: [9, 10], maxSize: 9, ordering: "seed-ascending" },
   ];
 
   it("splits evenly and numbers waves globally", () => {
@@ -91,6 +91,34 @@ describe("buildWaves", () => {
   });
 });
 
+describe("buildWaves — seed-descending", () => {
+  const fastHeat: CategoryDef[] = [
+    { label: "Adv 9-10 M", distanceLabel: "Pedal Bike", genders: ["M"], ages: [9, 10], maxSize: 9, ordering: "seed-descending" },
+  ];
+
+  it("puts highest seed (fastest) in the first wave", () => {
+    const riders = Array.from({ length: 11 }, (_, i) =>
+      rider({ categoryLabel: "Adv 9-10 M", seedLevel: i + 1, firstName: `r${i}` }),
+    );
+    const waves = buildWaves(riders, fastHeat);
+    expect(waves.map((w) => w.riders.length)).toEqual([6, 5]);
+    const firstWaveSeeds = waves[0].riders.map((r) => r.seedLevel!);
+    const secondWaveSeeds = waves[1].riders.map((r) => r.seedLevel!);
+    expect(Math.min(...firstWaveSeeds)).toBeGreaterThanOrEqual(Math.max(...secondWaveSeeds));
+  });
+
+  it("still puts unseeded riders in the last wave, not the lead heat", () => {
+    const riders = [
+      ...Array.from({ length: 9 }, (_, i) => rider({ categoryLabel: "Adv 9-10 M", seedLevel: i + 1, firstName: `seeded${i}` })),
+      rider({ categoryLabel: "Adv 9-10 M", seedLevel: null, firstName: "unseeded" }),
+    ];
+    const waves = buildWaves(riders, fastHeat); // 10 riders, max 9 -> 2 waves, even split 5 + 5
+    expect(waves.map((w) => w.riders.length)).toEqual([5, 5]);
+    expect(waves[1].riders.map((r) => r.firstName)).toContain("unseeded");
+    expect(waves[0].riders.map((r) => r.firstName)).not.toContain("unseeded");
+  });
+});
+
 describe("lastWaveForCategory", () => {
   it("returns null when the category has no riders yet", () => {
     const riders = [rider({ categoryLabel: "A", wave: 1 })];
@@ -134,7 +162,7 @@ describe("rebalanceCategoryWaves", () => {
   it("matches buildWaves' even split for one category", () => {
     const cat: CategoryDef = {
       label: "9-10 M", distanceLabel: "Pedal Bike", genders: ["M"], ages: [9, 10],
-      maxSize: 9, ordering: "isolate-slow-heat",
+      maxSize: 9, ordering: "seed-ascending",
     };
     const riders = Array.from({ length: 11 }, (_, i) =>
       rider({ categoryLabel: "9-10 M", seedLevel: 11 - i, firstName: `r${i}` }));

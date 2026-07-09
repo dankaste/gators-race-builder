@@ -58,7 +58,8 @@ function c(
   return { label, distanceLabel, genders, packages, ...band, maxSize, ordering };
 }
 
-const SLOW: WaveOrdering = "isolate-slow-heat";
+const SLOW: WaveOrdering = "seed-ascending";
+const FAST: WaveOrdering = "seed-descending";
 const REG: WaveOrdering = "registration";
 
 export function buildLapRace(p: LapRaceParams): RaceConfig {
@@ -83,25 +84,26 @@ export function buildLapRace(p: LapRaceParams): RaceConfig {
   }
 
   // Advanced 1 Lap — female: 9-10, 11+; male: 9-10, 11-12, <oldest>
-  cats.push(c("Adv 1 Lap 9-10F", d.adv1, ["F"], ADV1, { ageMin: 9, ageMax: 10 }, 9, SLOW));
-  cats.push(c("Adv 1 Lap 11+F", d.adv1, ["F"], ADV1, { ageMin: 11, ageMax: OPEN }, 9, SLOW));
-  cats.push(c("Adv 1 Lap 9-10M", d.adv1, ["M"], ADV1, { ageMin: 9, ageMax: 10 }, 9, SLOW));
-  cats.push(c("Adv 1 Lap 11-12M", d.adv1, ["M"], ADV1, { ageMin: 11, ageMax: 12 }, 9, SLOW));
+  // Faster heat starts first for Advanced groups.
+  cats.push(c("Adv 1 Lap 9-10F", d.adv1, ["F"], ADV1, { ageMin: 9, ageMax: 10 }, 9, FAST));
+  cats.push(c("Adv 1 Lap 11+F", d.adv1, ["F"], ADV1, { ageMin: 11, ageMax: OPEN }, 9, FAST));
+  cats.push(c("Adv 1 Lap 9-10M", d.adv1, ["M"], ADV1, { ageMin: 9, ageMax: 10 }, 9, FAST));
+  cats.push(c("Adv 1 Lap 11-12M", d.adv1, ["M"], ADV1, { ageMin: 11, ageMax: 12 }, 9, FAST));
   cats.push(
-    c(p.adv1MaleOldest.label, d.adv1, ["M"], ADV1, { ageMin: p.adv1MaleOldest.ageMin, ageMax: p.adv1MaleOldest.ageMax ?? OPEN }, 9, SLOW),
+    c(p.adv1MaleOldest.label, d.adv1, ["M"], ADV1, { ageMin: p.adv1MaleOldest.ageMin, ageMax: p.adv1MaleOldest.ageMax ?? OPEN }, 9, FAST),
   );
 
   // Advanced 2 Lap — female: 9-10, 11-12, <13-14 band>, 15+; male: 9-10, 11-12, 13-14, 15+
-  cats.push(c("Adv 2 Lap 9-10F", d.adv2, ["F"], ADV2, { ageMin: 9, ageMax: 10 }, 9, SLOW));
-  cats.push(c("Adv 2 Lap 11-12F", d.adv2, ["F"], ADV2, { ageMin: 11, ageMax: 12 }, 9, SLOW));
+  cats.push(c("Adv 2 Lap 9-10F", d.adv2, ["F"], ADV2, { ageMin: 9, ageMax: 10 }, 9, FAST));
+  cats.push(c("Adv 2 Lap 11-12F", d.adv2, ["F"], ADV2, { ageMin: 11, ageMax: 12 }, 9, FAST));
   cats.push(
-    c(p.adv2Female1314.label, d.adv2, ["F"], ADV2, { ageMin: p.adv2Female1314.ageMin, ageMax: p.adv2Female1314.ageMax ?? 14 }, 9, SLOW),
+    c(p.adv2Female1314.label, d.adv2, ["F"], ADV2, { ageMin: p.adv2Female1314.ageMin, ageMax: p.adv2Female1314.ageMax ?? 14 }, 9, FAST),
   );
-  cats.push(c("Adv 2 Lap 15+F", d.adv2, ["F"], ADV2, { ageMin: 15, ageMax: OPEN }, 9, SLOW));
-  cats.push(c("Adv 2 Lap 9-10M", d.adv2, ["M"], ADV2, { ageMin: 9, ageMax: 10 }, 9, SLOW));
-  cats.push(c("Adv 2 Lap 11-12M", d.adv2, ["M"], ADV2, { ageMin: 11, ageMax: 12 }, 9, SLOW));
-  cats.push(c("Adv 2 Lap 13-14M", d.adv2, ["M"], ADV2, { ageMin: 13, ageMax: 14 }, 9, SLOW));
-  cats.push(c("Adv 2 Lap 15+M", d.adv2, ["M"], ADV2, { ageMin: 15, ageMax: OPEN }, 9, SLOW));
+  cats.push(c("Adv 2 Lap 15+F", d.adv2, ["F"], ADV2, { ageMin: 15, ageMax: OPEN }, 9, FAST));
+  cats.push(c("Adv 2 Lap 9-10M", d.adv2, ["M"], ADV2, { ageMin: 9, ageMax: 10 }, 9, FAST));
+  cats.push(c("Adv 2 Lap 11-12M", d.adv2, ["M"], ADV2, { ageMin: 11, ageMax: 12 }, 9, FAST));
+  cats.push(c("Adv 2 Lap 13-14M", d.adv2, ["M"], ADV2, { ageMin: 13, ageMax: 14 }, 9, FAST));
+  cats.push(c("Adv 2 Lap 15+M", d.adv2, ["M"], ADV2, { ageMin: 15, ageMax: OPEN }, 9, FAST));
 
   return {
     slug: p.slug,

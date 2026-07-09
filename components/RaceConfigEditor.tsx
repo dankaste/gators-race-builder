@@ -5,7 +5,7 @@ import { useState } from "react";
 import { DEFAULT_SCHEDULE, type CategoryDef, type Gender, type RaceConfig, type RaceEvent, type WaveOrdering } from "@/lib/engine/models";
 import { ScheduleControls } from "./ScheduleControls";
 
-const ORDERINGS: WaveOrdering[] = ["isolate-slow-heat", "seed-ascending", "registration", "manual"];
+const ORDERINGS: WaveOrdering[] = ["seed-ascending", "seed-descending", "registration", "manual"];
 
 function numOrUndef(v: string): number | undefined {
   return v.trim() === "" ? undefined : Number(v);

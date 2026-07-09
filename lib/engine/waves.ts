@@ -3,23 +3,31 @@ import type { CategoryDef, Rider, WaveOrdering } from "./models";
 /**
  * Order riders within a single category prior to splitting into waves.
  *
- * - `seed-ascending` / `isolate-slow-heat`: sort by seed level ascending so the
- *   slowest/most-beginner riders land in the earliest wave(s). We deliberately
- *   do NOT stack the fastest into the final wave (mixed rider feedback) — an even
- *   split after sorting keeps waves balanced. Unseeded riders sort to the middle.
+ * - `seed-ascending`: sort by seed level ascending so the slowest/most-beginner
+ *   riders land in the earliest wave(s), fastest in the last — and every wave in
+ *   between falls in slow-to-fast order, not just a single isolated slow heat.
+ *   We deliberately do NOT stack the fastest into the final wave (mixed rider
+ *   feedback) — an even split after sorting keeps waves balanced.
+ * - `seed-descending`: the mirror image — fastest riders land in the earliest
+ *   wave(s), slowest in the last (e.g. Advanced groups where the faster heat
+ *   starts first).
+ * - Either way, unseeded riders sort to the very end of the category (last
+ *   wave) rather than the lead heat, since we have no data to justify placing
+ *   an unknown-speed rider ahead of a known one.
  * - `registration` / `manual`: preserve input order (director adjusts manually).
  */
 function orderRiders(riders: Rider[], ordering: WaveOrdering): Rider[] {
   if (ordering === "registration" || ordering === "manual") {
     return riders.slice();
   }
-  // seed-ascending and isolate-slow-heat both sort slowest-first.
+  const ascending = ordering !== "seed-descending";
+  // Unseeded riders sort to the end regardless of direction.
   const seedOf = (r: Rider) =>
-    r.seedLevel ?? Number.POSITIVE_INFINITY; // unseeded -> end of sort
+    r.seedLevel ?? (ascending ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY);
   return riders
     .map((r, i) => ({ r, i }))
     .sort((a, b) => {
-      const d = seedOf(a.r) - seedOf(b.r);
+      const d = ascending ? seedOf(a.r) - seedOf(b.r) : seedOf(b.r) - seedOf(a.r);
       return d !== 0 ? d : a.i - b.i; // stable
     })
     .map((x) => x.r);

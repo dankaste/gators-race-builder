@@ -5,7 +5,7 @@ import { checkInTable, podiumTable, scheduleTable, waveStagerTable } from "./han
 const event = {
   categories: [
     { label: "5-6 M", distanceLabel: "Pedal", genders: ["M"], maxSize: 10, ordering: "registration" },
-    { label: "9-10 M", distanceLabel: "Pedal", genders: ["M"], maxSize: 9, ordering: "isolate-slow-heat" },
+    { label: "9-10 M", distanceLabel: "Pedal", genders: ["M"], maxSize: 9, ordering: "seed-ascending" },
   ],
 } as RaceEvent;
 
