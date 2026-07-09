@@ -219,9 +219,11 @@ export function WaveEditor({
     const breaks = (sched.breaks ?? []).map((b, j) => (i === j ? { ...b, ...patch } : b));
     onScheduleChange({ ...sched, breaks });
   }
-  function addBreak() {
+  /** Insert a break after a specific wave; defaults to the very end when no wave is given. */
+  function addBreak(afterWave?: number) {
     const lastNo = waves.reduce((mx, w) => Math.max(mx, w.no ?? 0), 0) || 1;
-    onScheduleChange({ ...sched, breaks: [...(sched.breaks ?? []), { afterWave: lastNo, minutes: 15, label: "" }] });
+    const target = afterWave ?? lastNo;
+    onScheduleChange({ ...sched, breaks: [...(sched.breaks ?? []), { afterWave: target, minutes: 15, label: "" }] });
   }
   function removeBreak(i: number) {
     onScheduleChange({ ...sched, breaks: (sched.breaks ?? []).filter((_, j) => j !== i) });
@@ -264,7 +266,9 @@ export function WaveEditor({
           />
         </label>
         <div className="ml-auto flex gap-2">
-          <button className={btn} onClick={addBreak}>+ Add break</button>
+          <button className={btn} onClick={() => addBreak()} title="Add a break after the last wave — use a wave's own “+ Break” button to insert one earlier">
+            + Add break
+          </button>
           <button className={btn} onClick={() => setCollapsed(new Set(waves.map((w) => w.key)))}>Collapse all</button>
           <button className={btn} onClick={() => setCollapsed(new Set())}>Expand all</button>
           <button className={btn} onClick={addEmptyWave}>+ Add wave</button>
@@ -385,6 +389,11 @@ export function WaveEditor({
                   )}
                   {!combined && wave.blocks[0].group.riders.length > 1 && (
                     <button className={mini} onClick={() => splitBlock(wave.blocks[0].gi)}>Split</button>
+                  )}
+                  {wave.no != null && (
+                    <button className={mini} onClick={() => addBreak(wave.no!)} title="Insert a break right after this wave">
+                      + Break
+                    </button>
                   )}
                   <button className={mini} onClick={() => removeWave(wave)} title="Remove this wave">Remove</button>
                 </span>
