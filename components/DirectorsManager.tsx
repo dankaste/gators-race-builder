@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Director } from "@/db/schema";
+import { ConfirmButton } from "./ConfirmButton";
 
 export function DirectorsManager({
   initial,
@@ -45,7 +46,6 @@ export function DirectorsManager({
   }
 
   async function remove(target: string) {
-    if (!confirm(`Remove ${target} from the director allowlist?`)) return;
     setError(null);
     const res = await fetch(`/api/directors/${encodeURIComponent(target)}`, { method: "DELETE" });
     if (!res.ok) {
@@ -96,9 +96,14 @@ export function DirectorsManager({
                   managed by env
                 </span>
               ) : (
-                <button onClick={() => remove(d.email)} className="text-sm text-muted hover:text-danger">
+                <ConfirmButton
+                  onConfirm={() => remove(d.email)}
+                  prompt={`Remove ${d.email} from the director allowlist?`}
+                  confirmLabel="Remove"
+                  className="text-sm text-muted hover:text-danger"
+                >
                   Remove
-                </button>
+                </ConfirmButton>
               )}
             </li>
           );

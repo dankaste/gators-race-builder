@@ -10,6 +10,7 @@ import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { downloadBlob } from "@/lib/download";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
 import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
+import { ConfirmButton } from "./ConfirmButton";
 
 export function RelayBuilder({
   event,
@@ -148,12 +149,14 @@ export function RelayBuilder({
         >
           + Add rider
         </button>
-        <button
-          onClick={() => { if (confirm("Clear relay teams and re-import?")) onChange([]); }}
+        <ConfirmButton
+          onConfirm={() => onChange([])}
+          prompt="Clear relay teams and re-import?"
+          confirmLabel="Clear"
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
           Re-import
-        </button>
+        </ConfirmButton>
         <Link href="/guide#webscorer" className="text-sm text-brand-strong hover:underline">
           How to upload to WebScorer →
         </Link>

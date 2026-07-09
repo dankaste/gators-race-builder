@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DEFAULT_SCHEDULE, type CategoryDef, type Gender, type RaceConfig, type RaceEvent, type ScheduleConfig, type WaveOrdering } from "@/lib/engine/models";
 import { ScheduleControls } from "./ScheduleControls";
+import { ConfirmButton } from "./ConfirmButton";
 
 const ORDERINGS: WaveOrdering[] = ["seed-ascending", "seed-descending", "registration", "manual"];
 
@@ -87,7 +88,6 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
   }
 
   async function reset() {
-    if (!confirm("Reset this race to its built-in default? Your edits will be discarded.")) return;
     const res = await fetch(`/api/races/${cfg.slug}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
@@ -97,7 +97,6 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
   }
 
   async function del() {
-    if (!confirm(`Delete the "${cfg.name}" race type? This cannot be undone.`)) return;
     const res = await fetch(`/api/races/${cfg.slug}`, { method: "DELETE" });
     if (res.ok) router.push("/config");
   }
@@ -187,13 +186,23 @@ export function RaceConfigEditor({ config, seeded }: { config: RaceConfig; seede
           {status === "saving" ? "Saving…" : "Save race"}
         </button>
         {seeded && (
-          <button onClick={reset} className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground">
+          <ConfirmButton
+            onConfirm={reset}
+            prompt="Reset this race to its built-in default? Your edits will be discarded."
+            confirmLabel="Reset"
+            className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
+          >
             Reset to built-in default
-          </button>
+          </ConfirmButton>
         )}
-        <button onClick={del} className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-danger">
+        <ConfirmButton
+          onConfirm={del}
+          prompt={`Delete the "${cfg.name}" race type? This cannot be undone.`}
+          confirmLabel="Delete"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-danger"
+        >
           Delete race
-        </button>
+        </ConfirmButton>
         {status === "saved" && <span className="text-sm text-brand-strong">Saved</span>}
         {status === "error" && <span className="text-sm text-danger">{error ?? "Save failed"}</span>}
       </div>

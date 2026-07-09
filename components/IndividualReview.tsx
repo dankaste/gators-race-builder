@@ -17,6 +17,7 @@ import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } fro
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
 import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
+import { ConfirmButton } from "./ConfirmButton";
 
 export function IndividualReview({
   event,
@@ -160,12 +161,14 @@ export function IndividualReview({
         >
           + Add rider
         </button>
-        <button
-          onClick={() => { if (confirm("Clear this roster and re-import?")) onChange([]); }}
+        <ConfirmButton
+          onConfirm={() => onChange([])}
+          prompt="Clear this roster and re-import?"
+          confirmLabel="Clear"
           className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
         >
           Re-import
-        </button>
+        </ConfirmButton>
         <Link href="/guide#webscorer" className="text-sm text-brand-strong hover:underline">
           How to upload to WebScorer →
         </Link>

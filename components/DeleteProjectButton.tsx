@@ -2,31 +2,35 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ConfirmButton } from "./ConfirmButton";
 
 export function DeleteProjectButton({ projectId, name }: { projectId: string; name: string }) {
   const router = useRouter();
-  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function remove() {
-    if (!confirm(`Delete "${name}" and all its rider data? This cannot be undone.`)) return;
-    setBusy(true);
+    setError(null);
     try {
       const res = await fetch(`/api/projects/${projectId}`, { method: "DELETE" });
       if (res.ok) router.push("/projects");
-      else setBusy(false);
+      else setError("Delete failed");
     } catch {
-      setBusy(false);
+      setError("Delete failed");
     }
   }
 
   return (
-    <button
-      onClick={remove}
-      disabled={busy}
-      className="text-sm text-muted hover:text-danger disabled:opacity-50"
-      title="Delete this project"
-    >
-      {busy ? "Deleting…" : "Delete project"}
-    </button>
+    <span className="inline-flex items-center gap-2">
+      <ConfirmButton
+        onConfirm={remove}
+        prompt={`Delete "${name}" and all its rider data?`}
+        confirmLabel="Delete"
+        className="text-sm text-muted hover:text-danger disabled:opacity-50"
+        title="Delete this project"
+      >
+        Delete project
+      </ConfirmButton>
+      {error && <span className="text-sm text-danger">{error}</span>}
+    </span>
   );
 }
