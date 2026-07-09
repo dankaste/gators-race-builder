@@ -38,6 +38,8 @@ export const scheduleConfigSchema = z.object({
   startTime: z.string().regex(/^\d{1,2}:\d{2}$/, "use HH:MM, e.g. 09:30"),
   minutesPerWave: z.number().int().positive(),
   minutesPerWaveByCategory: z.record(z.string(), z.number().int().positive()).optional(),
+  // Keys are wave numbers, but JSON/zod records always key on strings.
+  minutesPerWaveByWave: z.record(z.string(), z.number().int().positive()).optional(),
   breaks: z.array(scheduleBreakSchema).optional(),
 });
 

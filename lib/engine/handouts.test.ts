@@ -114,4 +114,32 @@ describe("scheduleTable", () => {
     // wave 1 (5-6 M) consumes its 5-min override; 9-10 M falls back to the 10-min default.
     expect(t.rows.map((r) => r[1])).toEqual(["9:30 AM", "9:35 AM", "9:45 AM"]);
   });
+
+  it("per-wave overrides one wave without affecting a sibling wave in the same category", () => {
+    const t = scheduleTable(
+      [
+        rider({ wave: 1, categoryLabel: "9-10 M" }),
+        rider({ wave: 2, categoryLabel: "9-10 M" }),
+        rider({ wave: 3, categoryLabel: "9-10 M" }),
+      ],
+      event,
+      { startTime: "09:30", minutesPerWave: 10, minutesPerWaveByWave: { 1: 3 } },
+    );
+    // wave 1 uses its 3-min override; waves 2 and 3 (same category) fall back to the 10-min default.
+    expect(t.rows.map((r) => r[1])).toEqual(["9:30 AM", "9:33 AM", "9:43 AM"]);
+  });
+
+  it("prefers the per-wave override over a per-category default", () => {
+    const t = scheduleTable(
+      [rider({ wave: 1, categoryLabel: "9-10 M" }), rider({ wave: 2, categoryLabel: "9-10 M" })],
+      event,
+      {
+        startTime: "09:30",
+        minutesPerWave: 10,
+        minutesPerWaveByCategory: { "9-10 M": 7 },
+        minutesPerWaveByWave: { 1: 2 },
+      },
+    );
+    expect(t.rows.map((r) => r[1])).toEqual(["9:30 AM", "9:32 AM"]);
+  });
 });

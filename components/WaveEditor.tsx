@@ -94,7 +94,10 @@ export function WaveEditor({
     return out;
   }, [groups]);
 
-  const minsFor = (cat: string) => sched.minutesPerWaveByCategory?.[cat] ?? sched.minutesPerWave;
+  const minsFor = (waveNo: number | null, cat: string) =>
+    (waveNo != null ? sched.minutesPerWaveByWave?.[waveNo] : undefined) ??
+    sched.minutesPerWaveByCategory?.[cat] ??
+    sched.minutesPerWave;
 
   // --- interleave waves + breaks with cumulative start times ---
   const breaksByWave = useMemo(() => {
@@ -117,7 +120,7 @@ export function WaveEditor({
       const leadCat = wave.blocks[0].group.categoryLabel;
       items.push({ kind: "wave", wave, time: wave.no != null ? fmtTime(sched.startTime, offset) : null });
       if (wave.no != null) {
-        offset += minsFor(leadCat);
+        offset += minsFor(wave.no, leadCat);
         for (const b of breaksByWave.get(wave.no) ?? []) {
           items.push({ kind: "break", time: fmtTime(sched.startTime, offset), ...b });
           offset += b.minutes;
@@ -223,11 +226,12 @@ export function WaveEditor({
   function setStartTime(v: string) {
     onScheduleChange({ ...sched, startTime: v || "09:30" });
   }
-  function setCatMinutes(cat: string, v: string) {
-    const map = { ...(sched.minutesPerWaveByCategory ?? {}) };
-    if (v.trim() === "") delete map[cat];
-    else map[cat] = Math.max(1, Number(v) || 1);
-    onScheduleChange({ ...sched, minutesPerWaveByCategory: Object.keys(map).length ? map : undefined });
+  /** Per-wave override — editing one wave never affects others sharing its category. */
+  function setWaveMinutes(waveNo: number, v: string) {
+    const map = { ...(sched.minutesPerWaveByWave ?? {}) };
+    if (v.trim() === "") delete map[waveNo];
+    else map[waveNo] = Math.max(1, Number(v) || 1);
+    onScheduleChange({ ...sched, minutesPerWaveByWave: Object.keys(map).length ? map : undefined });
   }
   function setBreak(i: number, patch: Partial<{ afterWave: number; minutes: number; label: string }>) {
     const breaks = (sched.breaks ?? []).map((b, j) => (i === j ? { ...b, ...patch } : b));
@@ -391,10 +395,12 @@ export function WaveEditor({
                   <input
                     type="number"
                     min={1}
-                    value={sched.minutesPerWaveByCategory?.[leadCat] ?? ""}
-                    placeholder={String(sched.minutesPerWave)}
-                    onChange={(e) => setCatMinutes(leadCat, e.target.value)}
-                    className="w-14 rounded border border-border bg-background px-1.5 py-0.5 text-right text-foreground"
+                    value={wave.no != null ? sched.minutesPerWaveByWave?.[wave.no] ?? "" : ""}
+                    placeholder={String(sched.minutesPerWaveByCategory?.[leadCat] ?? sched.minutesPerWave)}
+                    disabled={wave.no == null}
+                    onChange={(e) => wave.no != null && setWaveMinutes(wave.no, e.target.value)}
+                    title="Minutes for this wave only; blank uses the category/event default"
+                    className="w-14 rounded border border-border bg-background px-1.5 py-0.5 text-right text-foreground disabled:opacity-40"
                   />
                 </label>
                 <span className="flex gap-1.5">

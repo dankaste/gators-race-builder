@@ -165,14 +165,24 @@ export interface ScheduleBreak {
 export interface ScheduleConfig {
   /** First wave start, "HH:MM" 24h (e.g. "09:30"). */
   startTime: string;
-  /** Default minutes allotted per wave (used when a category has no override). */
+  /** Default minutes allotted per wave (used when neither override below applies). */
   minutesPerWave: number;
   /**
-   * Optional per-category minutes-per-wave overrides, keyed by category label.
-   * A wave uses its category's value, falling back to {@link minutesPerWave}.
-   * Keyed by category (stable) rather than wave number (renumbers).
+   * Optional per-category minutes-per-wave defaults, keyed by category label —
+   * set in the race template, before any concrete waves exist. Falls back to
+   * {@link minutesPerWave}. A category that later splits into multiple waves
+   * shares this default across all of them.
    */
   minutesPerWaveByCategory?: Record<string, number>;
+  /**
+   * Optional per-wave minutes-per-wave overrides, keyed by wave number — set
+   * on a project's actual waves (e.g. in the wave editor), so adjusting one
+   * wave never touches another wave sharing the same category. Takes
+   * precedence over {@link minutesPerWaveByCategory}. Like {@link ScheduleBreak.afterWave},
+   * this is keyed by wave number, so it can end up applying to a different
+   * wave if waves are later reordered/combined/removed.
+   */
+  minutesPerWaveByWave?: Record<number, number>;
   /** Fixed breaks inserted into the timeline. */
   breaks?: ScheduleBreak[];
 }

@@ -25,8 +25,15 @@ export interface ScheduleOptions {
   startTime: string;
   /** Default minutes allotted per wave. */
   minutesPerWave: number;
-  /** Per-category minutes-per-wave overrides (keyed by category label). */
+  /** Per-category minutes-per-wave overrides (keyed by category label) — template-time defaults. */
   minutesPerWaveByCategory?: Record<string, number>;
+  /**
+   * Per-wave minutes-per-wave overrides (keyed by wave number) — set on the
+   * project's actual waves, so editing one wave never touches its siblings
+   * even when they share a category. Takes precedence over the category
+   * default.
+   */
+  minutesPerWaveByWave?: Record<number, number>;
   /** Fixed breaks inserted into the timeline. */
   breaks?: ScheduleBreak[];
 }
@@ -149,8 +156,8 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
     count: null,
   });
 
-  const minsFor = (label: string) =>
-    opts.minutesPerWaveByCategory?.[label] ?? opts.minutesPerWave;
+  const minsFor = (wave: number, label: string) =>
+    opts.minutesPerWaveByWave?.[wave] ?? opts.minutesPerWaveByCategory?.[label] ?? opts.minutesPerWave;
 
   const rows: ScheduleRow[] = [];
   let offset = 0; // minutes elapsed from startTime
@@ -162,7 +169,7 @@ function scheduleRows(riders: Rider[], opts: ScheduleOptions): ScheduleRow[] {
       label: info.get(wave)!.label,
       count: info.get(wave)!.count,
     });
-    offset += minsFor(info.get(wave)!.label);
+    offset += minsFor(wave, info.get(wave)!.label);
     for (const b of breaksByWave.get(wave) ?? []) {
       rows.push(breakRow(b, addMinutes(opts.startTime, offset)));
       offset += b.minutes;
