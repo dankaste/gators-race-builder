@@ -170,6 +170,20 @@ export function WaveEditor({
     remaining.splice(insertAt, 0, ...srcRefs);
     commit(remaining);
   }
+  /** Swap this wave's whole position with the adjacent wave (up or down), renumbering. */
+  function moveWave(wave: WaveView, dir: -1 | 1) {
+    const idx = waves.findIndex((w) => w.key === wave.key);
+    const other = waves[idx + dir];
+    if (!other) return;
+    const next = clone();
+    const waveGis = wave.blocks.map((b) => b.gi);
+    const otherGis = other.blocks.map((b) => b.gi);
+    const [firstGis, secondGis] = waveGis[0] < otherGis[0] ? [waveGis, otherGis] : [otherGis, waveGis];
+    const firstBlocks = firstGis.map((gi) => next[gi]);
+    const secondBlocks = secondGis.map((gi) => next[gi]);
+    next.splice(firstGis[0], firstGis.length + secondGis.length, ...secondBlocks, ...firstBlocks);
+    commit(next);
+  }
   function splitApart(wave: WaveView) {
     const next = clone();
     for (const b of wave.blocks) next[b.gi].combinedWithPrev = false;
@@ -318,6 +332,7 @@ export function WaveEditor({
           const catLabel = combined ? wave.blocks.map((b) => b.group.categoryLabel).join(" + ") : leadCat;
           const combineTargets = waves.filter((w) => w.key !== wave.key && w.no != null);
           const canDrop = drag != null && drag.gi !== -1;
+          const waveIdx = waves.findIndex((w) => w.key === wave.key);
 
           return (
             <div
@@ -345,6 +360,24 @@ export function WaveEditor({
                 <button className="text-muted" onClick={() => toggleCollapse(wave.key)} title={isCollapsed ? "Expand" : "Collapse"}>
                   {isCollapsed ? "▸" : "▾"}
                 </button>
+                <span className="flex flex-col text-xs leading-none">
+                  <button
+                    className="text-muted hover:text-foreground disabled:opacity-30"
+                    onClick={() => moveWave(wave, -1)}
+                    disabled={waveIdx === 0}
+                    title="Move this wave earlier"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    className="text-muted hover:text-foreground disabled:opacity-30"
+                    onClick={() => moveWave(wave, 1)}
+                    disabled={waveIdx === waves.length - 1}
+                    title="Move this wave later"
+                  >
+                    ▼
+                  </button>
+                </span>
                 <span className={`text-sm font-bold ${combined ? "text-brand-strong" : "text-foreground"}`}>
                   {wave.no != null ? `Wave ${wave.no}` : "New wave"}
                 </span>
