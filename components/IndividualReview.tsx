@@ -86,7 +86,6 @@ export function IndividualReview({
   /** Assign sequential bibs (from `bibStart`) to bib-less riders in wave order. */
   function assignBibs() {
     if (blankBibCount === 0) return;
-    if (!confirm(`Assign ${blankBibCount} bib${blankBibCount === 1 ? "" : "s"} starting at ${bibStart}? Existing bibs are left untouched.`)) return;
     const nameOf = (r: Rider) => `${r.lastName}, ${r.firstName}`;
     const order = riders
       .map((r, i) => ({ r, i }))
@@ -185,6 +184,7 @@ export function IndividualReview({
         <button
           onClick={assignBibs}
           disabled={blankBibCount === 0}
+          title={`Fills in bib-less riders starting at ${bibStart}, in wave order. Existing bibs are left untouched.`}
           className="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-40"
         >
           Assign {blankBibCount} blank{blankBibCount === 1 ? "" : "s"}
