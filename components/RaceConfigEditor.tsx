@@ -250,7 +250,7 @@ function CategoryEditor({
             <th className="px-2 py-1">Max wave</th>
             <th className="px-2 py-1">Wave order</th>
             <th className="px-2 py-1">Min/wave</th>
-            <th className="px-2 py-1"></th>
+            <th className="px-2 py-1">Reorder / remove</th>
           </tr>
         </thead>
         <tbody>
@@ -287,9 +287,11 @@ function CategoryEditor({
                 />
               </td>
               <td className="px-2 py-1 whitespace-nowrap">
-                <button onClick={() => moveCat(ei, ci, -1)} className="px-1 text-muted hover:text-foreground">↑</button>
-                <button onClick={() => moveCat(ei, ci, 1)} className="px-1 text-muted hover:text-foreground">↓</button>
-                <button onClick={() => removeCat(ei, ci)} className="px-1 text-muted hover:text-danger">✕</button>
+                <button onClick={() => moveCat(ei, ci, -1)} className="px-1 text-muted hover:text-foreground" title="Move up">↑</button>
+                <button onClick={() => moveCat(ei, ci, 1)} className="px-1 text-muted hover:text-foreground" title="Move down">↓</button>
+                <button onClick={() => removeCat(ei, ci)} className="ml-2 text-xs font-semibold text-muted hover:text-danger" title="Remove this category">
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
