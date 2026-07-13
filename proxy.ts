@@ -9,7 +9,12 @@ export { auth as proxy } from "@/auth";
 export const config = {
   // Run on pages only. ALL of /api is excluded so route handlers return a clean
   // JSON 401 (via apiRequireDirector) instead of an HTML redirect — `fetch`
-  // clients expect JSON. API auth is enforced in each handler, not here. The
-  // sign-in page, Next internals, and static metadata files are also excluded.
-  matcher: ["/((?!api|signin|_next/static|_next/image|favicon.ico).*)"],
+  // clients expect JSON. The sign-in page, Next internals, and static metadata
+  // files are also excluded. `/raceday` and `/results` are deliberately
+  // excluded too: those pages are public — `/raceday` stations are gated by
+  // their own bearer token (`apiRequireRaceDayAccess`, checked client-side
+  // against the API), and `/results` is genuinely unauthenticated (no token
+  // at all) — this proxy would otherwise bounce every volunteer's device, or
+  // every parent looking up results, to /signin first.
+  matcher: ["/((?!api|signin|raceday|results|_next/static|_next/image|favicon.ico).*)"],
 };

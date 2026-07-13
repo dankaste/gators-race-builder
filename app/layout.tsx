@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     "Turn PlayMetrics registration into WebScorer start lists and race-day handouts for the Gators Race Series.",
   // This app handles minors' PII — never let it be indexed.
   robots: { index: false, follow: false },
+  // Required for "Add to Home Screen" — iOS Safari only delivers push
+  // notifications to an installed PWA, never a plain browser tab (see
+  // RACEDAY.md). Every station device needs this done once during pre-race
+  // prep for EVAC's cloud-push channel to work at all.
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({

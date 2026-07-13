@@ -15,11 +15,24 @@ export async function getCurrentDirector(): Promise<CurrentDirector | null> {
 }
 
 /**
+ * Physical presence on the race-day hub's own local network stands in for a
+ * signed-in director when there's no internet to reach Google OAuth at all.
+ * Strictly scoped to `RACEDAY_MODE=local` (only ever set on the offline hub
+ * device, never on the real Vercel deployment) — a deliberate, narrow trust
+ * relaxation confirmed with the director, not an accident.
+ */
+function localHubDirector(): CurrentDirector | null {
+  return process.env.RACEDAY_MODE === "local" ? { email: "local-hub", name: "Race Day Hub" } : null;
+}
+
+/**
  * Page gate: require a signed-in, still-allowlisted director (re-checking the DB
  * enforces revocation). Redirects to /signin otherwise. Use at the top of every
  * protected server page — defense-in-depth behind the proxy redirect.
  */
 export async function requireDirector(): Promise<CurrentDirector> {
+  const local = localHubDirector();
+  if (local) return local;
   const director = await getCurrentDirector();
   if (!director || !(await isAllowedDirector(director.email))) {
     redirect("/signin");
@@ -34,6 +47,8 @@ export async function requireDirector(): Promise<CurrentDirector> {
  *   if (director instanceof NextResponse) return director;
  */
 export async function apiRequireDirector(): Promise<CurrentDirector | NextResponse> {
+  const local = localHubDirector();
+  if (local) return local;
   const director = await getCurrentDirector();
   if (!director || !(await isAllowedDirector(director.email))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

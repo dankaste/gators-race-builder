@@ -12,9 +12,15 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx db/migrate.ts",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx db/seed.ts"
+    "db:seed": "tsx db/seed.ts",
+    "raceday:migrate": "tsx db/raceday-migrate.ts",
+    "raceday:hub": "next start -H 0.0.0.0",
+    "raceday:sync-down": "tsx scripts/raceday/sync-down.ts",
+    "raceday:sync-up": "tsx scripts/raceday/sync-up.ts",
+    "raceday:reset-local": "tsx scripts/raceday/reset-local.ts"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.4",
     "@neondatabase/serverless": "^1.1.0",
     "drizzle-orm": "^0.45.2",
     "exceljs": "^4.4.0",
@@ -25,6 +31,7 @@
     "papaparse": "^5.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "web-push": "^3.6.7",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -33,6 +40,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
