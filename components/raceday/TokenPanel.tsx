@@ -21,34 +21,46 @@ export function TokenPanel({ projectId }: { projectId: string }) {
   const [token, setToken] = useState<string | null>(null);
   const [sync, setSync] = useState<SyncStatus | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/raceday/${projectId}/token`, { credentials: "include" })
-      .then((r) => r.json())
-      .then((d) => setToken(d.token));
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`Couldn't load the access token (${r.status})`);
+        setToken((await r.json()).token);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : String(err)));
     fetch(`/api/raceday/${projectId}/sync`, { credentials: "include" })
-      .then((r) => r.json())
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`Couldn't load sync status (${r.status})`))))
       .then(setSync)
-      .catch(() => {});
+      .catch(() => {}); // sync status is informational — a failure here shouldn't block the rest of the panel
   }, [projectId]);
 
   async function regenerate() {
-    const res = await fetch(`/api/raceday/${projectId}/token/regenerate`, {
-      method: "POST",
-      credentials: "include",
-    });
-    const data = await res.json();
-    setToken(data.token);
+    try {
+      const res = await fetch(`/api/raceday/${projectId}/token/regenerate`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error(`Regenerate failed (${res.status})`);
+      setToken((await res.json()).token);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
   }
 
   async function syncNow() {
     setSyncing(true);
-    const res = await fetch(`/api/raceday/${projectId}/sync`, { method: "POST", credentials: "include" });
-    const data = await res.json();
-    setSyncing(false);
-    if (data.ok) {
-      const status = await fetch(`/api/raceday/${projectId}/sync`, { credentials: "include" }).then((r) => r.json());
-      setSync(status);
+    try {
+      const res = await fetch(`/api/raceday/${projectId}/sync`, { method: "POST", credentials: "include" });
+      if (!res.ok) throw new Error(`Sync failed (${res.status})`);
+      const status = await fetch(`/api/raceday/${projectId}/sync`, { credentials: "include" });
+      if (status.ok) setSync(await status.json());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -59,6 +71,9 @@ export function TokenPanel({ projectId }: { projectId: string }) {
 
   return (
     <div className="flex flex-col gap-4">
+      {error && (
+        <div className="rounded-lg border border-danger bg-danger/10 px-3 py-2 text-sm text-danger">{error}</div>
+      )}
       <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-2 px-3 py-2">
         <span
           className={`h-2.5 w-2.5 shrink-0 rounded-full ${sync?.online ? "bg-brand" : "bg-warning"}`}

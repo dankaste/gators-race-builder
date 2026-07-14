@@ -2,6 +2,7 @@
 
 import { StationShell } from "./StationShell";
 import { useRaceDayToken } from "@/lib/raceday/useRaceDayToken";
+import { computeRaceStatus } from "@/lib/engine/raceDay";
 import type { RaceDaySnapshot } from "@/lib/raceday/snapshot";
 
 function WaveBlock({
@@ -63,7 +64,20 @@ function WaveBlock({
       </div>
       <div className="flex flex-col gap-1 p-2">
         {riders.map((r) => {
-          const status = marksByPlayer.get(r.playerId) ?? "started";
+          // Reuse the shared engine logic (also used by Course Watch/Overview)
+          // rather than re-deriving this — a rider only defaults to "started"
+          // once their wave has actually rolled, never before.
+          const status = computeRaceStatus(r, snapshot.waves, snapshot.startMarks, snapshot.finishResults, snapshot.dnfMarks);
+          const label =
+            status === "dns" ? "DNS" : status === "not-started" ? "Waiting" : status === "finished" ? "Finished" : status === "dnf" ? "DNF" : "Started";
+          const colorCls =
+            status === "dns"
+              ? "bg-danger/20 text-danger"
+              : status === "not-started"
+                ? "bg-surface text-muted"
+                : status === "dnf"
+                  ? "bg-warning/20 text-warning"
+                  : "bg-brand-deep/20 text-brand-strong";
           return (
             <button
               key={r.playerId}
@@ -74,12 +88,8 @@ function WaveBlock({
               <span className="flex-1 truncate">
                 {r.firstName} {r.lastName}
               </span>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold uppercase ${
-                  status === "dns" ? "bg-danger/20 text-danger" : "bg-brand-deep/20 text-brand-strong"
-                }`}
-              >
-                {status === "dns" ? "DNS" : "Started"}
+              <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold uppercase ${colorCls}`}>
+                {label}
               </span>
             </button>
           );

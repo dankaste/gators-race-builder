@@ -55,10 +55,16 @@ function CategoryGroup({ projectId, category }: { projectId: string; category: C
 }
 
 export function OverviewPanel({ projectId }: { projectId: string }) {
-  const { snapshot } = useSnapshotPoll(projectId, null, { requireToken: false, intervalMs: 4000 });
+  const { snapshot, error } = useSnapshotPoll(projectId, null, { requireToken: false, intervalMs: 4000 });
   const [resolving, setResolving] = useState(false);
 
-  if (!snapshot) return <p className="text-sm text-muted">Loading…</p>;
+  if (!snapshot) {
+    return (
+      <p className={`text-sm ${error ? "text-danger" : "text-muted"}`}>
+        {error ? `Couldn't load race-day data: ${error}` : "Loading…"}
+      </p>
+    );
+  }
 
   const checkedInCount = snapshot.checkIns.filter((c) => c.checkedIn).length;
   const startedCount = snapshot.startMarks.filter((m) => m.status === "started").length;
@@ -69,11 +75,17 @@ export function OverviewPanel({ projectId }: { projectId: string }) {
   async function resolveIncident() {
     if (!snapshot?.incident) return;
     setResolving(true);
-    await fetch(`/api/raceday/${projectId}/incidents/${snapshot.incident.id}/resolve`, {
-      method: "POST",
-      credentials: "include",
-    });
-    setResolving(false);
+    try {
+      const res = await fetch(`/api/raceday/${projectId}/incidents/${snapshot.incident.id}/resolve`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    } catch (err) {
+      alert(`Couldn't resolve the incident: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
+      setResolving(false);
+    }
   }
 
   return (
