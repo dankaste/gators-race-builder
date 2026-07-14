@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { StationShell } from "./StationShell";
 import { useRaceDayToken } from "@/lib/raceday/useRaceDayToken";
 import { computeRaceStatus } from "@/lib/engine/raceDay";
@@ -12,6 +13,7 @@ function WaveBlock({
   wave,
   riders,
   snapshot,
+  isNextToStart,
 }: {
   projectId: string;
   token: string;
@@ -19,10 +21,19 @@ function WaveBlock({
   wave: number;
   riders: RaceDaySnapshot["roster"];
   snapshot: RaceDaySnapshot;
+  isNextToStart: boolean;
 }) {
   const waveStart = snapshot.waves.find((w) => w.wave === wave);
   const marksByPlayer = new Map(snapshot.startMarks.filter((m) => m.wave === wave).map((m) => [m.playerId, m.status]));
   const categories = [...new Set(riders.map((r) => r.categoryLabel).filter(Boolean))];
+
+  // Defaults to expanded only for the one wave that's next up; already-started
+  // waves collapse automatically. `manualOverride` lets a volunteer still
+  // expand/collapse by hand without the server-derived default clobbering it
+  // on the next poll.
+  const [manualOverride, setManualOverride] = useState<boolean | null>(null);
+  const defaultExpanded = isNextToStart && !waveStart;
+  const expanded = manualOverride ?? defaultExpanded;
 
   async function startWave() {
     await fetch(`/api/raceday/${projectId}/starts/wave`, {
@@ -44,24 +55,34 @@ function WaveBlock({
 
   return (
     <div className="overflow-hidden rounded-lg border border-border">
-      <div className="flex items-center justify-between bg-surface-2 px-3 py-2">
+      <button
+        onClick={() => setManualOverride(!expanded)}
+        className="flex w-full items-center justify-between bg-surface-2 px-3 py-2 text-left"
+      >
         <div>
           <div className="text-sm font-bold text-foreground">Wave {wave}</div>
           <div className="text-xs text-muted">{categories.join(" · ")}</div>
         </div>
-        {waveStart ? (
-          <span className="text-xs font-bold text-brand-strong">
-            🟢 {new Date(waveStart.startedAt).toLocaleTimeString()}
-          </span>
-        ) : (
-          <button
-            onClick={startWave}
-            className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-background hover:opacity-90"
-          >
-            Start wave
-          </button>
-        )}
-      </div>
+        <div className="flex items-center gap-2">
+          {waveStart ? (
+            <span className="text-xs font-bold text-brand-strong">
+              🟢 {new Date(waveStart.startedAt).toLocaleTimeString()}
+            </span>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                startWave();
+              }}
+              className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-background hover:opacity-90"
+            >
+              Start wave
+            </button>
+          )}
+          <span className="text-muted">{expanded ? "▾" : "▸"}</span>
+        </div>
+      </button>
+      {expanded && (
       <div className="flex flex-col gap-1 p-2">
         {riders.map((r) => {
           // Reuse the shared engine logic (also used by Course Watch/Overview)
@@ -95,6 +116,7 @@ function WaveBlock({
           );
         })}
       </div>
+      )}
     </div>
   );
 }
@@ -118,6 +140,8 @@ function StartLineList({
     byWave.set(rider.wave, arr);
   }
   const waves = [...byWave.keys()].sort((a, b) => a - b);
+  const startedWaves = new Set(snapshot.waves.map((w) => w.wave));
+  const nextWave = waves.find((w) => !startedWaves.has(w));
 
   return (
     <div className="flex flex-col gap-3">
@@ -130,6 +154,7 @@ function StartLineList({
           wave={wave}
           riders={byWave.get(wave)!}
           snapshot={snapshot}
+          isNextToStart={wave === nextWave}
         />
       ))}
       {waves.length === 0 && <p className="text-sm text-muted">No waves assigned yet.</p>}
