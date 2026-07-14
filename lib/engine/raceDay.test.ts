@@ -6,6 +6,7 @@ import {
   computePodium,
   computeRaceStatus,
   computeRaceStatuses,
+  computeWaveProgress,
   groupResultsByCategory,
   toRaceDayRoster,
   type DnfMark,
@@ -183,6 +184,44 @@ describe("computeRaceStatus", () => {
     const statuses = computeRaceStatuses(roster, waves, [], [], []);
     expect(statuses.get("p1")).toBe("started");
     expect(statuses.get("p2")).toBe("not-started");
+  });
+});
+
+describe("computeWaveProgress", () => {
+  const waves: WaveStart[] = [
+    { wave: 3, startedAt: "2026-07-11T13:00:00.000Z" },
+    { wave: 5, startedAt: "2026-07-11T13:07:00.000Z" },
+  ];
+
+  it("is not complete while any rider in the wave is still on course", () => {
+    const roster = [rosterEntry({ playerId: "p1", wave: 3 }), rosterEntry({ playerId: "p2", wave: 3 })];
+    const results: FinishResult[] = [
+      { rowId: "o1", bib: "301", playerId: "p1", finishTime: "2026-07-11T13:09:00.000Z", origin: "auto" },
+    ];
+    const [progress] = computeWaveProgress(roster, waves, [], results, []);
+    expect(progress).toEqual({ wave: 3, startedAt: "2026-07-11T13:00:00.000Z", total: 2, remaining: 1, complete: false });
+  });
+
+  it("completes once the last rider reaches a terminal status, whether finished, DNF, or DNS", () => {
+    const roster = [
+      rosterEntry({ playerId: "p1", wave: 3 }),
+      rosterEntry({ playerId: "p2", wave: 3 }),
+      rosterEntry({ playerId: "p3", wave: 3 }),
+    ];
+    const results: FinishResult[] = [
+      { rowId: "o1", bib: "301", playerId: "p1", finishTime: "2026-07-11T13:09:00.000Z", origin: "auto" },
+    ];
+    const dnf: DnfMark[] = [{ playerId: "p2", markedAt: "" }];
+    const marks: StartMark[] = [{ playerId: "p3", wave: 3, status: "dns", recordedAt: "" }];
+    const [progress] = computeWaveProgress(roster, waves, marks, results, dnf);
+    expect(progress.complete).toBe(true);
+    expect(progress.remaining).toBe(0);
+  });
+
+  it("only reports waves that have actually rolled, sorted by wave number", () => {
+    const roster = [rosterEntry({ playerId: "p1", wave: 3 }), rosterEntry({ playerId: "p2", wave: 9 })];
+    const progress = computeWaveProgress(roster, waves, [], [], []);
+    expect(progress.map((p) => p.wave)).toEqual([3, 5]);
   });
 });
 

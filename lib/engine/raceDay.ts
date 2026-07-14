@@ -199,6 +199,43 @@ export function computeRaceStatuses(
 }
 
 // ---------------------------------------------------------------------------
+// Wave progress (finish line: which started waves are fully resolved)
+// ---------------------------------------------------------------------------
+
+export interface WaveProgress {
+  wave: number;
+  startedAt: string;
+  total: number;
+  remaining: number;
+  complete: boolean;
+}
+
+/**
+ * Per-wave rollup for the finish line, over every wave that has actually
+ * rolled: how many of its riders are still out on course. A wave is
+ * `complete` once every rider in it has reached a terminal status (finished,
+ * DNF, or DNS) — the same statuses {@link computeRaceStatus} already
+ * reports, so a straggler who never crosses resolves the normal way (an
+ * explicit DNF), not a separate "close out this wave" action.
+ */
+export function computeWaveProgress(
+  roster: RaceDayRosterEntry[],
+  waves: WaveStart[],
+  startMarks: StartMark[],
+  finishResults: FinishResult[],
+  dnfMarks: DnfMark[],
+): WaveProgress[] {
+  const statuses = computeRaceStatuses(roster, waves, startMarks, finishResults, dnfMarks);
+  return waves
+    .map((w) => {
+      const riders = roster.filter((r) => r.wave === w.wave);
+      const remaining = riders.filter((r) => statuses.get(r.playerId) === "started").length;
+      return { wave: w.wave, startedAt: w.startedAt, total: riders.length, remaining, complete: remaining === 0 };
+    })
+    .sort((a, b) => a.wave - b.wave);
+}
+
+// ---------------------------------------------------------------------------
 // Podium
 // ---------------------------------------------------------------------------
 
