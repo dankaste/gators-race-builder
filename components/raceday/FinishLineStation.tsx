@@ -204,6 +204,23 @@ function FinishLineBody({
     }
   }
 
+  // Reverses a mistaken DNF tap — the rider's status recomputes from
+  // whatever signals remain (back to "started" if their wave has rolled and
+  // they haven't finished), same as voiding a finish tap un-fills a slot.
+  async function undoDnf(playerId: string) {
+    setError(null);
+    try {
+      const res = await fetch(`/api/raceday/${projectId}/dnf`, {
+        method: "DELETE",
+        headers: { "x-raceday-token": token, "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId, playerId }),
+      });
+      if (!res.ok) throw new Error(`Undo failed (${res.status})`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
   // "On course" — started, not yet finished/DNF/DNS — same definition Course
   // Watch uses. Computed against the locally-assigned results, not just the
   // last-polled snapshot, so a rider just assigned here drops off the list
@@ -215,6 +232,14 @@ function FinishLineBody({
     if (!q) return true;
     return `${r.firstName} ${r.lastName}`.toLowerCase().includes(q) || String(r.bib ?? "").includes(q);
   });
+
+  // DNF'd riders otherwise vanish from every list on this screen with no
+  // trace — surfaced here (most recent first) so a mis-tap is easy to spot
+  // and reverse.
+  const dnfList = snapshot.dnfMarks
+    .map((mark) => ({ mark, rider: rosterByPlayer.get(mark.playerId) }))
+    .filter((x): x is { mark: (typeof snapshot.dnfMarks)[number]; rider: NonNullable<typeof x.rider> } => x.rider != null)
+    .sort((a, b) => new Date(b.mark.markedAt).getTime() - new Date(a.mark.markedAt).getTime());
 
   // Fully-resolved waves (every rider finished/DNF/DNS) collapse their
   // finish-line slots into a one-line summary, so the live slot list stays
@@ -344,6 +369,27 @@ function FinishLineBody({
         ))}
         {filtered.length === 0 && <p className="text-sm text-muted">Nobody currently on course.</p>}
       </div>
+
+      {dnfList.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <div className="text-xs font-bold uppercase tracking-wide text-muted">DNF&rsquo;d ({dnfList.length})</div>
+          {dnfList.map(({ mark, rider }) => (
+            <div key={mark.playerId} className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm">
+              <WaveChip wave={rider.wave} />
+              <span className="w-10 shrink-0 font-bold text-brand-strong">{rider.bib ?? "—"}</span>
+              <span className="flex-1 truncate">{rider.firstName} {rider.lastName}</span>
+              <span className="shrink-0 text-xs text-muted">{new Date(mark.markedAt).toLocaleTimeString()}</span>
+              <button
+                onClick={() => undoDnf(mark.playerId)}
+                title="Reverse this DNF"
+                className="rounded-lg bg-brand/20 px-2 py-1 text-xs font-bold text-brand-strong"
+              >
+                Undo
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {completedWaveNumbers.length > 0 && (
         <div className="flex flex-col gap-1.5">

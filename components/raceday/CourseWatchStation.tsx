@@ -33,6 +33,14 @@ function CourseWatchBody({
   const onCourse = snapshot.roster.filter((r) => statuses.get(r.playerId) === "started");
   const activeIncidentCount = snapshot.incident ? 1 : 0;
 
+  // DNF'd riders otherwise vanish from "Still on course" with no trace —
+  // surfaced here (most recent first) so a mis-tap is easy to spot and undo.
+  const rosterByPlayer = new Map(snapshot.roster.map((r) => [r.playerId, r]));
+  const dnfList = snapshot.dnfMarks
+    .map((mark) => ({ mark, rider: rosterByPlayer.get(mark.playerId) }))
+    .filter((x): x is { mark: (typeof snapshot.dnfMarks)[number]; rider: NonNullable<typeof x.rider> } => x.rider != null)
+    .sort((a, b) => new Date(b.mark.markedAt).getTime() - new Date(a.mark.markedAt).getTime());
+
   async function sendReport() {
     await fetch(`/api/raceday/${projectId}/incidents`, {
       method: "POST",
@@ -54,6 +62,14 @@ function CourseWatchBody({
       method: "POST",
       headers: { "x-raceday-token": token, "Content-Type": "application/json" },
       body: JSON.stringify({ eventId, playerId, idempotencyKey: crypto.randomUUID() }),
+    });
+  }
+
+  async function undoDnf(playerId: string) {
+    await fetch(`/api/raceday/${projectId}/dnf`, {
+      method: "DELETE",
+      headers: { "x-raceday-token": token, "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId, playerId }),
     });
   }
 
@@ -137,6 +153,28 @@ function CourseWatchBody({
         ))}
         {onCourse.length === 0 && <p className="text-sm text-muted">Nobody currently out on course.</p>}
       </div>
+
+      {dnfList.length > 0 && (
+        <>
+          <div className="text-xs font-bold uppercase tracking-wide text-muted">DNF&rsquo;d ({dnfList.length})</div>
+          <div className="flex flex-col gap-1.5">
+            {dnfList.map(({ mark, rider }) => (
+              <div key={mark.playerId} className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm">
+                <span className="w-10 shrink-0 font-bold text-brand-strong">{rider.bib ?? "—"}</span>
+                <span className="flex-1 truncate">{rider.firstName} {rider.lastName}</span>
+                <span className="shrink-0 text-xs text-muted">{new Date(mark.markedAt).toLocaleTimeString()}</span>
+                <button
+                  onClick={() => undoDnf(mark.playerId)}
+                  title="Reverse this DNF"
+                  className="rounded-lg bg-brand/20 px-2 py-1 text-xs font-bold text-brand-strong"
+                >
+                  Undo
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {snapshot.incident && (
         <>
