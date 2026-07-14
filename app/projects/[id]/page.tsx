@@ -23,7 +23,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <Link href="/projects" className="text-sm text-muted hover:text-foreground">
           ← Projects
         </Link>
-        <DeleteProjectButton projectId={project.id} name={project.name} />
+        <div className="flex items-center gap-4">
+          <Link
+            href={`/projects/${project.id}/raceday`}
+            className="text-sm font-semibold text-brand-strong hover:underline"
+          >
+            🏁 Race day →
+          </Link>
+          <DeleteProjectButton projectId={project.id} name={project.name} />
+        </div>
       </div>
       <div className="mt-2 flex items-baseline gap-3">
         <h1 className="text-3xl font-black text-foreground">{project.name}</h1>
