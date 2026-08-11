@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
 import { assignCups, buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine/relay";
@@ -157,6 +157,11 @@ export function RelayBuilder({
   const [importing, setImporting] = useState(false);
   const [warnings, setWarnings] = useState<Pick<RelayResult, "unmatchedFriends" | "splitGroups"> | null>(null);
   const [rosterSource, setRosterSource] = useState<string[] | null>(null);
+  // Post-build table display only — doesn't touch `riders`, so it's plain local
+  // state (nothing to persist). Reassigning a rider's cup/team via the "Reassign"
+  // dropdown works the same in both views; it calls onChange(next) either way,
+  // which flows up to Workspace's eventsState and autosaves (see reassign() below).
+  const [groupByTeam, setGroupByTeam] = useState(true);
 
   // Rows for the post-build table, sorted Cup -> Team -> Leg. (Declared before
   // any early return so hooks run in a stable order.)
@@ -319,6 +324,20 @@ export function RelayBuilder({
         <span className="text-sm text-muted">
           {riders.length} riders · {teamSizes.size} teams · sizes {minS}–{maxS}
         </span>
+        <div className="flex items-center rounded-lg border border-border p-0.5 text-sm">
+          <button
+            onClick={() => setGroupByTeam(false)}
+            className={`rounded px-3 py-1 ${!groupByTeam ? "bg-brand text-foreground" : "text-muted hover:text-foreground"}`}
+          >
+            Flat
+          </button>
+          <button
+            onClick={() => setGroupByTeam(true)}
+            className={`rounded px-3 py-1 ${groupByTeam ? "bg-brand text-foreground" : "text-muted hover:text-foreground"}`}
+          >
+            By team
+          </button>
+        </div>
         <button
           onClick={async () => downloadBlob(await toRelayWebScorerXlsx(riders, event), `${slug}-relay-webscorer.xlsx`)}
           className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-strong"
@@ -409,65 +428,93 @@ export function RelayBuilder({
           {relay.cups.map((cupLabel, cupIdx) => {
             const cupRows = rowsByCup.get(cupIdx) ?? [];
             if (cupRows.length === 0) return null;
+            // Sub-group cupRows by team (character), preserving the cup's Team -> Leg
+            // sort order from `rows` above — so this is just a run-length split, not
+            // a fresh grouping pass.
+            const teamGroups: { character: string; rows: typeof cupRows }[] = [];
+            for (const row of cupRows) {
+              const character = row.rider.relay!.character;
+              const last = teamGroups[teamGroups.length - 1];
+              if (last?.character === character) last.rows.push(row);
+              else teamGroups.push({ character, rows: [row] });
+            }
             return (
-              <tbody key={cupLabel}>
-                <tr className="border-b border-border bg-surface-2">
-                  <td colSpan={8} className="py-1.5 px-1 text-xs font-semibold text-foreground">
-                    {cupTierLabel(relay.cups, cupIdx)} · <span className="text-muted">{cupRows.length} rider{cupRows.length === 1 ? "" : "s"}</span>
-                  </td>
-                </tr>
-                {cupRows.map(({ rider, index }) => {
-                  const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
-                  const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+              <Fragment key={cupLabel}>
+                <tbody>
+                  <tr className="border-b border-border bg-surface-2">
+                    <td colSpan={8} className="py-1.5 px-1 text-xs font-semibold text-foreground">
+                      {cupTierLabel(relay.cups, cupIdx)} · <span className="text-muted">{cupRows.length} rider{cupRows.length === 1 ? "" : "s"}</span>
+                    </td>
+                  </tr>
+                </tbody>
+                {teamGroups.map(({ character, rows: teamRows }) => {
+                  const times = teamRows.map(({ rider }) => rider.estimatedLapSeconds).filter((t): t is number => t != null);
+                  const avg = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : null;
                   return (
-                    <tr key={index} className="border-b border-border/60">
-                      <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
-                        {rider.relay!.cup}
-                      </td>
-                      <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
-                      <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
-                      <td className="py-1.5 pr-3 text-foreground">
-                        {rider.firstName} {rider.lastName}
-                        {rider.playerId.startsWith("manual-") && (
-                          <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
-                            manual
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
-                      <td className="py-1.5 pr-3">
-                        <span className="inline-flex items-center gap-1">
-                          {rider.estimatedLapSeconds != null && (
-                            <span className="text-muted">{formatSeconds(rider.estimatedLapSeconds)}</span>
-                          )}
-                          <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
-                            {badge.text}
-                          </span>
-                        </span>
-                      </td>
-                      <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
-                      <td className="py-1.5 pr-3">
-                        <select
-                          className="rounded border border-border bg-background px-1 py-0.5 text-xs"
-                          value={`${rider.relay!.cup}||${rider.relay!.character}`}
-                          onChange={(e) => {
-                            const [c, ch] = e.target.value.split("||");
-                            reassign(index, c, ch);
-                          }}
-                        >
-                          {relay.cups.flatMap((c, ci) =>
-                            relay.characters.map((ch) => (
-                              <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
-                                {cupTierLabel(relay.cups, ci)} · {ch}
-                              </option>
-                            )),
-                          )}
-                        </select>
-                      </td>
-                    </tr>
+                    <tbody key={`${cupLabel}||${character}`}>
+                      {groupByTeam && (
+                        <tr className="border-b border-border/60 bg-background">
+                          <td colSpan={8} className="py-1 pl-4 pr-1 text-[11px] font-semibold text-muted">
+                            {character} · {teamRows.length} rider{teamRows.length === 1 ? "" : "s"}
+                            {avg != null && <> · avg {formatSeconds(avg)}</>}
+                          </td>
+                        </tr>
+                      )}
+                      {teamRows.map(({ rider, index }) => {
+                        const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
+                        const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+                        return (
+                          <tr key={index} className="border-b border-border/60">
+                            <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
+                              {rider.relay!.cup}
+                            </td>
+                            <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
+                            <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
+                            <td className="py-1.5 pr-3 text-foreground">
+                              {rider.firstName} {rider.lastName}
+                              {rider.playerId.startsWith("manual-") && (
+                                <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                                  manual
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
+                            <td className="py-1.5 pr-3">
+                              <span className="inline-flex items-center gap-1">
+                                {rider.estimatedLapSeconds != null && (
+                                  <span className="text-muted">{formatSeconds(rider.estimatedLapSeconds)}</span>
+                                )}
+                                <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
+                                  {badge.text}
+                                </span>
+                              </span>
+                            </td>
+                            <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
+                            <td className="py-1.5 pr-3">
+                              <select
+                                className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+                                value={`${rider.relay!.cup}||${rider.relay!.character}`}
+                                onChange={(e) => {
+                                  const [c, ch] = e.target.value.split("||");
+                                  reassign(index, c, ch);
+                                }}
+                              >
+                                {relay.cups.flatMap((c, ci) =>
+                                  relay.characters.map((ch) => (
+                                    <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
+                                      {cupTierLabel(relay.cups, ci)} · {ch}
+                                    </option>
+                                  )),
+                                )}
+                              </select>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   );
                 })}
-              </tbody>
+              </Fragment>
             );
           })}
         </table>
