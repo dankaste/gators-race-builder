@@ -220,13 +220,24 @@ function placeGroupsLPT(groups: Group[], bins: Bin[], assign: (groupIndex: numbe
  *
  * `pinnedCupByGroup[i]` (parallel to `groups`), when non-null, forces that
  * group straight into the given cup — a director override from the review
- * screen (Rider.manualCupOverride) — applied BEFORE the sorted walk so the
- * walk's capacity/target accounting for every other (unpinned) group already
- * reflects the space pins consumed.
+ * screen (Rider.manualCupOverride).
+ *
+ * Pinned and auto-walked riders are tracked in SEPARATE counters
+ * (`pinnedCounts` / `walkCounts`), and `target` is computed from only the
+ * UNPINNED total — not the whole roster. A first version counted pins
+ * against the same shared total, which meant "move this rider to cup 1"
+ * silently bumped some OTHER unpinned rider out of cup 1 to keep it at the
+ * global target, leaving cup 1's headcount completely unchanged even though
+ * the people in it visibly changed — a real bug (looked like the UI just
+ * wasn't updating). Keeping the walk's fairness target blind to pins means a
+ * pin is purely additive: the cup a director moves someone into actually
+ * grows, and the cup they left actually shrinks. `capacity` is still a HARD
+ * ceiling that DOES include pinned counts, so a cup can never overflow.
  */
 function assignCupsToGroups(groups: Group[], cupCount: number, capacity: number, pinnedCupByGroup: (number | null)[]): number[] {
   const cupIndexByGroup = new Array<number>(groups.length).fill(0);
-  const cupCounts = new Array<number>(cupCount).fill(0);
+  const pinnedCounts = new Array<number>(cupCount).fill(0);
+  const walkCounts = new Array<number>(cupCount).fill(0);
   const cupSeedSums = new Array<number>(cupCount).fill(0);
 
   groups.forEach((g, idx) => {
@@ -234,47 +245,45 @@ function assignCupsToGroups(groups: Group[], cupCount: number, capacity: number,
     if (pin == null) return;
     const clamped = Math.max(0, Math.min(cupCount - 1, pin));
     cupIndexByGroup[idx] = clamped;
-    cupCounts[clamped] += g.indices.length;
+    pinnedCounts[clamped] += g.indices.length;
   });
 
   const unpinned = groups.map((g, idx) => ({ g, idx })).filter(({ idx }) => pinnedCupByGroup[idx] == null);
   const withRank = unpinned.filter((x) => x.g.rank != null).sort((a, b) => b.g.rank! - a.g.rank!);
   const withoutRank = unpinned.filter((x) => x.g.rank == null);
 
-  const totalRiders = groups.reduce((n, g) => n + g.indices.length, 0);
-  const target = Math.ceil(totalRiders / cupCount);
+  const unpinnedTotal = unpinned.reduce((n, { g }) => n + g.indices.length, 0);
+  const target = Math.ceil(unpinnedTotal / cupCount);
 
-  // `target` is a SOFT even-split goal — only advances a cup that already has
-  // something in it, so it never forces a cup past target when there was no
-  // alternative (an indivisible group can legitimately push a cup slightly
-  // over). `capacity` is a HARD ceiling — advances even an empty cup, as a
-  // safety net for the (essentially unreachable, since a single group is
-  // already ≤ teamSize) case of one group alone exceeding it. Keeping these
-  // as two separate conditions (not `Math.min`) matters: collapsing them
-  // would let the smaller of the two artificially shrink the real capacity
-  // ceiling, pushing riders into a faster cup than necessary whenever group
-  // sizes don't divide the roster evenly.
+  // `target` is a SOFT even-split goal (over the unpinned riders only) — only
+  // advances a cup whose WALK contribution already has something in it, so it
+  // never forces a cup past target when there was no alternative (an
+  // indivisible group can legitimately push a cup slightly over). `capacity`
+  // is a HARD ceiling on the cup's REAL total (pinned + walked) — advances
+  // even an empty cup, the safety net that actually matters once pins exist
+  // (a cup can be near capacity from pins alone before the walk even starts).
   let cupIdx = 0;
   for (const { g, idx } of withRank) {
     const size = g.indices.length;
     while (
       cupIdx < cupCount - 1 &&
-      ((cupCounts[cupIdx] > 0 && cupCounts[cupIdx] + size > target) || cupCounts[cupIdx] + size > capacity)
+      ((walkCounts[cupIdx] > 0 && walkCounts[cupIdx] + size > target) ||
+        pinnedCounts[cupIdx] + walkCounts[cupIdx] + size > capacity)
     ) {
       cupIdx++;
     }
     cupIndexByGroup[idx] = cupIdx;
-    cupCounts[cupIdx] += size;
+    walkCounts[cupIdx] += size;
   }
 
   for (const { g, idx } of withoutRank) {
     const size = g.indices.length;
-    const fitting = cupCounts.map((_, i) => i).filter((i) => cupCounts[i] + size <= capacity);
-    const pool = fitting.length ? fitting : cupCounts.map((_, i) => i);
-    pool.sort((a, b) => cupCounts[a] - cupCounts[b] || cupSeedSums[a] - cupSeedSums[b]);
+    const fitting = walkCounts.map((_, i) => i).filter((i) => pinnedCounts[i] + walkCounts[i] + size <= capacity);
+    const pool = fitting.length ? fitting : walkCounts.map((_, i) => i);
+    pool.sort((a, b) => pinnedCounts[a] + walkCounts[a] - (pinnedCounts[b] + walkCounts[b]) || cupSeedSums[a] - cupSeedSums[b]);
     const target2 = pool[0];
     cupIndexByGroup[idx] = target2;
-    cupCounts[target2] += size;
+    walkCounts[target2] += size;
     cupSeedSums[target2] += g.seedSum;
   }
 

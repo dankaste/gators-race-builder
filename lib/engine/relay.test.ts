@@ -113,6 +113,47 @@ describe("buildRelayTeams", () => {
     expect(team.riders.some((r) => r.firstName === "Paired")).toBe(true);
   });
 
+  it("actually grows the destination cup's headcount when pinning a group there, instead of silently swapping an unpinned rider out to compensate", () => {
+    // Regression test: a first version computed the auto-walk's fair-split target from
+    // the TOTAL roster (pinned + unpinned), so pinning 2 riders into a cup just made the
+    // walk hand that cup 2 FEWER auto-placed riders to compensate — net headcount
+    // unchanged, even though the specific people in it changed (looked like a UI bug).
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    const a = rider({ firstName: "A", lastName: "Pair", estimatedLapSeconds: 90, estimatedLapConfidence: "direct" });
+    const b = rider({
+      firstName: "B",
+      lastName: "Pair",
+      estimatedLapSeconds: 95,
+      estimatedLapConfidence: "direct",
+      custom: { "Teammate request": "A Pair" },
+    });
+    const filler = Array.from({ length: 12 }, (_, i) =>
+      rider({ estimatedLapSeconds: 100 + i * 15, estimatedLapConfidence: "direct" }),
+    );
+    const riders = [a, b, ...filler];
+
+    const countByCup = (riderCupIndex: number[]) => {
+      const counts = new Array<number>(tieredConfig.cups.length).fill(0);
+      for (const c of riderCupIndex) counts[c]++;
+      return counts;
+    };
+
+    const before = assignCups(riders, tieredConfig);
+    const beforeCounts = countByCup(before.riderCupIndex);
+
+    const pinned = riders.map((r, i) => (i === 0 || i === 1 ? { ...r, manualCupOverride: 0 } : r));
+    const after = assignCups(pinned, tieredConfig);
+    const afterCounts = countByCup(after.riderCupIndex);
+
+    expect(after.riderCupIndex[0]).toBe(0);
+    expect(after.riderCupIndex[1]).toBe(0);
+    // Cup 0 actually gained riders (not just different ones at the same count) — the
+    // bug this guards against left this exactly equal to beforeCounts[0].
+    expect(afterCounts[0]).toBeGreaterThan(beforeCounts[0]);
+    // Total headcount is conserved either way.
+    expect(afterCounts.reduce((a, b) => a + b, 0)).toBe(riders.length);
+  });
+
   it("treats a non-answer (NA/none/etc) as no request at all, not an unmatched one", () => {
     for (const nonAnswer of ["NA", "N/A", "none", "None", "no one", "nobody", "-", "TBD"]) {
       const a = rider({ firstName: "Solo", lastName: "Rider", custom: { "Teammate request": nonAnswer } });
