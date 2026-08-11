@@ -481,6 +481,29 @@ function RelayReviewPanel({
     );
   }
 
+  // Name lookup for the manual-match dropdown/chips, and add/remove helpers — see
+  // Rider.manualFriendMatches in lib/engine/models.ts.
+  const riderByPlayerId = useMemo(() => new Map(pendingRegs.map((r) => [r.playerId, r])), [pendingRegs]);
+  const sortedForPicker = useMemo(
+    () => [...pendingRegs].sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)),
+    [pendingRegs],
+  );
+
+  function addManualMatch(index: number, targetPlayerId: string) {
+    setPendingRegs(
+      pendingRegs.map((r, i) =>
+        i === index ? { ...r, manualFriendMatches: [...(r.manualFriendMatches ?? []), targetPlayerId] } : r,
+      ),
+    );
+  }
+  function removeManualMatch(index: number, targetPlayerId: string) {
+    setPendingRegs(
+      pendingRegs.map((r, i) =>
+        i === index ? { ...r, manualFriendMatches: (r.manualFriendMatches ?? []).filter((id) => id !== targetPlayerId) } : r,
+      ),
+    );
+  }
+
   const label = "block text-sm font-semibold text-muted mb-1";
 
   return (
@@ -593,9 +616,52 @@ function RelayReviewPanel({
                     </span>
                   </td>
                   <td className="py-1.5 pr-3 text-muted">
-                    {raw || <span className="text-muted/50">—</span>}
-                    {notFound && notFound.length > 0 && (
-                      <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
+                    <div>
+                      {raw || <span className="text-muted/50">—</span>}
+                      {notFound && notFound.length > 0 && (
+                        <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
+                      )}
+                    </div>
+                    {(rider.manualFriendMatches ?? []).length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {rider.manualFriendMatches!.map((pid) => {
+                          const match = riderByPlayerId.get(pid);
+                          return (
+                            <span
+                              key={pid}
+                              className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
+                            >
+                              ✓ {match ? `${match.firstName} ${match.lastName}` : "unknown rider"}
+                              <button
+                                type="button"
+                                onClick={() => removeManualMatch(index, pid)}
+                                className="ml-0.5 text-foreground/70 hover:text-foreground"
+                                title="Remove this manual match"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {raw && (
+                      <select
+                        className="mt-1 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-muted"
+                        value=""
+                        onChange={(e) => {
+                          if (e.target.value) addManualMatch(index, e.target.value);
+                        }}
+                      >
+                        <option value="">+ match to a rider…</option>
+                        {sortedForPicker
+                          .filter((r) => r.playerId !== rider.playerId && !(rider.manualFriendMatches ?? []).includes(r.playerId))
+                          .map((r) => (
+                            <option key={r.playerId} value={r.playerId}>
+                              {r.firstName} {r.lastName}
+                            </option>
+                          ))}
+                      </select>
                     )}
                   </td>
                   <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>

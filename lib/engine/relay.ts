@@ -12,7 +12,11 @@ import { normName, nameKeys as nameKeysOf } from "./nameMatch";
  *   1. Groups riders who requested each other (friend requests) so they land
  *      on the same team — a keep-together constraint. Groups larger than a
  *      team are split into team-sized chunks (flagged, not silently
- *      overflowed). See {@link assignCups}.
+ *      overflowed). A free-text request that doesn't match anyone by name
+ *      can be resolved by hand (Rider.manualFriendMatches, set from the
+ *      review screen's "match to a rider" dropdown) — additive on top of
+ *      name-matching, never clearing the original unmatched note. See
+ *      {@link assignCups}.
  *   2a. Sorts groups slowest→fastest (by each group's SLOWEST member's
  *      estimated Swamp Dash lap time — see lib/engine/history.ts — not the
  *      group average, so a mixed-speed friend group is never placed faster
@@ -305,6 +309,18 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
       }
     });
   }
+
+  // Director-confirmed matches (relay review screen) for a free-text request that
+  // didn't resolve by name — unioned on top of whatever automatic matching found.
+  // These don't clear the unmatchedFriends entry above (the raw text still failed
+  // to auto-match, and stays visible for review) — this is purely additive.
+  const byPlayerId = new Map(riders.map((r, i) => [r.playerId, i]));
+  riders.forEach((r, i) => {
+    for (const pid of r.manualFriendMatches ?? []) {
+      const target = byPlayerId.get(pid);
+      if (target !== undefined && target !== i) dsu.union(i, target);
+    }
+  });
 
   const groupsMap = new Map<number, number[]>();
   riders.forEach((_, i) => {

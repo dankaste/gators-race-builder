@@ -74,6 +74,15 @@ export interface Rider {
   wave: number | null;
   /** Relay assignment (relay events only): cup heat, character team, and leg order. */
   relay?: { cup: string; character: string; leg: number } | null;
+  /**
+   * playerIds of riders a director has manually confirmed as this rider's
+   * teammate (relay review screen) — for a free-text teammate request that
+   * didn't match anyone by name. Unioned into the same friend group in
+   * addition to whatever automatic name-matching finds (see assignCups in
+   * lib/engine/relay.ts); the raw request text is untouched and still shown,
+   * this is purely an additive override.
+   */
+  manualFriendMatches?: string[];
   custom?: Record<string, string>;
   /** Non-fatal issues surfaced for director review (e.g. "no bib match"). */
   warnings: string[];

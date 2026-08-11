@@ -70,6 +70,22 @@ describe("buildRelayTeams", () => {
     expect(unmatchedFriends).toEqual([{ rider: "Req Ester", requested: "Nobody Here" }]);
   });
 
+  it("groups riders via a director-confirmed manual match, without clearing the original unmatched-request note", () => {
+    const bob = rider({ firstName: "Bob", lastName: "Jones" });
+    const solo = rider({
+      firstName: "Solo",
+      lastName: "Rider",
+      custom: { "Teammate request": "Bobby" }, // free text that doesn't auto-match "Bob Jones"
+      manualFriendMatches: [bob.playerId], // director resolved it by hand on the review screen
+    });
+    const { teams, unmatchedFriends } = buildRelayTeams([solo, bob, ...Array.from({ length: 10 }, () => rider())], config);
+    // Still grouped together despite the name never auto-matching.
+    const team = teams.find((t) => t.riders.some((r) => r.firstName === "Solo"))!;
+    expect(team.riders.some((r) => r.firstName === "Bob")).toBe(true);
+    // The raw request still shows up as unmatched — the manual match is additive, not a fix to the text itself.
+    expect(unmatchedFriends).toEqual([{ rider: "Solo Rider", requested: "Bobby" }]);
+  });
+
   it("treats a non-answer (NA/none/etc) as no request at all, not an unmatched one", () => {
     for (const nonAnswer of ["NA", "N/A", "none", "None", "no one", "nobody", "-", "TBD"]) {
       const a = rider({ firstName: "Solo", lastName: "Rider", custom: { "Teammate request": nonAnswer } });
