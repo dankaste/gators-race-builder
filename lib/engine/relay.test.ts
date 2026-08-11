@@ -40,13 +40,14 @@ describe("buildRelayTeams", () => {
     expect(teams.length).toBe(6);
   });
 
-  it("keeps requested friends on the same team", () => {
+  it("keeps requested friends on the same team, and reports the successful match (not just failures)", () => {
     const alice = rider({ firstName: "Alice", lastName: "Smith" });
     const bob = rider({ firstName: "Bob", lastName: "Jones", custom: { "Teammate request": "Alice Smith" } });
     const others = Array.from({ length: 10 }, () => rider());
-    const { teams } = buildRelayTeams([bob, alice, ...others], config);
+    const { teams, matchedFriends } = buildRelayTeams([bob, alice, ...others], config);
     const aliceTeam = teams.find((t) => t.riders.some((r) => r.firstName === "Alice"))!;
     expect(aliceTeam.riders.some((r) => r.firstName === "Bob")).toBe(true);
+    expect(matchedFriends).toEqual([{ rider: "Bob Jones", requested: "Alice Smith", matchedRider: "Alice Smith" }]);
   });
 
   it("reports unmatched friend requests", () => {

@@ -439,7 +439,7 @@ function RelayReviewPanel({
   onBuild: () => void;
   onStartOver: () => void;
 }) {
-  const { groups, riderCupIndex, unmatchedFriends } = useMemo(
+  const { groups, riderCupIndex, matchedFriends, unmatchedFriends } = useMemo(
     () => assignCups(pendingRegs, { ...relay, friendRequestField: friendField || undefined }),
     [pendingRegs, relay, friendField],
   );
@@ -455,6 +455,15 @@ function RelayReviewPanel({
     for (const u of unmatchedFriends) map.set(u.rider, [...(map.get(u.rider) ?? []), u.requested]);
     return map;
   }, [unmatchedFriends]);
+
+  // Successful auto-matches (a free-text request that DID resolve to a rider by
+  // name) — labeled the same way as a manual match, so a director sees confirmation
+  // either way instead of only ever seeing failures called out.
+  const matchedByRider = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const m of matchedFriends) map.set(m.rider, [...(map.get(m.rider) ?? []), m.matchedRider]);
+    return map;
+  }, [matchedFriends]);
 
   const sortedRows = useMemo(
     () =>
@@ -524,7 +533,10 @@ function RelayReviewPanel({
             <span className="font-semibold text-warning">mixed-speed group</span> badge means a friend group spans more
             than one cup&apos;s worth of speed — they&apos;re kept together at the slowest member&apos;s tier. A{" "}
             <span className="font-semibold text-danger">⚠ check</span> flag means the time looks unusually fast or slow
-            next to the field — worth a second look before building.
+            next to the field — worth a second look before building. A{" "}
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground">✓ Name</span>{" "}
+            chip under a request confirms who it matched to — automatically by name, or by your own pick from the
+            &quot;+ match to a rider…&quot; dropdown (manual matches also get a × to remove).
           </p>
         </div>
         <button onClick={onStartOver} className="text-sm text-muted hover:text-foreground">
@@ -622,6 +634,19 @@ function RelayReviewPanel({
                         <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
                       )}
                     </div>
+                    {(matchedByRider.get(`${rider.firstName} ${rider.lastName}`)?.length ?? 0) > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {matchedByRider.get(`${rider.firstName} ${rider.lastName}`)!.map((name, i) => (
+                          <span
+                            key={i}
+                            title="Matched by name — resolved automatically from the request text."
+                            className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
+                          >
+                            ✓ {name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     {(rider.manualFriendMatches ?? []).length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-1">
                         {rider.manualFriendMatches!.map((pid) => {

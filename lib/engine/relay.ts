@@ -44,6 +44,8 @@ export interface RelaySlot {
 
 export interface RelayResult {
   teams: RelaySlot[];
+  /** Free-text requests that DID resolve to a rider by name — see AssignCupsResult.matchedFriends. */
+  matchedFriends: { rider: string; requested: string; matchedRider: string }[];
   /** Friend-request values that couldn't be matched to a rider. */
   unmatchedFriends: { rider: string; requested: string }[];
   /** Friend groups larger than a single team — split into team-sized chunks rather than silently overflowing one slot. */
@@ -273,6 +275,8 @@ export interface AssignCupsResult {
   cupIndexByGroup: number[];
   /** Same info flattened per-rider — cupIndexByGroup for that rider's group, by rider index into the input array. */
   riderCupIndex: number[];
+  /** Free-text requests that DID resolve to a rider by name — the success counterpart to unmatchedFriends, so a director can see confirmation either way, not just failures. */
+  matchedFriends: { rider: string; requested: string; matchedRider: string }[];
   unmatchedFriends: { rider: string; requested: string }[];
   splitGroups: { riders: string[]; teamSize: number }[];
 }
@@ -295,6 +299,7 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
   riders.forEach((r, i) => {
     for (const k of nameKeys(r)) if (!byName.has(k)) byName.set(k, i);
   });
+  const matchedFriends: { rider: string; requested: string; matchedRider: string }[] = [];
   const unmatchedFriends: { rider: string; requested: string }[] = [];
   if (friendField) {
     riders.forEach((r, i) => {
@@ -302,8 +307,14 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
       if (!req || NON_ANSWER.test(req)) return;
       for (const candidate of splitNameList(req)) {
         const target = byName.get(norm(candidate));
-        if (target !== undefined && target !== i) dsu.union(i, target);
-        else if (target === undefined) {
+        if (target !== undefined && target !== i) {
+          dsu.union(i, target);
+          matchedFriends.push({
+            rider: `${r.firstName} ${r.lastName}`,
+            requested: candidate,
+            matchedRider: `${riders[target].firstName} ${riders[target].lastName}`,
+          });
+        } else if (target === undefined) {
           unmatchedFriends.push({ rider: `${r.firstName} ${r.lastName}`, requested: candidate });
         }
       }
@@ -362,7 +373,7 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
     for (const i of g.indices) riderCupIndex[i] = cupIndexByGroup[gi];
   });
 
-  return { groups, cupIndexByGroup, riderCupIndex, unmatchedFriends, splitGroups };
+  return { groups, cupIndexByGroup, riderCupIndex, matchedFriends, unmatchedFriends, splitGroups };
 }
 
 /**
@@ -373,7 +384,7 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
  */
 export function buildRelayTeams(riders: Rider[], config: RelayConfig): RelayResult {
   const { cups, characters, teamSize } = config;
-  const { groups, cupIndexByGroup, unmatchedFriends, splitGroups } = assignCups(riders, config);
+  const { groups, cupIndexByGroup, matchedFriends, unmatchedFriends, splitGroups } = assignCups(riders, config);
 
   // 2b. Team pass: within each cup, converge each character-team's average toward that cup's.
   const slots: RelaySlot[] = [];
@@ -407,7 +418,7 @@ export function buildRelayTeams(riders: Rider[], config: RelayConfig): RelayResu
     });
   }
 
-  return { teams, unmatchedFriends, splitGroups };
+  return { teams, matchedFriends, unmatchedFriends, splitGroups };
 }
 
 /** Move a rider to a specific cup/character team, recomputing legs is left to a rebuild. */
