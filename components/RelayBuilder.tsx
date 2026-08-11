@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
-import { assignCups, buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine/relay";
+import { assignCups, buildRelayTeams, compareLegOrder } from "@/lib/engine/relay";
 import { DEFAULT_FIVE_SIX_COURSE_FACTOR, median, parseRaceTime, projectToFullCourse } from "@/lib/engine/history";
 import { createManualRider } from "@/lib/engine/manualRider";
 import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
@@ -155,13 +155,16 @@ export function RelayBuilder({
   }, [pendingRegs]);
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
-  const [warnings, setWarnings] = useState<Pick<RelayResult, "unmatchedFriends" | "splitGroups"> | null>(null);
   const [rosterSource, setRosterSource] = useState<string[] | null>(null);
   // Post-build table display only — doesn't touch `riders`, so it's plain local
   // state (nothing to persist). Reassigning a rider's cup/team via the "Reassign"
   // dropdown works the same in both views; it calls onChange(next) either way,
   // which flows up to Workspace's eventsState and autosaves (see reassign() below).
   const [groupByTeam, setGroupByTeam] = useState(true);
+  // Forces the review/rankings panel back onto the screen even though `riders` is
+  // already populated — the "‹ Back to review" path. `pendingRegs` is never cleared
+  // by a successful build (see build() below), so it's always there to go back to.
+  const [viewingReview, setViewingReview] = useState(false);
 
   // Rows for the post-build table, sorted Cup -> Team -> Leg. (Declared before
   // any early return so hooks run in a stable order.)
@@ -195,6 +198,22 @@ export function RelayBuilder({
     }
     return byCup;
   }, [rows, relay]);
+
+  // Unmatched teammate requests / oversized-group splits for the BUILT riders,
+  // recomputed live via assignCups (the same source of truth the review screen
+  // uses) rather than kept in a one-shot useState set inside build() — a useState
+  // would go back to empty after a reload even though `riders` (and the requests
+  // that failed to match) are still right there. Also drives the per-row "(not
+  // found: …)" annotation below instead of a flat list of every failure.
+  const { unmatchedFriends, splitGroups } = useMemo(() => {
+    if (!relay || riders.length === 0) return { unmatchedFriends: [], splitGroups: [] };
+    return assignCups(riders, { ...relay, friendRequestField: friendField || undefined });
+  }, [riders, relay, friendField]);
+  const unmatchedByRider = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const u of unmatchedFriends) map.set(u.rider, [...(map.get(u.rider) ?? []), u.requested]);
+    return map;
+  }, [unmatchedFriends]);
 
   if (!relay) return <p className="text-muted">This event has no relay configuration.</p>;
 
@@ -232,13 +251,13 @@ export function RelayBuilder({
     if (!pendingRegs) return;
     try {
       const clone = pendingRegs.map((r) => ({ ...r }));
-      const result = buildRelayTeams(clone, { ...relay!, friendRequestField: friendField || undefined });
-      setWarnings({ unmatchedFriends: result.unmatchedFriends, splitGroups: result.splitGroups });
+      buildRelayTeams(clone, { ...relay!, friendRequestField: friendField || undefined });
       onChange(clone);
-      // Only clear the review state once the build has actually succeeded and
-      // landed in `riders` — otherwise a failure here would silently discard
-      // the director's in-progress edits with no way to get them back.
-      setPendingRegs(null);
+      // pendingRegs is deliberately kept (not cleared) after a successful build —
+      // it's what "‹ Back to review" returns to, and unmatchedFriends/splitGroups
+      // are recomputed live from `riders` above instead of captured here, so
+      // nothing is lost by keeping it around.
+      setViewingReview(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to build teams");
     }
@@ -274,7 +293,9 @@ export function RelayBuilder({
     }
   }
 
-  if (riders.length === 0) {
+  // Reviewing either because nothing's been built yet, or because a director hit
+  // "‹ Back to review" on the built table (pendingRegs survives a build, see build()).
+  if (riders.length === 0 || (viewingReview && pendingRegs)) {
     if (pendingRegs) {
       return (
         <RelayReviewPanel
@@ -291,7 +312,10 @@ export function RelayBuilder({
             setPendingRegs(null);
             setRosterSource(null);
             setError(null);
+            setViewingReview(false);
           }}
+          builtTeamsAvailable={riders.length > 0}
+          onBackToTeams={() => setViewingReview(false)}
         />
       );
     }
@@ -316,7 +340,7 @@ export function RelayBuilder({
   }, new Map<string, number>());
   const sizes = [...teamSizes.values()];
   const minS = Math.min(...sizes), maxS = Math.max(...sizes);
-  const hasWarnings = warnings && (warnings.unmatchedFriends.length > 0 || warnings.splitGroups.length > 0);
+  const hasWarnings = unmatchedFriends.length > 0 || splitGroups.length > 0;
 
   return (
     <>
@@ -350,9 +374,18 @@ export function RelayBuilder({
         >
           + Add rider
         </button>
+        {pendingRegs && (
+          <button
+            onClick={() => setViewingReview(true)}
+            className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
+          >
+            ‹ Back to review
+          </button>
+        )}
         <ConfirmButton
           onConfirm={() => {
-            setWarnings(null);
+            setPendingRegs(null);
+            setRosterSource(null);
             onChange([]);
           }}
           prompt="Clear relay teams and re-import?"
@@ -368,27 +401,19 @@ export function RelayBuilder({
 
       {hasWarnings && (
         <div className="mt-4 rounded-lg border border-warning bg-surface p-4 text-sm">
-          {warnings!.unmatchedFriends.length > 0 && (
-            <div>
-              <p className="font-semibold text-warning">
-                {warnings!.unmatchedFriends.length} teammate request{warnings!.unmatchedFriends.length === 1 ? "" : "s"} didn&apos;t match a rider:
-              </p>
-              <ul className="mt-1 list-disc pl-5 text-muted">
-                {warnings!.unmatchedFriends.map((u, i) => (
-                  <li key={i}>
-                    {u.rider} requested &quot;{u.requested}&quot;
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {unmatchedFriends.length > 0 && (
+            <p className="font-semibold text-warning">
+              {unmatchedFriends.length} teammate request{unmatchedFriends.length === 1 ? "" : "s"} didn&apos;t match a
+              rider — see the <span className="font-normal text-muted">(not found: …)</span> note on each row below.
+            </p>
           )}
-          {warnings!.splitGroups.length > 0 && (
-            <div className={warnings!.unmatchedFriends.length > 0 ? "mt-3" : ""}>
+          {splitGroups.length > 0 && (
+            <div className={unmatchedFriends.length > 0 ? "mt-3" : ""}>
               <p className="font-semibold text-warning">
-                {warnings!.splitGroups.length} friend group{warnings!.splitGroups.length === 1 ? "" : "s"} too big for one team, split across teams:
+                {splitGroups.length} friend group{splitGroups.length === 1 ? "" : "s"} too big for one team, split across teams:
               </p>
               <ul className="mt-1 list-disc pl-5 text-muted">
-                {warnings!.splitGroups.map((g, i) => (
+                {splitGroups.map((g, i) => (
                   <li key={i}>
                     {g.riders.join(", ")} ({g.riders.length} riders, team size {g.teamSize})
                   </li>
@@ -463,6 +488,7 @@ export function RelayBuilder({
                       {teamRows.map(({ rider, index }) => {
                         const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
                         const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+                        const notFound = unmatchedByRider.get(`${rider.firstName} ${rider.lastName}`);
                         return (
                           <tr key={index} className="border-b border-border/60">
                             <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
@@ -489,7 +515,12 @@ export function RelayBuilder({
                                 </span>
                               </span>
                             </td>
-                            <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
+                            <td className="py-1.5 pr-3 text-muted">
+                              {requested || <span className="text-muted/50">—</span>}
+                              {notFound && notFound.length > 0 && (
+                                <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
+                              )}
+                            </td>
                             <td className="py-1.5 pr-3">
                               <select
                                 className="rounded border border-border bg-background px-1 py-0.5 text-xs"
@@ -543,6 +574,8 @@ function RelayReviewPanel({
   error,
   onBuild,
   onStartOver,
+  builtTeamsAvailable,
+  onBackToTeams,
 }: {
   pendingRegs: Rider[];
   /** Always the updater form — every edit here derives the next array from the current one, so a stale closure over `pendingRegs` from an earlier render must never be the source of truth (see onPendingReviewChange in RelayBuilder). */
@@ -555,6 +588,9 @@ function RelayReviewPanel({
   error: string | null;
   onBuild: () => void;
   onStartOver: () => void;
+  /** True when there's already a built team table underneath this review (reached via "‹ Back to review", not the initial import flow). Rebuilding from here overwrites it, including any manual reassignments made there since the last build — so the Build button gets a confirmation and there's a non-destructive way back out. */
+  builtTeamsAvailable: boolean;
+  onBackToTeams: () => void;
 }) {
   const { groups, riderCupIndex, matchedFriends, unmatchedFriends } = useMemo(
     () => assignCups(pendingRegs, { ...relay, friendRequestField: friendField || undefined }),
@@ -698,9 +734,16 @@ function RelayReviewPanel({
             &quot;+ match to a rider…&quot; dropdown (manual matches also get a × to remove).
           </p>
         </div>
-        <button onClick={onStartOver} className="text-sm text-muted hover:text-foreground">
-          ‹ Start over
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          {builtTeamsAvailable && (
+            <button onClick={onBackToTeams} className="text-sm text-muted hover:text-foreground">
+              ‹ Back to built teams
+            </button>
+          )}
+          <button onClick={onStartOver} className="text-sm text-muted hover:text-foreground">
+            ‹ Start over
+          </button>
+        </div>
       </div>
 
       {rosterSource && (
@@ -910,9 +953,20 @@ function RelayReviewPanel({
       </div>
 
       <div className="mt-5">
-        <button onClick={onBuild} className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong">
-          Build teams ({pendingRegs.length} riders)
-        </button>
+        {builtTeamsAvailable ? (
+          <ConfirmButton
+            onConfirm={onBuild}
+            prompt="Rebuild teams? This overwrites the currently built teams, including any manual reassignments made there since the last build."
+            confirmLabel="Rebuild"
+            className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong"
+          >
+            Rebuild teams ({pendingRegs.length} riders)
+          </ConfirmButton>
+        ) : (
+          <button onClick={onBuild} className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong">
+            Build teams ({pendingRegs.length} riders)
+          </button>
+        )}
         {error && <p className="mt-2 text-danger">{error}</p>}
       </div>
     </div>

@@ -329,6 +329,93 @@ describe("buildRelayTeams", () => {
     for (const n of names) expect(placedNames).toContain(`${n} Big`);
   });
 
+  it("consolidates into ~teamSize teams instead of scattering thin when the config has far more characters than a cup needs", () => {
+    // Regression test: sdr's real config has 14 characters but a field small enough
+    // that each cup only needs ~4 of them. The old greedy always preferred a still-
+    // empty bin (lowest running total) over a partially-filled one, so with 14
+    // available character slots it kept reaching for a fresh one instead of filling
+    // existing teams — producing teams anywhere from 1 to teamSize riders instead of
+    // consolidating to teamSize.
+    const manyCharsConfig: RelayConfig = {
+      ...config,
+      cups: ["Cup 1"],
+      characters: Array.from({ length: 14 }, (_, i) => `Character ${i}`),
+    };
+    // 13 riders, mostly in friend pairs/trios so groups are indivisible — same shape
+    // as real teammate-request data, not 13 independent singletons.
+    const names = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"];
+    const riders = names.map((n, i) =>
+      rider({
+        firstName: n,
+        lastName: "Team",
+        estimatedLapSeconds: 100 + i * 5,
+        estimatedLapConfidence: "direct",
+        ...(i > 0 && i % 3 !== 0 ? { custom: { "Teammate request": `${names[i - 1]} Team` } } : {}),
+      }),
+    );
+    const { teams } = buildRelayTeams(riders, manyCharsConfig);
+    expect(teams.reduce((n, t) => n + t.riders.length, 0)).toBe(13);
+    // ceil(13/4) = 4 teams needed — not 13 (one per rider) or anywhere near 14 (one per character).
+    expect(teams.length).toBe(4);
+    for (const t of teams) {
+      expect(t.riders.length).toBeGreaterThanOrEqual(config.teamSize - 1);
+      expect(t.riders.length).toBeLessThanOrEqual(config.teamSize);
+    }
+  });
+
+  it("spreads a remainder team count evenly across cups by TEAM count, not raw headcount, so it's one short team in the whole field rather than one per cup", () => {
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    // 13 riders / teamSize 4 = ceil(13/4) = 4 teams total needed, across 4 cups: 3 cups
+    // get 1 team (4 riders) and 1 cup gets the remainder — NOT a raw ceil(13/4)=4-per-cup
+    // split, which would leave every cup short by the same amount.
+    const riders = Array.from({ length: 13 }, (_, i) =>
+      rider({ estimatedLapSeconds: 100 + i * 10, estimatedLapConfidence: "direct" }),
+    );
+    const { teams } = buildRelayTeams(riders, tieredConfig);
+    const sizes = teams.map((t) => t.riders.length).sort((a, b) => b - a);
+    // Exactly one team short of teamSize; the rest are full.
+    expect(sizes.filter((s) => s === config.teamSize).length).toBe(3);
+    expect(sizes.filter((s) => s < config.teamSize).length).toBe(1);
+  });
+
+  it("grows the team count instead of overflowing when same-sized friend groups don't tile evenly into teamSize bins", () => {
+    // 4 groups of 3 (12 riders), all pinned into ONE cup: ceil(12/4) = 3 teams by
+    // headcount alone, but two groups of 3 already exceed one team's capacity of 4
+    // (3+3=6), so at most one group-of-3 fits per team — 3 teams can only hold 9 of
+    // the 12 riders. A headcount-only estimate would force the 4th group to overflow
+    // an existing team to 6; the fix must grow to 4 teams of 3 instead. Needs a config
+    // with enough SPARE characters to grow into (the base `config` fixture only has 3,
+    // which is itself a hard capacity ceiling — see the "far more characters than a
+    // cup needs" test above for that scenario).
+    const roomyConfig: RelayConfig = { ...config, characters: ["Link", "Mario", "Yoshi", "Wario", "Toad"] };
+    const groupNames = ["A", "B", "C", "D"];
+    const riders = groupNames.flatMap((g, gi) => [
+      rider({ firstName: `${g}1`, lastName: "Fam", estimatedLapSeconds: 100 + gi, estimatedLapConfidence: "direct", manualCupOverride: 0 }),
+      rider({
+        firstName: `${g}2`,
+        lastName: "Fam",
+        estimatedLapSeconds: 100 + gi,
+        estimatedLapConfidence: "direct",
+        manualCupOverride: 0,
+        custom: { "Teammate request": `${g}1 Fam` },
+      }),
+      rider({
+        firstName: `${g}3`,
+        lastName: "Fam",
+        estimatedLapSeconds: 100 + gi,
+        estimatedLapConfidence: "direct",
+        manualCupOverride: 0,
+        custom: { "Teammate request": `${g}2 Fam` },
+      }),
+    ]);
+    const { teams, splitGroups } = buildRelayTeams(riders, roomyConfig);
+    expect(splitGroups).toHaveLength(0); // groups of 3 fit within teamSize 4 — never split
+    expect(teams.every((t) => t.riders.length <= config.teamSize)).toBe(true); // never overflows
+    expect(teams).toHaveLength(4); // grew past the headcount-only ceil(12/4)=3 estimate
+    expect(teams.every((t) => t.riders.length === 3)).toBe(true);
+    expect(teams.reduce((n, t) => n + t.riders.length, 0)).toBe(12);
+  });
+
   it("ranks legs by estimated lap time (slowest/highest-seconds first) when present", () => {
     const a = rider({ firstName: "A", lastName: "X", estimatedLapSeconds: 150, estimatedLapConfidence: "direct" });
     const b = rider({

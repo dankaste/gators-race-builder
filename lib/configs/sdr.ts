@@ -5,8 +5,12 @@ import type { CategoryDef, Gender, RaceConfig, WaveOrdering } from "@/lib/engine
  *   1. Standard Pedal Race (individual): young Balance + Novice riders, run like
  *      a normal age-band race at 9:30am.
  *   2. Relay (relay type): older riders distributed across 4 time-staggered cups,
- *      each holding ~14 Mario-Kart-character teams of ~4 riders. Team assignment
- *      (cup + character, honoring friend requests) is handled by the relay builder.
+ *      each cup split into Mario-Kart-character teams of ~4 riders (teamSize) —
+ *      as many characters as that cup's headcount actually needs, not all 14;
+ *      RELAY_CHARACTERS is a big enough roster to name teams for a much larger
+ *      field than a typical season sees, not a per-cup quota. Team assignment
+ *      (cup + character, honoring friend requests) is handled by the relay
+ *      builder — see lib/engine/relay.ts.
  */
 
 const NOVICE = ["Novice"];
