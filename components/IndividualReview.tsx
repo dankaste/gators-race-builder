@@ -441,6 +441,9 @@ function ImportPanel({
           <label className={label}>PlayMetrics player export (CSV) — for bibs &amp; seeding</label>
           <input type="file" accept=".csv" onChange={(e) => setRoster(e.target.files?.[0] ?? null)}
             className="block w-full text-sm text-muted file:mr-3 file:rounded file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-foreground" />
+          <p className="mt-1 text-xs text-muted">
+            Optional — leave blank to reuse bibs/teams/contacts already captured from another race this season.
+          </p>
         </div>
       </div>
       {!raceDate && <p className="mt-4 text-warning">Set the race date above before importing.</p>}
