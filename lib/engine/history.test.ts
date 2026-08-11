@@ -119,20 +119,39 @@ describe("deriveFiveSixFactor", () => {
     };
   }
 
-  it("de-confounds the 5-6 course jump from ordinary same-course growth", () => {
-    // Every rider: 5-6 time is exactly 1.8x their 7-8 time the following year;
-    // every rider also has a same-course (7-8→9-10) leg that's flat (ratio 1.0),
-    // so the derived factor should land close to 1.8 (growth ≈ 1.0).
+  it("de-confounds the 5-6 course jump from SAME-AGE same-course growth (age 5 -> age 6, not an older band's growth rate)", () => {
+    // Every rider: age-5 time 100, age-6 time 80 the following year (a same-course
+    // 5-6->5-6 "growth" leg, ratio 0.8), age-8 time 128 the year after that (the
+    // 5-6->7-8 course-length jump from their age-6 time, ratio 1.6) — so the
+    // derived factor should land at 1.6 / 0.8 = 2.0.
     const rows: HistoryRow[] = [];
     for (let i = 0; i < 6; i++) {
       const name = `Rider${i}, R`;
-      rows.push(sdRow(name, 2022, 6, 100));
-      rows.push(sdRow(name, 2023, 8, 180));
-      rows.push(sdRow(name, 2024, 10, 180));
+      rows.push(sdRow(name, 2022, 5, 100));
+      rows.push(sdRow(name, 2023, 6, 80));
+      rows.push(sdRow(name, 2024, 8, 128));
     }
     const { factor, n } = deriveFiveSixFactor(rows);
     expect(n).toBe(6);
-    expect(factor).toBeCloseTo(1.8, 1);
+    expect(factor).toBeCloseTo(2.0, 5);
+  });
+
+  it("would derive a smaller (understated) factor if it used an older band's slower growth rate instead — the exact bug this baseline fixes", () => {
+    // Same shape as above, but if a rider's own age-6->age-8 "growth-only" leg were
+    // FLAT (ratio 1.0, like an older band's slower improvement) instead of the real
+    // faster young-age rate, the factor would come out at the full observed jump
+    // (1.6) with no correction at all — i.e. exactly the historical bug: treating
+    // young kids' improvement like older kids' understates how much of the
+    // slowdown is really the course, not growth.
+    const rows: HistoryRow[] = [];
+    for (let i = 0; i < 6; i++) {
+      const name = `Rider${i}, R`;
+      rows.push(sdRow(name, 2022, 5, 100));
+      rows.push(sdRow(name, 2023, 6, 100)); // flat "growth" (ratio 1.0) — the understating scenario
+      rows.push(sdRow(name, 2024, 8, 160));
+    }
+    const { factor } = deriveFiveSixFactor(rows);
+    expect(factor).toBeCloseTo(1.6, 5); // no correction applied — the whole jump gets misattributed to "growth"
   });
 
   it("returns a null factor when there's no paired data", () => {

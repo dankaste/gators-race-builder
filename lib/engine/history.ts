@@ -415,19 +415,30 @@ function pairedRatios(
  * The 5-6 individual Swamp Dash course is physically shorter than the 7+
  * course. Riders who raced 5-6 then 7-8 a year later slow down by ~1.6x, but
  * that conflates the course-length jump with a year of ordinary growth.
- * De-confound it using riders who stayed on the full course a year apart
- * (7-8→9-10, 9-10→11-12) as the growth baseline: factor = paired ratio ÷
- * same-course growth. Best-effort — 5-6 riders never race the full course,
- * so this can never be measured directly; store the result as an editable
- * config default (see RelayConfig.historyEstimation), not gospel.
+ * De-confound it using a SAME-AGE growth baseline: riders who stayed within
+ * the 5-6 band a year apart (age 5 → age 6, same short course both years) —
+ * factor = paired 5-6→7-8 ratio ÷ that same-course, same-age growth.
+ *
+ * An earlier version of this function used OLDER riders' same-course growth
+ * (7-8→9-10, 9-10→11-12) as the baseline instead, reasoning that any
+ * same-course pair would do. Real data doesn't support that: young kids
+ * improve much faster year over year than older kids do (5-6→5-6 riders get
+ * ~20% faster per year; 7-8+ riders only ~8%). Using the older, slower
+ * growth rate as a stand-in for the younger transition systematically
+ * UNDERSTATED how much of the 5-6→7-8 slowdown was really the course jump
+ * (vs. ordinary growth), silently deflating the derived factor — riders on
+ * the shorter course looked faster, relative to the full field, than they
+ * actually are. Age-matching the baseline (5-6→5-6, not 7-8→9-10) fixes
+ * this; see history.test.ts for the numbers.
+ *
+ * Best-effort either way — 5-6 riders never race the full course, so this
+ * can never be measured directly; store the result as an editable config
+ * default (see RelayConfig.historyEstimation), not gospel.
  */
 export function deriveFiveSixFactor(history: HistoryRow[]): { factor: number | null; n: number } {
   const byRiderSeason = sdTimesByRiderSeason(history);
   const paired = pairedRatios(byRiderSeason, "5-6", "7-8");
-  const growth = [
-    ...pairedRatios(byRiderSeason, "7-8", "9-10"),
-    ...pairedRatios(byRiderSeason, "9-10", "11-12"),
-  ];
+  const growth = pairedRatios(byRiderSeason, "5-6", "5-6");
   if (paired.length === 0 || growth.length === 0) return { factor: null, n: paired.length };
   return { factor: median(paired) / median(growth), n: paired.length };
 }
@@ -456,7 +467,7 @@ export function projectToFullCourse(seconds: number, ageOnRaceDay: number, fiveS
  * genuinely on the shorter 5-6 course's scale, just never corrected up to
  * full-course). Matches sdr.ts's real derived value; see deriveFiveSixFactor.
  */
-export const DEFAULT_FIVE_SIX_COURSE_FACTOR = 1.78;
+export const DEFAULT_FIVE_SIX_COURSE_FACTOR = 2.03;
 
 // --- estimation --------------------------------------------------------------
 

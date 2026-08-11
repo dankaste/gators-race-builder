@@ -75,9 +75,13 @@ export const swampDashRelayConfig: RaceConfig = {
         // friendRequestField: mapped from the relay registration export in M6.
         historyEstimation: {
           // Derived from lib/engine/history.ts's deriveFiveSixFactor() against the
-          // real 2018-2025 export (paired 5-6→7-8 ratio ÷ same-course growth,
-          // n=81 paired riders) — best-effort, editable here as more seasons land.
-          fiveSixCourseFactor: 1.78,
+          // real 2018-2025 export (paired 5-6→7-8 ratio ÷ SAME-AGE same-course
+          // growth — riders who stayed in the 5-6 band a year apart, n=81 paired
+          // riders, n=75 growth pairs) — best-effort, editable here as more
+          // seasons land. An earlier version (1.78) used older riders' growth
+          // rate as the baseline and understated this — see deriveFiveSixFactor's
+          // doc comment for why age-matching the baseline matters.
+          fiveSixCourseFactor: 2.03,
           minCellSize: 5,
         },
       },
