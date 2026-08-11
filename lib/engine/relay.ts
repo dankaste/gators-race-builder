@@ -217,17 +217,29 @@ function placeGroupsLPT(groups: Group[], bins: Bin[], assign: (groupIndex: numbe
  * into whichever cup (with room) currently has the fewest riders, tied by
  * lowest seedSum — the same `(count, skillSum)` signal the old bin-pack used,
  * so an all-unestimated roster still spreads evenly by headcount alone.
+ *
+ * `pinnedCupByGroup[i]` (parallel to `groups`), when non-null, forces that
+ * group straight into the given cup — a director override from the review
+ * screen (Rider.manualCupOverride) — applied BEFORE the sorted walk so the
+ * walk's capacity/target accounting for every other (unpinned) group already
+ * reflects the space pins consumed.
  */
-function assignCupsToGroups(groups: Group[], cupCount: number, capacity: number): number[] {
+function assignCupsToGroups(groups: Group[], cupCount: number, capacity: number, pinnedCupByGroup: (number | null)[]): number[] {
   const cupIndexByGroup = new Array<number>(groups.length).fill(0);
   const cupCounts = new Array<number>(cupCount).fill(0);
   const cupSeedSums = new Array<number>(cupCount).fill(0);
 
-  const withRank = groups
-    .map((g, idx) => ({ g, idx }))
-    .filter((x) => x.g.rank != null)
-    .sort((a, b) => b.g.rank! - a.g.rank!);
-  const withoutRank = groups.map((g, idx) => ({ g, idx })).filter((x) => x.g.rank == null);
+  groups.forEach((g, idx) => {
+    const pin = pinnedCupByGroup[idx];
+    if (pin == null) return;
+    const clamped = Math.max(0, Math.min(cupCount - 1, pin));
+    cupIndexByGroup[idx] = clamped;
+    cupCounts[clamped] += g.indices.length;
+  });
+
+  const unpinned = groups.map((g, idx) => ({ g, idx })).filter(({ idx }) => pinnedCupByGroup[idx] == null);
+  const withRank = unpinned.filter((x) => x.g.rank != null).sort((a, b) => b.g.rank! - a.g.rank!);
+  const withoutRank = unpinned.filter((x) => x.g.rank == null);
 
   const totalRiders = groups.reduce((n, g) => n + g.indices.length, 0);
   const target = Math.ceil(totalRiders / cupCount);
@@ -365,8 +377,20 @@ export function assignCups(riders: Rider[], config: RelayConfig): AssignCupsResu
     };
   });
 
+  // Director overrides (relay review screen): if ANY member of a group has a
+  // manualCupOverride, pin the WHOLE group there — moving one rider moves
+  // their paired teammate(s) with them, matching the keep-together rule
+  // everywhere else in this file. First override found wins on conflict.
+  const pinnedCupByGroup: (number | null)[] = indexGroups.map((indices) => {
+    for (const i of indices) {
+      const pin = riders[i].manualCupOverride;
+      if (pin != null) return pin;
+    }
+    return null;
+  });
+
   // 2a. Cup pass: sorted slowest→fastest partition — cups are tiered heats, not interchangeable bins.
-  const cupIndexByGroup = assignCupsToGroups(groups, cups.length, capacity);
+  const cupIndexByGroup = assignCupsToGroups(groups, cups.length, capacity, pinnedCupByGroup);
 
   const riderCupIndex = new Array<number>(riders.length).fill(-1);
   groups.forEach((g, gi) => {

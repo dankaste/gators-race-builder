@@ -83,6 +83,14 @@ export interface Rider {
    * this is purely an additive override.
    */
   manualFriendMatches?: string[];
+  /**
+   * Director override (relay review screen): force this rider's whole friend
+   * group into a specific cup, bypassing the slowest→fastest sorted
+   * partition for that group. Cup array index (parallel to config.cups; 0 =
+   * slowest) — see assignCups in lib/engine/relay.ts. Undefined = no
+   * override, placed automatically like everyone else.
+   */
+  manualCupOverride?: number;
   custom?: Record<string, string>;
   /** Non-fatal issues surfaced for director review (e.g. "no bib match"). */
   warnings: string[];

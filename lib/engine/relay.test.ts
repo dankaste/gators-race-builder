@@ -87,6 +87,32 @@ describe("buildRelayTeams", () => {
     expect(unmatchedFriends).toEqual([{ rider: "Solo Rider", requested: "Bobby" }]);
   });
 
+  it("moves a rider AND their paired friend to a director-chosen cup, bypassing the sorted partition for just that group", () => {
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    // Fastest rider in the field, but overridden into Cup 1 (normally the slowest tier).
+    const fast = rider({
+      firstName: "Fast",
+      lastName: "Kid",
+      estimatedLapSeconds: 90,
+      estimatedLapConfidence: "direct",
+      manualCupOverride: 0,
+      custom: { "Teammate request": "Paired Kid" },
+    });
+    const paired = rider({ firstName: "Paired", lastName: "Kid", estimatedLapSeconds: 95, estimatedLapConfidence: "direct" });
+    const filler = Array.from({ length: 12 }, (_, i) =>
+      rider({ estimatedLapSeconds: 100 + i * 15, estimatedLapConfidence: "direct" }),
+    );
+    const { riderCupIndex } = assignCups([fast, paired, ...filler], tieredConfig);
+    expect(riderCupIndex[0]).toBe(0); // Fast Kid, pinned
+    expect(riderCupIndex[1]).toBe(0); // Paired Kid, moved along with them despite not having the override themselves
+
+    // Also honored by the actual build, via the same assignCups call — not just the review screen's live preview.
+    const { teams } = buildRelayTeams([fast, paired, ...filler].map((r) => ({ ...r })), tieredConfig);
+    const team = teams.find((t) => t.riders.some((r) => r.firstName === "Fast"))!;
+    expect(team.cup).toBe("Cup 1");
+    expect(team.riders.some((r) => r.firstName === "Paired")).toBe(true);
+  });
+
   it("treats a non-answer (NA/none/etc) as no request at all, not an unmatched one", () => {
     for (const nonAnswer of ["NA", "N/A", "none", "None", "no one", "nobody", "-", "TBD"]) {
       const a = rider({ firstName: "Solo", lastName: "Rider", custom: { "Teammate request": nonAnswer } });

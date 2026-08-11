@@ -144,6 +144,19 @@ export function RelayBuilder({
       });
   }, [riders, relay]);
 
+  // Same rows, bucketed by cup — grouped headers with a rider count, like the review screen.
+  const rowsByCup = useMemo(() => {
+    const byCup = new Map<number, typeof rows>();
+    if (!relay) return byCup;
+    for (const row of rows) {
+      const ci = relay.cups.indexOf(row.rider.relay!.cup);
+      const arr = byCup.get(ci) ?? [];
+      arr.push(row);
+      byCup.set(ci, arr);
+    }
+    return byCup;
+  }, [rows, relay]);
+
   if (!relay) return <p className="text-muted">This event has no relay configuration.</p>;
 
   // Step 1: import → parse → transform (no categories) → estimate lap times (5-6-projected, once) → median-default → collect custom fields for friend mapping → review.
@@ -349,60 +362,70 @@ export function RelayBuilder({
               <th className="py-2 pr-3">Reassign</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map(({ rider, index }) => {
-              const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
-              const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
-              const cupIdx = relay.cups.indexOf(rider.relay!.cup);
-              return (
-                <tr key={index} className="border-b border-border/60">
-                  <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
-                    {rider.relay!.cup}
-                  </td>
-                  <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
-                  <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
-                  <td className="py-1.5 pr-3 text-foreground">
-                    {rider.firstName} {rider.lastName}
-                    {rider.playerId.startsWith("manual-") && (
-                      <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
-                        manual
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
-                  <td className="py-1.5 pr-3">
-                    <span className="inline-flex items-center gap-1">
-                      {rider.estimatedLapSeconds != null && (
-                        <span className="text-muted">{formatSeconds(rider.estimatedLapSeconds)}</span>
-                      )}
-                      <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
-                        {badge.text}
-                      </span>
-                    </span>
-                  </td>
-                  <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
-                  <td className="py-1.5 pr-3">
-                    <select
-                      className="rounded border border-border bg-background px-1 py-0.5 text-xs"
-                      value={`${rider.relay!.cup}||${rider.relay!.character}`}
-                      onChange={(e) => {
-                        const [c, ch] = e.target.value.split("||");
-                        reassign(index, c, ch);
-                      }}
-                    >
-                      {relay.cups.flatMap((c, ci) =>
-                        relay.characters.map((ch) => (
-                          <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
-                            {cupTierLabel(relay.cups, ci)} · {ch}
-                          </option>
-                        )),
-                      )}
-                    </select>
+          {relay.cups.map((cupLabel, cupIdx) => {
+            const cupRows = rowsByCup.get(cupIdx) ?? [];
+            if (cupRows.length === 0) return null;
+            return (
+              <tbody key={cupLabel}>
+                <tr className="border-b border-border bg-surface-2">
+                  <td colSpan={8} className="py-1.5 px-1 text-xs font-semibold text-foreground">
+                    {cupTierLabel(relay.cups, cupIdx)} · <span className="text-muted">{cupRows.length} rider{cupRows.length === 1 ? "" : "s"}</span>
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
+                {cupRows.map(({ rider, index }) => {
+                  const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
+                  const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+                  return (
+                    <tr key={index} className="border-b border-border/60">
+                      <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
+                        {rider.relay!.cup}
+                      </td>
+                      <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
+                      <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
+                      <td className="py-1.5 pr-3 text-foreground">
+                        {rider.firstName} {rider.lastName}
+                        {rider.playerId.startsWith("manual-") && (
+                          <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                            manual
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
+                      <td className="py-1.5 pr-3">
+                        <span className="inline-flex items-center gap-1">
+                          {rider.estimatedLapSeconds != null && (
+                            <span className="text-muted">{formatSeconds(rider.estimatedLapSeconds)}</span>
+                          )}
+                          <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
+                            {badge.text}
+                          </span>
+                        </span>
+                      </td>
+                      <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
+                      <td className="py-1.5 pr-3">
+                        <select
+                          className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+                          value={`${rider.relay!.cup}||${rider.relay!.character}`}
+                          onChange={(e) => {
+                            const [c, ch] = e.target.value.split("||");
+                            reassign(index, c, ch);
+                          }}
+                        >
+                          {relay.cups.flatMap((c, ci) =>
+                            relay.characters.map((ch) => (
+                              <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
+                                {cupTierLabel(relay.cups, ci)} · {ch}
+                              </option>
+                            )),
+                          )}
+                        </select>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            );
+          })}
         </table>
       </div>
     </>
@@ -465,13 +488,55 @@ function RelayReviewPanel({
     return map;
   }, [matchedFriends]);
 
-  const sortedRows = useMemo(
-    () =>
-      pendingRegs
-        .map((rider, index) => ({ rider, index }))
-        .sort((a, b) => (b.rider.estimatedLapSeconds ?? -Infinity) - (a.rider.estimatedLapSeconds ?? -Infinity)),
-    [pendingRegs],
-  );
+  // Rows grouped by cup (slowest cup first), each sorted slowest-first within
+  // itself — the "group by cup, show me the count" view, replacing one flat sort.
+  const rowsByCup = useMemo(() => {
+    const byCup = new Map<number, { rider: Rider; index: number }[]>();
+    pendingRegs.forEach((rider, index) => {
+      // -1 should be unreachable (every rider belongs to some group, and every group
+      // gets a clamped cup index) — bucketed separately anyway so a bug here shows up
+      // as a visible "unassigned" row instead of silently dropping someone from a
+      // screen whose whole job is "show me everyone before I commit."
+      const cupIdx = riderCupIndex[index];
+      const key = cupIdx >= 0 && cupIdx < relay.cups.length ? cupIdx : -1;
+      const arr = byCup.get(key) ?? [];
+      arr.push({ rider, index });
+      byCup.set(key, arr);
+    });
+    for (const arr of byCup.values()) {
+      arr.sort((a, b) => (b.rider.estimatedLapSeconds ?? -Infinity) - (a.rider.estimatedLapSeconds ?? -Infinity));
+    }
+    return byCup;
+  }, [pendingRegs, riderCupIndex, relay.cups.length]);
+
+  // Rider index -> the group (from assignCups) they belong to, so moving one
+  // rider to a different cup can move their whole friend group with them.
+  const groupIndexOfRider = useMemo(() => {
+    const map = new Array<number>(pendingRegs.length).fill(-1);
+    groups.forEach((g, gi) => {
+      for (const i of g.indices) map[i] = gi;
+    });
+    return map;
+  }, [groups, pendingRegs.length]);
+
+  // Whether a rider's whole group currently has a director-pinned cup — shown
+  // as a badge on every member's row, not just whoever set the override.
+  const groupPinned = useMemo(() => {
+    const flags = new Array<boolean>(pendingRegs.length).fill(false);
+    for (const g of groups) {
+      if (g.indices.some((i) => pendingRegs[i].manualCupOverride != null)) {
+        for (const i of g.indices) flags[i] = true;
+      }
+    }
+    return flags;
+  }, [groups, pendingRegs]);
+
+  /** Move a rider AND their whole friend group to `cupIndex` (or back to automatic placement when null). */
+  function moveGroupToCup(riderIndex: number, cupIndex: number | null) {
+    const gi = groupIndexOfRider[riderIndex];
+    const memberIndices = new Set(gi >= 0 ? groups[gi].indices : [riderIndex]);
+    setPendingRegs(pendingRegs.map((r, i) => (memberIndices.has(i) ? { ...r, manualCupOverride: cupIndex ?? undefined } : r)));
+  }
 
   // Sanity check, not a hard rule: flag any estimate under half or over double the
   // field's median as worth a second look — catches bad source data or a missed
@@ -578,124 +643,175 @@ function RelayReviewPanel({
               <th className="py-2 pr-3">Cup</th>
             </tr>
           </thead>
-          <tbody>
-            {sortedRows.map(({ rider, index }) => {
-              const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
-              const raw = friendField ? rider.custom?.[friendField]?.trim() : "";
-              const notFound = unmatchedByRider.get(`${rider.firstName} ${rider.lastName}`);
-              const cupIdx = riderCupIndex[index];
-              return (
-                // Keyed by playerId, not array index: sortedRows re-sorts on every edit
-                // (editing a time moves the row), so an index-based key would let React
-                // reuse this row's DOM node — including the time <input>'s defaultValue —
-                // for a *different* rider after a re-sort, showing a stale value.
-                <tr key={rider.playerId} className="border-b border-border/60">
-                  <td className="py-1.5 pr-3 text-foreground">
-                    {rider.firstName} {rider.lastName}
-                    {mixedSpeedByRider[index] && (
-                      <span
-                        title="Friend group spans more than one cup's worth of speed — placed together at the slowest member's tier."
-                        className="ml-1.5 rounded-full bg-warning/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-warning"
-                      >
-                        mixed-speed group
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
-                  <td className="py-1.5 pr-3">
-                    <span className="inline-flex items-center gap-1">
-                      <input
-                        type="text"
-                        defaultValue={rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : ""}
-                        onBlur={(e) => {
-                          const parsed = parseRaceTime(e.target.value);
-                          if (parsed != null) updateEstimate(index, parsed);
-                          else e.target.value = rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : "";
-                        }}
-                        className="w-24 rounded border border-border bg-background px-1.5 py-0.5 text-xs text-foreground"
-                        placeholder="m:ss.s"
-                      />
-                      {implausibleByRider[index] && (
-                        <span title="This time looks unusually fast or slow compared to the field — double check it." className="text-danger">
-                          ⚠
-                        </span>
-                      )}
+          {relay.cups.map((cupName, cupIdx) => {
+            const rows = rowsByCup.get(cupIdx) ?? [];
+            const capacity = relay.teamSize * relay.characters.length;
+            return (
+              <tbody key={cupName}>
+                <tr className="border-b border-border bg-surface-2">
+                  <td colSpan={6} className="py-1.5 px-1 text-xs font-semibold text-foreground">
+                    {cupTierLabel(relay.cups, cupIdx)} ·{" "}
+                    <span className={rows.length > capacity ? "text-warning" : "text-muted"}>
+                      {rows.length} rider{rows.length === 1 ? "" : "s"}
+                      {rows.length > capacity && ` (over capacity — ${capacity})`}
                     </span>
-                  </td>
-                  <td className="py-1.5 pr-3">
-                    <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
-                      {badge.text}
-                    </span>
-                  </td>
-                  <td className="py-1.5 pr-3 text-muted">
-                    <div>
-                      {raw || <span className="text-muted/50">—</span>}
-                      {notFound && notFound.length > 0 && (
-                        <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
-                      )}
-                    </div>
-                    {(matchedByRider.get(`${rider.firstName} ${rider.lastName}`)?.length ?? 0) > 0 && (
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {matchedByRider.get(`${rider.firstName} ${rider.lastName}`)!.map((name, i) => (
-                          <span
-                            key={i}
-                            title="Matched by name — resolved automatically from the request text."
-                            className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
-                          >
-                            ✓ {name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    {(rider.manualFriendMatches ?? []).length > 0 && (
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {rider.manualFriendMatches!.map((pid) => {
-                          const match = riderByPlayerId.get(pid);
-                          return (
-                            <span
-                              key={pid}
-                              className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
-                            >
-                              ✓ {match ? `${match.firstName} ${match.lastName}` : "unknown rider"}
-                              <button
-                                type="button"
-                                onClick={() => removeManualMatch(index, pid)}
-                                className="ml-0.5 text-foreground/70 hover:text-foreground"
-                                title="Remove this manual match"
-                              >
-                                ×
-                              </button>
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {raw && (
-                      <select
-                        className="mt-1 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-muted"
-                        value=""
-                        onChange={(e) => {
-                          if (e.target.value) addManualMatch(index, e.target.value);
-                        }}
-                      >
-                        <option value="">+ match to a rider…</option>
-                        {sortedForPicker
-                          .filter((r) => r.playerId !== rider.playerId && !(rider.manualFriendMatches ?? []).includes(r.playerId))
-                          .map((r) => (
-                            <option key={r.playerId} value={r.playerId}>
-                              {r.firstName} {r.lastName}
-                            </option>
-                          ))}
-                      </select>
-                    )}
-                  </td>
-                  <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
-                    {cupIdx >= 0 ? relay.cups[cupIdx] : "—"}
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
+                {rows.map(({ rider, index }) => {
+                  const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
+                  const raw = friendField ? rider.custom?.[friendField]?.trim() : "";
+                  const notFound = unmatchedByRider.get(`${rider.firstName} ${rider.lastName}`);
+                  return (
+                    // Keyed by playerId, not array index: rows re-sort on every edit
+                    // (editing a time or moving a cup moves the row), so an index-based
+                    // key would let React reuse this row's DOM node — including the time
+                    // <input>'s defaultValue — for a *different* rider, showing a stale value.
+                    <tr key={rider.playerId} className="border-b border-border/60">
+                      <td className="py-1.5 pr-3 text-foreground">
+                        {rider.firstName} {rider.lastName}
+                        {mixedSpeedByRider[index] && (
+                          <span
+                            title="Friend group spans more than one cup's worth of speed — placed together at the slowest member's tier."
+                            className="ml-1.5 rounded-full bg-warning/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-warning"
+                          >
+                            mixed-speed group
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
+                      <td className="py-1.5 pr-3">
+                        <span className="inline-flex items-center gap-1">
+                          <input
+                            type="text"
+                            defaultValue={rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : ""}
+                            onBlur={(e) => {
+                              const parsed = parseRaceTime(e.target.value);
+                              if (parsed != null) updateEstimate(index, parsed);
+                              else e.target.value = rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : "";
+                            }}
+                            className="w-24 rounded border border-border bg-background px-1.5 py-0.5 text-xs text-foreground"
+                            placeholder="m:ss.s"
+                          />
+                          {implausibleByRider[index] && (
+                            <span title="This time looks unusually fast or slow compared to the field — double check it." className="text-danger">
+                              ⚠
+                            </span>
+                          )}
+                        </span>
+                      </td>
+                      <td className="py-1.5 pr-3">
+                        <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
+                          {badge.text}
+                        </span>
+                      </td>
+                      <td className="py-1.5 pr-3 text-muted">
+                        <div>
+                          {raw || <span className="text-muted/50">—</span>}
+                          {notFound && notFound.length > 0 && (
+                            <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
+                          )}
+                        </div>
+                        {(matchedByRider.get(`${rider.firstName} ${rider.lastName}`)?.length ?? 0) > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {matchedByRider.get(`${rider.firstName} ${rider.lastName}`)!.map((name, i) => (
+                              <span
+                                key={i}
+                                title="Matched by name — resolved automatically from the request text."
+                                className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
+                              >
+                                ✓ {name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {(rider.manualFriendMatches ?? []).length > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {rider.manualFriendMatches!.map((pid) => {
+                              const match = riderByPlayerId.get(pid);
+                              return (
+                                <span
+                                  key={pid}
+                                  className="inline-flex items-center gap-1 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-semibold text-foreground"
+                                >
+                                  ✓ {match ? `${match.firstName} ${match.lastName}` : "unknown rider"}
+                                  <button
+                                    type="button"
+                                    onClick={() => removeManualMatch(index, pid)}
+                                    className="ml-0.5 text-foreground/70 hover:text-foreground"
+                                    title="Remove this manual match"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                        {raw && (
+                          <select
+                            className="mt-1 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-muted"
+                            value=""
+                            onChange={(e) => {
+                              if (e.target.value) addManualMatch(index, e.target.value);
+                            }}
+                          >
+                            <option value="">+ match to a rider…</option>
+                            {sortedForPicker
+                              .filter((r) => r.playerId !== rider.playerId && !(rider.manualFriendMatches ?? []).includes(r.playerId))
+                              .map((r) => (
+                                <option key={r.playerId} value={r.playerId}>
+                                  {r.firstName} {r.lastName}
+                                </option>
+                              ))}
+                          </select>
+                        )}
+                      </td>
+                      <td className="py-1.5 pr-3">
+                        <span className="inline-flex items-center gap-1">
+                          <select
+                            className="rounded border border-border bg-background px-1 py-0.5 text-xs text-foreground"
+                            value={groupPinned[index] ? String(cupIdx) : ""}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              moveGroupToCup(index, v === "" ? null : Number(v));
+                            }}
+                          >
+                            <option value="">Auto — {relay.cups[cupIdx]}</option>
+                            {relay.cups.map((c, ci) => (
+                              <option key={ci} value={ci}>
+                                {cupTierLabel(relay.cups, ci)}
+                              </option>
+                            ))}
+                          </select>
+                          {groupPinned[index] && (
+                            <span title="Moved here by hand — along with their whole friend group." className="text-xs">
+                              📌
+                            </span>
+                          )}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            );
+          })}
+          {(rowsByCup.get(-1)?.length ?? 0) > 0 && (
+            <tbody>
+              <tr className="border-b border-border bg-danger/10">
+                <td colSpan={6} className="py-1.5 px-1 text-xs font-semibold text-danger">
+                  Unassigned — {rowsByCup.get(-1)!.length} rider(s) didn&apos;t land in a cup (unexpected — please flag this)
+                </td>
+              </tr>
+              {rowsByCup.get(-1)!.map(({ rider }) => (
+                <tr key={rider.playerId} className="border-b border-border/60">
+                  <td colSpan={6} className="py-1.5 pr-3 text-foreground">
+                    {rider.firstName} {rider.lastName}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
 
