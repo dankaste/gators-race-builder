@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
-import { buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine/relay";
+import { assignCups, buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine/relay";
+import { median, parseRaceTime, projectToFullCourse } from "@/lib/engine/history";
 import { createManualRider } from "@/lib/engine/manualRider";
 import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { downloadBlob } from "@/lib/download";
 import { fetchSeasonRoster } from "@/lib/fetchSeasonRoster";
-import type { RaceEvent, Rider } from "@/lib/engine/models";
+import type { RaceEvent, RelayConfig, Rider } from "@/lib/engine/models";
 import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
 import { ConfirmButton } from "./ConfirmButton";
 
@@ -19,6 +20,7 @@ const CONFIDENCE_LABEL: Record<string, { text: string; title: string; className:
   "cross-event": { text: "X", title: "Cross-event — estimated from Chestnut Scorcher/John Bryan", className: "bg-surface-2 text-foreground" },
   widened: { text: "W", title: "Widened cohort — sparse data, gender/season merged", className: "bg-surface-2 text-muted" },
   none: { text: "—", title: "No history match", className: "bg-surface-2 text-muted" },
+  manual: { text: "M", title: "Manually overridden by a director", className: "bg-accent text-background" },
 };
 
 function formatSeconds(s: number): string {
@@ -27,8 +29,14 @@ function formatSeconds(s: number): string {
   return `${m}:${sec.padStart(4, "0")}`;
 }
 
-/** Fetch estimated lap times for a batch of riders. On any failure, returns riders unchanged (no estimates) — team-building still works off seedLevel alone. */
-async function withLapTimeEstimates(riders: Rider[]): Promise<Rider[]> {
+/**
+ * Fetch estimated lap times for a batch of riders, projecting 5-6 riders onto
+ * the full-course scale exactly once (see projectToFullCourse in
+ * lib/engine/history.ts — applying it more than once double-counts it, so
+ * this is the ONLY place it's ever called). On any failure, returns riders
+ * unchanged (no estimates) — team-building still works off seedLevel alone.
+ */
+async function withLapTimeEstimates(riders: Rider[], historyEstimation: RelayConfig["historyEstimation"]): Promise<Rider[]> {
   try {
     const candidates = riders.map((r) => ({
       firstName: r.firstName,
@@ -46,15 +54,37 @@ async function withLapTimeEstimates(riders: Rider[]): Promise<Rider[]> {
     const byIndex = new Map(data.estimates.map((e) => [e.index, e]));
     return riders.map((r, i) => {
       const e = byIndex.get(i);
+      const raw = e?.seconds ?? null;
+      const seconds =
+        raw != null && historyEstimation && r.ageOnRaceDay != null
+          ? projectToFullCourse(raw, r.ageOnRaceDay, historyEstimation.fiveSixCourseFactor)
+          : raw;
       return {
         ...r,
-        estimatedLapSeconds: e?.seconds ?? null,
+        estimatedLapSeconds: seconds,
         estimatedLapConfidence: (e?.confidence as Rider["estimatedLapConfidence"]) ?? "none",
       };
     });
   } catch {
     return riders;
   }
+}
+
+/**
+ * Give every estimate-less rider a visible default — the population median of
+ * riders who DO have a real estimate — so the review table sorts them
+ * somewhere reasonable and they still get a cup/team instead of being
+ * silently left out of the ranking. Confidence stays "none" (not promoted to
+ * "direct") so it's clear this is a placeholder, not a measurement. Only
+ * applies when at least one real estimate exists; with zero history data
+ * anywhere, buildRelayTeams' headcount/seedLevel fallback takes over exactly
+ * as before.
+ */
+function withMedianDefault(riders: Rider[]): Rider[] {
+  const real = riders.map((r) => r.estimatedLapSeconds).filter((t): t is number => t != null);
+  if (real.length === 0) return riders;
+  const mid = median(real);
+  return riders.map((r) => (r.estimatedLapSeconds != null ? r : { ...r, estimatedLapSeconds: mid, estimatedLapConfidence: "none" as const }));
 }
 
 export function RelayBuilder({
@@ -84,35 +114,29 @@ export function RelayBuilder({
   const [warnings, setWarnings] = useState<Pick<RelayResult, "unmatchedFriends" | "splitGroups"> | null>(null);
   const [rosterSource, setRosterSource] = useState<string[] | null>(null);
 
-  // Group assigned riders by cup -> character for display. (Declared before any
-  // early return so hooks run in a stable order.)
-  const grouped = useMemo(() => {
-    const byCup = new Map<string, Map<string, { rider: Rider; index: number }[]>>();
-    riders.forEach((r, index) => {
-      if (!r.relay) return;
-      const cup = byCup.get(r.relay.cup) ?? new Map();
-      const team = cup.get(r.relay.character) ?? [];
-      team.push({ rider: r, index });
-      cup.set(r.relay.character, team);
-      byCup.set(r.relay.cup, cup);
-    });
-    return byCup;
-  }, [riders]);
-
-  // Average estimated lap time per team and per cup — riders with no estimate don't count toward it.
-  const averages = useMemo(() => {
-    const of = (rs: Rider[]) => {
-      const times = rs.map((r) => r.estimatedLapSeconds).filter((t): t is number => t != null);
-      return times.length ? times.reduce((a, b) => a + b, 0) / times.length : null;
-    };
-    const perCup = new Map<string, number | null>();
-    for (const [cup, teams] of grouped) perCup.set(cup, of([...teams.values()].flat().map((x) => x.rider)));
-    return { perCup, of };
-  }, [grouped]);
+  // Rows for the post-build table, sorted Cup -> Team -> Leg. (Declared before
+  // any early return so hooks run in a stable order.)
+  const rows = useMemo(() => {
+    if (!relay) return [];
+    const cupIdx = new Map(relay.cups.map((c, i) => [c, i]));
+    const charIdx = new Map(relay.characters.map((c, i) => [c, i]));
+    return riders
+      .map((rider, index) => ({ rider, index }))
+      .filter((x) => x.rider.relay)
+      .sort((a, b) => {
+        const ra = a.rider.relay!;
+        const rb = b.rider.relay!;
+        return (
+          (cupIdx.get(ra.cup) ?? 0) - (cupIdx.get(rb.cup) ?? 0) ||
+          (charIdx.get(ra.character) ?? 0) - (charIdx.get(rb.character) ?? 0) ||
+          ra.leg - rb.leg
+        );
+      });
+  }, [riders, relay]);
 
   if (!relay) return <p className="text-muted">This event has no relay configuration.</p>;
 
-  // Step 1: import → parse → transform (no categories) → estimate lap times → collect custom fields for friend mapping.
+  // Step 1: import → parse → transform (no categories) → estimate lap times (5-6-projected, once) → median-default → collect custom fields for friend mapping → review.
   async function handleImport(regFile: File, rosterFile: File | null) {
     setError(null);
     setImporting(true);
@@ -127,13 +151,13 @@ export function RelayBuilder({
         if (derived.sourceProjectNames.length > 0) setRosterSource(derived.sourceProjectNames);
       }
       const { riders: computed } = transformEvent({ registrations, roster, event, raceDate });
-      const withEstimates = await withLapTimeEstimates(computed);
+      const withEstimates = await withLapTimeEstimates(computed, relay!.historyEstimation);
       const fields = new Set<string>();
       for (const r of withEstimates) for (const k of Object.keys(r.custom ?? {})) fields.add(k);
       setCustomFields([...fields]);
       const guess = [...fields].find((f) => /friend|teammate|team request/i.test(f));
       if (guess && !friendField) setFriendField(guess);
-      setPendingRegs(withEstimates);
+      setPendingRegs(withMedianDefault(withEstimates));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to import");
     } finally {
@@ -180,6 +204,25 @@ export function RelayBuilder({
   }
 
   if (riders.length === 0) {
+    if (pendingRegs) {
+      return (
+        <RelayReviewPanel
+          pendingRegs={pendingRegs}
+          setPendingRegs={setPendingRegs}
+          relay={relay}
+          friendField={friendField}
+          setFriendField={setFriendField}
+          customFields={customFields}
+          rosterSource={rosterSource}
+          onBuild={build}
+          onStartOver={() => {
+            setPendingRegs(null);
+            setCustomFields([]);
+            setRosterSource(null);
+          }}
+        />
+      );
+    }
     return (
       <RelayImportPanel
         raceDate={raceDate}
@@ -189,12 +232,6 @@ export function RelayBuilder({
         onImport={handleImport}
         importing={importing}
         error={error}
-        pending={pendingRegs}
-        customFields={customFields}
-        friendField={friendField}
-        setFriendField={setFriendField}
-        onBuild={build}
-        rosterSource={rosterSource}
       />
     );
   }
@@ -282,83 +319,249 @@ export function RelayBuilder({
         </div>
       )}
 
-      <div className="mt-5 space-y-6">
-        {relay.cups.map((cup) => {
-          const cupTeams = grouped.get(cup);
-          const cupCount = cupTeams ? [...cupTeams.values()].reduce((n, t) => n + t.length, 0) : 0;
-          const cupAvg = averages.perCup.get(cup);
-          return (
-            <section key={cup}>
-              <h3 className="font-bold text-foreground">
-                {cup} <span className="text-sm font-normal text-muted">({cupCount} riders{cupAvg != null ? ` · avg ${formatSeconds(cupAvg)}` : ""})</span>
-              </h3>
-              <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {relay.characters.map((character) => {
-                  const team = cupTeams?.get(character) ?? [];
-                  const over = team.length > relay.teamSize;
-                  const teamAvg = averages.of(team.map((x) => x.rider));
-                  return (
-                    <div key={character} className={`rounded-lg border bg-surface p-3 ${over ? "border-warning" : "border-border"}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-foreground">{character}</span>
-                        <span className={`text-xs ${over ? "text-warning" : "text-muted"}`}>
-                          {team.length}/{relay.teamSize}
-                          {teamAvg != null && ` · ${formatSeconds(teamAvg)}`}
-                        </span>
-                      </div>
-                      <ul className="mt-2 space-y-1">
-                        {team.sort((a, b) => a.rider.relay!.leg - b.rider.relay!.leg).map(({ rider, index }) => {
-                          const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
-                          return (
-                            <li key={index} className="flex items-center gap-1 text-sm">
-                              <span className="w-5 text-muted">{rider.relay!.leg}.</span>
-                              <span className="flex-1 truncate text-foreground">
-                                {rider.firstName} {rider.lastName}
-                                {rider.playerId.startsWith("manual-") && (
-                                  <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
-                                    manual
-                                  </span>
-                                )}
-                              </span>
-                              {rider.estimatedLapSeconds != null && (
-                                <span className="text-xs text-muted" title={badge.title}>
-                                  {formatSeconds(rider.estimatedLapSeconds)}
-                                </span>
-                              )}
-                              <span
-                                title={badge.title}
-                                className={`rounded px-1 text-[10px] font-bold ${badge.className}`}
-                              >
-                                {badge.text}
-                              </span>
-                              <select
-                                className="rounded border border-border bg-background px-1 py-0.5 text-xs"
-                                value={`${cup}||${character}`}
-                                onChange={(e) => {
-                                  const [c, ch] = e.target.value.split("||");
-                                  reassign(index, c, ch);
-                                }}
-                              >
-                                {relay.cups.flatMap((c) =>
-                                  relay.characters.map((ch) => (
-                                    <option key={`${c}||${ch}`} value={`${c}||${ch}`}>{c.replace(/ Cup.*/, "")} · {ch}</option>
-                                  )),
-                                )}
-                              </select>
-                            </li>
-                          );
-                        })}
-                        {team.length === 0 && <li className="text-xs text-muted">empty</li>}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+      <div className="mt-5 overflow-x-auto">
+        <table className="w-full min-w-[860px] border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+              <th className="py-2 pr-3">Cup</th>
+              <th className="py-2 pr-3">Team</th>
+              <th className="py-2 pr-3">Leg</th>
+              <th className="py-2 pr-3">Name</th>
+              <th className="py-2 pr-3">Est. time</th>
+              <th className="py-2 pr-3">Requested teammate</th>
+              <th className="py-2 pr-3">Reassign</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ rider, index }) => {
+              const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
+              const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+              return (
+                <tr key={index} className="border-b border-border/60">
+                  <td className="py-1.5 pr-3 text-foreground">{rider.relay!.cup}</td>
+                  <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
+                  <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
+                  <td className="py-1.5 pr-3 text-foreground">
+                    {rider.firstName} {rider.lastName}
+                    {rider.playerId.startsWith("manual-") && (
+                      <span className="ml-1.5 rounded-full bg-brand-deep px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                        manual
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-1.5 pr-3">
+                    <span className="inline-flex items-center gap-1">
+                      {rider.estimatedLapSeconds != null && (
+                        <span className="text-muted">{formatSeconds(rider.estimatedLapSeconds)}</span>
+                      )}
+                      <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
+                        {badge.text}
+                      </span>
+                    </span>
+                  </td>
+                  <td className="py-1.5 pr-3 text-muted">{requested || <span className="text-muted/50">—</span>}</td>
+                  <td className="py-1.5 pr-3">
+                    <select
+                      className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+                      value={`${rider.relay!.cup}||${rider.relay!.character}`}
+                      onChange={(e) => {
+                        const [c, ch] = e.target.value.split("||");
+                        reassign(index, c, ch);
+                      }}
+                    >
+                      {relay.cups.flatMap((c) =>
+                        relay.characters.map((ch) => (
+                          <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
+                            {c} · {ch}
+                          </option>
+                        )),
+                      )}
+                    </select>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </>
+  );
+}
+
+/**
+ * Editable rankings review, inserted between "load riders" and "build teams".
+ * One row per rider — extrapolated time (editable, the override mechanism —
+ * editing live-reorders and live-recomputes the Cup column), confidence,
+ * requested teammate, and which cup they'd land in — computed via
+ * {@link assignCups}, the exact same function `buildRelayTeams` calls, so
+ * this screen can never disagree with what the actual build does. Also hosts
+ * the friend-request field selector, since grouping needs it.
+ */
+function RelayReviewPanel({
+  pendingRegs,
+  setPendingRegs,
+  relay,
+  friendField,
+  setFriendField,
+  customFields,
+  rosterSource,
+  onBuild,
+  onStartOver,
+}: {
+  pendingRegs: Rider[];
+  setPendingRegs: (r: Rider[]) => void;
+  relay: RelayConfig;
+  friendField: string;
+  setFriendField: (v: string) => void;
+  customFields: string[];
+  rosterSource: string[] | null;
+  onBuild: () => void;
+  onStartOver: () => void;
+}) {
+  const { groups, riderCupIndex, unmatchedFriends } = useMemo(
+    () => assignCups(pendingRegs, { ...relay, friendRequestField: friendField || undefined }),
+    [pendingRegs, relay, friendField],
+  );
+
+  const mixedSpeedByRider = useMemo(() => {
+    const flags = new Array<boolean>(pendingRegs.length).fill(false);
+    for (const g of groups) if (g.mixedSpeed) for (const i of g.indices) flags[i] = true;
+    return flags;
+  }, [groups, pendingRegs.length]);
+
+  const unmatchedByRider = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const u of unmatchedFriends) map.set(u.rider, [...(map.get(u.rider) ?? []), u.requested]);
+    return map;
+  }, [unmatchedFriends]);
+
+  const sortedRows = useMemo(
+    () =>
+      pendingRegs
+        .map((rider, index) => ({ rider, index }))
+        .sort((a, b) => (b.rider.estimatedLapSeconds ?? -Infinity) - (a.rider.estimatedLapSeconds ?? -Infinity)),
+    [pendingRegs],
+  );
+
+  function updateEstimate(index: number, seconds: number) {
+    setPendingRegs(
+      pendingRegs.map((r, i) => (i === index ? { ...r, estimatedLapSeconds: seconds, estimatedLapConfidence: "manual" as const } : r)),
+    );
+  }
+
+  const label = "block text-sm font-semibold text-muted mb-1";
+
+  return (
+    <div className="rounded-xl border border-border bg-surface p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-bold text-foreground">Review rankings</h2>
+          <p className="mt-1 text-sm text-muted">
+            Cups are progressively faster heats — {relay.cups[0]} is the slowest, {relay.cups[relay.cups.length - 1]} the fastest.
+            Edit a time to override it (marked <span className="font-semibold">M</span> for manual); the table and Cup column
+            re-sort live. Riders with no history match default to the field&apos;s median time (
+            <span className="font-semibold">—</span>) so they still land somewhere reasonable.
+          </p>
+        </div>
+        <button onClick={onStartOver} className="text-sm text-muted hover:text-foreground">
+          ‹ Start over
+        </button>
+      </div>
+
+      {rosterSource && (
+        <p className="mt-3 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
+          No Player export uploaded — used roster data from {rosterSource.join(", ")} instead.
+        </p>
+      )}
+
+      <div className="mt-4 max-w-md">
+        <label className={label}>Friend / teammate-request column (optional)</label>
+        <select
+          className="w-full rounded-lg border border-border bg-background px-3 py-2"
+          value={friendField}
+          onChange={(e) => setFriendField(e.target.value)}
+        >
+          <option value="">— none —</option>
+          {customFields.map((f) => (
+            <option key={f} value={f}>
+              {f}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mt-5 overflow-x-auto">
+        <table className="w-full min-w-[720px] border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+              <th className="py-2 pr-3">Name</th>
+              <th className="py-2 pr-3">Est. time</th>
+              <th className="py-2 pr-3">Confidence</th>
+              <th className="py-2 pr-3">Requested teammate</th>
+              <th className="py-2 pr-3">Cup</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedRows.map(({ rider, index }) => {
+              const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
+              const raw = friendField ? rider.custom?.[friendField]?.trim() : "";
+              const notFound = unmatchedByRider.get(`${rider.firstName} ${rider.lastName}`);
+              const cupIdx = riderCupIndex[index];
+              return (
+                // Keyed by playerId, not array index: sortedRows re-sorts on every edit
+                // (editing a time moves the row), so an index-based key would let React
+                // reuse this row's DOM node — including the time <input>'s defaultValue —
+                // for a *different* rider after a re-sort, showing a stale value.
+                <tr key={rider.playerId} className="border-b border-border/60">
+                  <td className="py-1.5 pr-3 text-foreground">
+                    {rider.firstName} {rider.lastName}
+                    {mixedSpeedByRider[index] && (
+                      <span
+                        title="Friend group spans more than one cup's worth of speed — placed together at the slowest member's tier."
+                        className="ml-1.5 rounded-full bg-warning/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-warning"
+                      >
+                        mixed-speed group
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-1.5 pr-3">
+                    <input
+                      type="text"
+                      defaultValue={rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : ""}
+                      onBlur={(e) => {
+                        const parsed = parseRaceTime(e.target.value);
+                        if (parsed != null) updateEstimate(index, parsed);
+                        else e.target.value = rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : "";
+                      }}
+                      className="w-24 rounded border border-border bg-background px-1.5 py-0.5 text-xs text-foreground"
+                      placeholder="m:ss.s"
+                    />
+                  </td>
+                  <td className="py-1.5 pr-3">
+                    <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
+                      {badge.text}
+                    </span>
+                  </td>
+                  <td className="py-1.5 pr-3 text-muted">
+                    {raw || <span className="text-muted/50">—</span>}
+                    {notFound && notFound.length > 0 && (
+                      <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
+                    )}
+                  </td>
+                  <td className="py-1.5 pr-3 text-foreground">{cupIdx >= 0 ? relay.cups[cupIdx] : "—"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-5">
+        <button onClick={onBuild} className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong">
+          Build teams ({pendingRegs.length} riders)
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -370,12 +573,6 @@ function RelayImportPanel(props: {
   onImport: (reg: File, roster: File | null) => void;
   importing: boolean;
   error: string | null;
-  pending: Rider[] | null;
-  customFields: string[];
-  friendField: string;
-  setFriendField: (v: string) => void;
-  onBuild: () => void;
-  rosterSource: string[] | null;
 }) {
   const [reg, setReg] = useState<File | null>(null);
   const [roster, setRoster] = useState<File | null>(null);
@@ -408,40 +605,14 @@ function RelayImportPanel(props: {
       </div>
       {!props.raceDate && <p className="mt-4 text-warning">Set the race date above before importing.</p>}
       {props.error && <p className="mt-4 text-danger">{props.error}</p>}
-      {props.rosterSource && (
-        <p className="mt-4 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
-          No Player export uploaded — used roster data from {props.rosterSource.join(", ")} instead.
-        </p>
-      )}
 
-      {!props.pending ? (
-        <button
-          onClick={() => reg && props.onImport(reg, roster)}
-          disabled={!reg || !props.raceDate || props.importing}
-          className="mt-5 rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong disabled:opacity-50"
-        >
-          {props.importing ? "Loading…" : "Load riders"}
-        </button>
-      ) : (
-        <div className="mt-5">
-          <label className={label}>Friend / teammate-request column (optional)</label>
-          <select
-            className="w-full max-w-md rounded-lg border border-border bg-background px-3 py-2"
-            value={props.friendField}
-            onChange={(e) => props.setFriendField(e.target.value)}
-          >
-            <option value="">— none —</option>
-            {props.customFields.map((f) => (
-              <option key={f} value={f}>{f}</option>
-            ))}
-          </select>
-          <div className="mt-4">
-            <button onClick={props.onBuild} className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong">
-              Build teams ({props.pending.length} riders)
-            </button>
-          </div>
-        </div>
-      )}
+      <button
+        onClick={() => reg && props.onImport(reg, roster)}
+        disabled={!reg || !props.raceDate || props.importing}
+        className="mt-5 rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong disabled:opacity-50"
+      >
+        {props.importing ? "Loading…" : "Load riders"}
+      </button>
     </div>
   );
 }

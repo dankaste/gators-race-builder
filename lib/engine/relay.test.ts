@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { RelayConfig, Rider } from "./models";
-import { buildRelayTeams, compareLegOrder } from "./relay";
+import { assignCups, buildRelayTeams, compareLegOrder } from "./relay";
 
 const config: RelayConfig = {
   teamSize: 4,
@@ -103,21 +103,117 @@ describe("buildRelayTeams", () => {
     expect(riders.every((r) => r.relay)).toBe(true);
   });
 
-  it("balances cup and team averages around estimated lap time, not just headcount", () => {
+  it("tiers cups slowest-to-fastest by estimated lap time, not converged to a single mean", () => {
+    // Cups are time-staggered heats, not interchangeable bins: cups[0] should get the
+    // slowest riders, the last cup the fastest — the opposite of the old mean-converging design.
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
     const seconds = [100, 120, 140, 160, 180, 200, 220, 240];
     const riders = seconds.map((s) => rider({ estimatedLapSeconds: s, estimatedLapConfidence: "direct" }));
-    const { teams } = buildRelayTeams(riders, config);
-    const byCup = new Map<string, number[]>();
+    const { teams } = buildRelayTeams(riders, tieredConfig);
+    const avgByCup = new Map<string, number>();
     for (const t of teams) {
-      const arr = byCup.get(t.cup) ?? [];
+      const times = t.riders.map((r) => r.estimatedLapSeconds!);
+      const arr = [...(avgByCup.has(t.cup) ? [avgByCup.get(t.cup)!] : []), ...times];
+      avgByCup.set(t.cup, arr.reduce((a, b) => a + b, 0) / arr.length);
+    }
+    const cupAverages = tieredConfig.cups.map((c) => avgByCup.get(c)).filter((a): a is number => a != null);
+    // Strictly descending: Cup 1 slowest (highest seconds) through Cup 4 fastest (lowest).
+    for (let i = 1; i < cupAverages.length; i++) expect(cupAverages[i]).toBeLessThan(cupAverages[i - 1]);
+  });
+
+  it("assignCups is the exact same source of truth buildRelayTeams uses (review screen can't disagree with the build)", () => {
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    const alice = rider({ firstName: "Alice", lastName: "Smith", estimatedLapSeconds: 200, estimatedLapConfidence: "direct" });
+    const bob = rider({
+      firstName: "Bob",
+      lastName: "Jones",
+      estimatedLapSeconds: 120,
+      estimatedLapConfidence: "direct",
+      custom: { "Teammate request": "Alice Smith" },
+    });
+    const others = Array.from({ length: 10 }, (_, i) =>
+      rider({ estimatedLapSeconds: 100 + i * 15, estimatedLapConfidence: "direct" }),
+    );
+    const riders = [alice, bob, ...others];
+    const clone = riders.map((r) => ({ ...r }));
+    const { riderCupIndex } = assignCups(clone, tieredConfig);
+    const { teams } = buildRelayTeams(riders.map((r) => ({ ...r })), tieredConfig);
+    // Rebuild "which cup index did each rider actually land in" from the real build's output, by identity (firstName+lastName is unique in this fixture).
+    const cupIndexOf = new Map(tieredConfig.cups.map((c, i) => [c, i]));
+    const actualCupIndex = new Map<string, number>();
+    for (const t of teams) for (const r of t.riders) actualCupIndex.set(`${r.firstName} ${r.lastName}`, cupIndexOf.get(t.cup)!);
+    riders.forEach((r, i) => {
+      expect(riderCupIndex[i]).toBe(actualCupIndex.get(`${r.firstName} ${r.lastName}`));
+    });
+  });
+
+  it("places a mixed-speed friend group at its slowest member's tier and flags it, instead of averaging them into a middle tier", () => {
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    const slowKid = rider({ firstName: "Slow", lastName: "Kid", estimatedLapSeconds: 300, estimatedLapConfidence: "direct" });
+    const fastFriend = rider({
+      firstName: "Fast",
+      lastName: "Friend",
+      estimatedLapSeconds: 100,
+      estimatedLapConfidence: "direct",
+      custom: { "Teammate request": "Slow Kid" },
+    });
+    // Filler riders spanning the same 100-300 range so cup boundaries are meaningful.
+    const filler = Array.from({ length: 10 }, (_, i) =>
+      rider({ estimatedLapSeconds: 100 + i * 20, estimatedLapConfidence: "direct" }),
+    );
+    const riders = [slowKid, fastFriend, ...filler];
+    const { groups, riderCupIndex } = assignCups(riders, tieredConfig);
+    const group = groups.find((g) => g.indices.some((i) => riders[i] === slowKid))!;
+    expect(group.mixedSpeed).toBe(true);
+    // Both friends land in the SAME cup (kept together), and it's the slow kid's tier, not a faster one.
+    const slowIdx = riders.indexOf(slowKid);
+    const fastIdx = riders.indexOf(fastFriend);
+    expect(riderCupIndex[slowIdx]).toBe(riderCupIndex[fastIdx]);
+    // The group's rank is the slower member's time, not the (much faster) average.
+    expect(group.rank).toBe(300);
+  });
+
+  it("keeps every cup at or under capacity AND stays tiered when group sizes don't divide the even-split target evenly", () => {
+    // teamSize 4, 3 characters => capacity 12/cup. 7 groups of 3 (21 riders, all
+    // ≤ teamSize so none get split) across 4 cups: 21/4 doesn't divide evenly
+    // (target = ceil(21/4) = 6), so some cup boundary has to absorb a group that
+    // pushes it past the soft target — this is exactly the branch `target` vs
+    // `capacity` (two separate conditions, not Math.min) exists for.
+    const tieredConfig: RelayConfig = { ...config, cups: ["Cup 1", "Cup 2", "Cup 3", "Cup 4"] };
+    let seconds = 700;
+    const groupsOfRiders: Rider[][] = Array.from({ length: 7 }, (_, g) => {
+      seconds -= 50;
+      const t = seconds;
+      return Array.from({ length: 3 }, (_, m) =>
+        rider({
+          firstName: `G${g}M${m}`,
+          lastName: "Fam",
+          estimatedLapSeconds: t,
+          estimatedLapConfidence: "direct",
+          ...(m > 0 ? { custom: { "Teammate request": `G${g}M${m - 1} Fam` } } : {}),
+        }),
+      );
+    });
+    const riders = groupsOfRiders.flat();
+    const { teams, splitGroups } = buildRelayTeams(riders, tieredConfig);
+    expect(splitGroups).toHaveLength(0); // groups of 3 fit within teamSize 4 — never split
+
+    const timesByCup = new Map<string, number[]>();
+    for (const t of teams) {
+      const arr = timesByCup.get(t.cup) ?? [];
       arr.push(...t.riders.map((r) => r.estimatedLapSeconds!));
-      byCup.set(t.cup, arr);
+      timesByCup.set(t.cup, arr);
     }
-    const overallMean = seconds.reduce((a, b) => a + b, 0) / seconds.length;
-    for (const times of byCup.values()) {
-      const avg = times.reduce((a, b) => a + b, 0) / times.length;
-      expect(avg).toBeCloseTo(overallMean, 5);
-    }
+    const capacity = tieredConfig.teamSize * tieredConfig.characters.length;
+    for (const times of timesByCup.values()) expect(times.length).toBeLessThanOrEqual(capacity);
+    expect([...timesByCup.values()].reduce((n, arr) => n + arr.length, 0)).toBe(21);
+
+    // Still tiered: non-increasing cup averages from Cup 1 (slowest) to Cup 4 (fastest).
+    const cupAverages = tieredConfig.cups
+      .map((c) => timesByCup.get(c))
+      .filter((arr): arr is number[] => !!arr && arr.length > 0)
+      .map((arr) => arr.reduce((a, b) => a + b, 0) / arr.length);
+    for (let i = 1; i < cupAverages.length; i++) expect(cupAverages[i]).toBeLessThanOrEqual(cupAverages[i - 1]);
   });
 
   it("interleaves no-estimate riders by headcount rather than dumping them all in one cup/team", () => {

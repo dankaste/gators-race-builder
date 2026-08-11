@@ -291,7 +291,8 @@ function buildCellIndex(history: HistoryRow[]): CellIndex {
   return index;
 }
 
-function median(values: number[]): number {
+/** Exposed for callers outside this module (e.g. the relay review screen's population-median default for unestimated riders — see RelayBuilder.tsx). */
+export function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
@@ -431,6 +432,20 @@ export function deriveFiveSixFactor(history: HistoryRow[]): { factor: number | n
   return { factor: median(paired) / median(growth), n: paired.length };
 }
 
+/**
+ * Project a band-relative estimate onto the full-course scale. A 5-6 rider's
+ * estimate is only comparable to other 5-6 riders (see the cohort-ratio
+ * explanation at the top of this file) — multiply by `fiveSixCourseFactor`
+ * (see deriveFiveSixFactor) to put it on the same scale as everyone else.
+ * Every other age band is already full-course and passes through unchanged.
+ * Apply this exactly once, right where an estimate is first assigned (see
+ * RelayBuilder.tsx's withLapTimeEstimates) — applying it more than once
+ * silently compounds the factor.
+ */
+export function projectToFullCourse(seconds: number, ageOnRaceDay: number, fiveSixCourseFactor: number): number {
+  return ageBandOf(ageOnRaceDay) === "5-6" ? seconds * fiveSixCourseFactor : seconds;
+}
+
 // --- estimation --------------------------------------------------------------
 
 export interface EstimateTarget {
@@ -440,7 +455,7 @@ export interface EstimateTarget {
   gender: HistoryGender | string | null;
 }
 
-export type EstimateConfidence = "direct" | "cross-event" | "widened" | "none";
+export type EstimateConfidence = "direct" | "cross-event" | "widened" | "none" | "manual";
 
 export interface LapTimeEstimate {
   seconds: number | null;

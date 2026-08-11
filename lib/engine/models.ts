@@ -69,8 +69,8 @@ export interface Rider {
    * speed signal when present. Null = no history match at all.
    */
   estimatedLapSeconds?: number | null;
-  /** How the estimate was derived — see EstimateConfidence in lib/engine/history.ts. Absent/undefined when no estimate was attempted (e.g. non-relay events). */
-  estimatedLapConfidence?: "direct" | "cross-event" | "widened" | "none";
+  /** How the estimate was derived — kept in sync by hand with EstimateConfidence in lib/engine/history.ts. Absent/undefined when no estimate was attempted (e.g. non-relay events). "manual" = a director overrode it on the relay review screen. */
+  estimatedLapConfidence?: "direct" | "cross-event" | "widened" | "none" | "manual";
   wave: number | null;
   /** Relay assignment (relay events only): cup heat, character team, and leg order. */
   relay?: { cup: string; character: string; leg: number } | null;

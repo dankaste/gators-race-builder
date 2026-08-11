@@ -6,11 +6,13 @@ import {
   deriveFiveSixFactor,
   estimateLapTimes,
   inferRaceFromFilename,
+  median,
   mostRecentSwampDashSeason,
   normalizeGender,
   parseHistoryCsv,
   parseRaceResultsXlsx,
   parseRaceTime,
+  projectToFullCourse,
   type HistoryRow,
 } from "./history";
 
@@ -136,6 +138,23 @@ describe("deriveFiveSixFactor", () => {
   it("returns a null factor when there's no paired data", () => {
     expect(deriveFiveSixFactor([])).toEqual({ factor: null, n: 0 });
   });
+});
+
+describe("projectToFullCourse", () => {
+  it("multiplies a 5-6 rider's estimate by the factor", () => {
+    expect(projectToFullCourse(100, 6, 1.8)).toBeCloseTo(180);
+    expect(projectToFullCourse(100, 5, 1.8)).toBeCloseTo(180);
+  });
+
+  it("passes every other age band through unchanged", () => {
+    expect(projectToFullCourse(100, 7, 1.8)).toBe(100);
+    expect(projectToFullCourse(100, 12, 1.8)).toBe(100);
+  });
+});
+
+describe("median", () => {
+  it("averages the two middle values for an even-length list", () => expect(median([1, 3, 2, 4])).toBe(2.5));
+  it("returns the middle value for an odd-length list", () => expect(median([5, 1, 3])).toBe(3));
 });
 
 describe("estimateLapTimes", () => {
