@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { parseRegistrations, parseRoster } from "@/lib/engine/parse";
 import { transformEvent } from "@/lib/engine/transform";
 import { assignCups, buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine/relay";
-import { median, parseRaceTime, projectToFullCourse } from "@/lib/engine/history";
+import { DEFAULT_FIVE_SIX_COURSE_FACTOR, median, parseRaceTime, projectToFullCourse } from "@/lib/engine/history";
 import { createManualRider } from "@/lib/engine/manualRider";
 import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { downloadBlob } from "@/lib/download";
@@ -37,6 +37,10 @@ function formatSeconds(s: number): string {
  * unchanged (no estimates) — team-building still works off seedLevel alone.
  */
 async function withLapTimeEstimates(riders: Rider[], historyEstimation: RelayConfig["historyEstimation"]): Promise<Rider[]> {
+  // Fall back to the known-good default when a project's persisted config predates
+  // this field (see DEFAULT_FIVE_SIX_COURSE_FACTOR) — never silently skip the
+  // projection just because historyEstimation is missing from the saved config.
+  const fiveSixFactor = historyEstimation?.fiveSixCourseFactor ?? DEFAULT_FIVE_SIX_COURSE_FACTOR;
   try {
     const candidates = riders.map((r) => ({
       firstName: r.firstName,
@@ -55,10 +59,7 @@ async function withLapTimeEstimates(riders: Rider[], historyEstimation: RelayCon
     return riders.map((r, i) => {
       const e = byIndex.get(i);
       const raw = e?.seconds ?? null;
-      const seconds =
-        raw != null && historyEstimation && r.ageOnRaceDay != null
-          ? projectToFullCourse(raw, r.ageOnRaceDay, historyEstimation.fiveSixCourseFactor)
-          : raw;
+      const seconds = raw != null && r.ageOnRaceDay != null ? projectToFullCourse(raw, r.ageOnRaceDay, fiveSixFactor) : raw;
       return {
         ...r,
         estimatedLapSeconds: seconds,
@@ -68,6 +69,15 @@ async function withLapTimeEstimates(riders: Rider[], historyEstimation: RelayCon
   } catch {
     return riders;
   }
+}
+
+/** "Mushroom Cup #1" -> "Mushroom Cup #1 — Tier 1 (slowest)" / "... — Tier 2" / "... — Tier 4 (fastest)". Cup NAMES alone don't say which end of the speed range they are; always pair a cup name with its tier. */
+function cupTierLabel(cups: string[], idx: number): string {
+  if (idx < 0) return "—";
+  const tier = `Tier ${idx + 1}`;
+  if (idx === 0) return `${cups[idx]} — ${tier} (slowest)`;
+  if (idx === cups.length - 1) return `${cups[idx]} — ${tier} (fastest)`;
+  return `${cups[idx]} — ${tier}`;
 }
 
 /**
@@ -319,14 +329,21 @@ export function RelayBuilder({
         </div>
       )}
 
-      <div className="mt-5 overflow-x-auto">
-        <table className="w-full min-w-[860px] border-collapse text-sm">
+      <p className="mt-4 text-xs text-muted">
+        Confidence: <b>D</b> direct (their own recent Swamp Dash time) · <b>X</b> cross-event (from Chestnut
+        Scorcher/John Bryan) · <b>W</b> widened (sparse data, gender/season merged) · <b>—</b> no history match ·{" "}
+        <b>M</b> manually overridden.
+      </p>
+
+      <div className="mt-2 overflow-x-auto">
+        <table className="w-full min-w-[940px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
               <th className="py-2 pr-3">Cup</th>
               <th className="py-2 pr-3">Team</th>
               <th className="py-2 pr-3">Leg</th>
               <th className="py-2 pr-3">Name</th>
+              <th className="py-2 pr-3">Age</th>
               <th className="py-2 pr-3">Est. time</th>
               <th className="py-2 pr-3">Requested teammate</th>
               <th className="py-2 pr-3">Reassign</th>
@@ -336,9 +353,12 @@ export function RelayBuilder({
             {rows.map(({ rider, index }) => {
               const badge = CONFIDENCE_LABEL[rider.estimatedLapConfidence ?? "none"];
               const requested = friendField ? rider.custom?.[friendField]?.trim() : "";
+              const cupIdx = relay.cups.indexOf(rider.relay!.cup);
               return (
                 <tr key={index} className="border-b border-border/60">
-                  <td className="py-1.5 pr-3 text-foreground">{rider.relay!.cup}</td>
+                  <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
+                    {rider.relay!.cup}
+                  </td>
                   <td className="py-1.5 pr-3 text-foreground">{rider.relay!.character}</td>
                   <td className="py-1.5 pr-3 text-muted">{rider.relay!.leg}</td>
                   <td className="py-1.5 pr-3 text-foreground">
@@ -349,6 +369,7 @@ export function RelayBuilder({
                       </span>
                     )}
                   </td>
+                  <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
                   <td className="py-1.5 pr-3">
                     <span className="inline-flex items-center gap-1">
                       {rider.estimatedLapSeconds != null && (
@@ -369,10 +390,10 @@ export function RelayBuilder({
                         reassign(index, c, ch);
                       }}
                     >
-                      {relay.cups.flatMap((c) =>
+                      {relay.cups.flatMap((c, ci) =>
                         relay.characters.map((ch) => (
                           <option key={`${c}||${ch}`} value={`${c}||${ch}`}>
-                            {c} · {ch}
+                            {cupTierLabel(relay.cups, ci)} · {ch}
                           </option>
                         )),
                       )}
@@ -443,6 +464,17 @@ function RelayReviewPanel({
     [pendingRegs],
   );
 
+  // Sanity check, not a hard rule: flag any estimate under half or over double the
+  // field's median as worth a second look — catches bad source data or a missed
+  // scale correction (e.g. a 5-6 rider's time that never got the full-course
+  // projection applied) rather than trusting every number silently.
+  const implausibleByRider = useMemo(() => {
+    const real = pendingRegs.map((r) => r.estimatedLapSeconds).filter((t): t is number => t != null);
+    if (real.length < 2) return new Array<boolean>(pendingRegs.length).fill(false);
+    const mid = median(real);
+    return pendingRegs.map((r) => r.estimatedLapSeconds != null && (r.estimatedLapSeconds < mid * 0.5 || r.estimatedLapSeconds > mid * 2));
+  }, [pendingRegs]);
+
   function updateEstimate(index: number, seconds: number) {
     setPendingRegs(
       pendingRegs.map((r, i) => (i === index ? { ...r, estimatedLapSeconds: seconds, estimatedLapConfidence: "manual" as const } : r)),
@@ -457,10 +489,19 @@ function RelayReviewPanel({
         <div>
           <h2 className="text-lg font-bold text-foreground">Review rankings</h2>
           <p className="mt-1 text-sm text-muted">
-            Cups are progressively faster heats — {relay.cups[0]} is the slowest, {relay.cups[relay.cups.length - 1]} the fastest.
-            Edit a time to override it (marked <span className="font-semibold">M</span> for manual); the table and Cup column
-            re-sort live. Riders with no history match default to the field&apos;s median time (
-            <span className="font-semibold">—</span>) so they still land somewhere reasonable.
+            Cups are progressively faster heats — {cupTierLabel(relay.cups, 0)} is the slowest,{" "}
+            {cupTierLabel(relay.cups, relay.cups.length - 1)} the fastest. Edit a time to override it (marked{" "}
+            <span className="font-semibold">M</span> for manual); the table and Cup column re-sort live. Riders with no
+            history match default to the field&apos;s median time so they still land somewhere reasonable.
+          </p>
+          <p className="mt-2 text-xs text-muted">
+            Confidence: <b>D</b> direct (their own recent Swamp Dash time) · <b>X</b> cross-event (from Chestnut
+            Scorcher/John Bryan) · <b>W</b> widened (sparse data, gender/season merged) · <b>—</b> no history match
+            (defaulted to the field median) · <b>M</b> manually overridden. A{" "}
+            <span className="font-semibold text-warning">mixed-speed group</span> badge means a friend group spans more
+            than one cup&apos;s worth of speed — they&apos;re kept together at the slowest member&apos;s tier. A{" "}
+            <span className="font-semibold text-danger">⚠ check</span> flag means the time looks unusually fast or slow
+            next to the field — worth a second look before building.
           </p>
         </div>
         <button onClick={onStartOver} className="text-sm text-muted hover:text-foreground">
@@ -491,10 +532,11 @@ function RelayReviewPanel({
       </div>
 
       <div className="mt-5 overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-sm">
+        <table className="w-full min-w-[800px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
               <th className="py-2 pr-3">Name</th>
+              <th className="py-2 pr-3">Age</th>
               <th className="py-2 pr-3">Est. time</th>
               <th className="py-2 pr-3">Confidence</th>
               <th className="py-2 pr-3">Requested teammate</th>
@@ -524,18 +566,26 @@ function RelayReviewPanel({
                       </span>
                     )}
                   </td>
+                  <td className="py-1.5 pr-3 text-muted">{rider.ageOnRaceDay ?? "—"}</td>
                   <td className="py-1.5 pr-3">
-                    <input
-                      type="text"
-                      defaultValue={rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : ""}
-                      onBlur={(e) => {
-                        const parsed = parseRaceTime(e.target.value);
-                        if (parsed != null) updateEstimate(index, parsed);
-                        else e.target.value = rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : "";
-                      }}
-                      className="w-24 rounded border border-border bg-background px-1.5 py-0.5 text-xs text-foreground"
-                      placeholder="m:ss.s"
-                    />
+                    <span className="inline-flex items-center gap-1">
+                      <input
+                        type="text"
+                        defaultValue={rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : ""}
+                        onBlur={(e) => {
+                          const parsed = parseRaceTime(e.target.value);
+                          if (parsed != null) updateEstimate(index, parsed);
+                          else e.target.value = rider.estimatedLapSeconds != null ? formatSeconds(rider.estimatedLapSeconds) : "";
+                        }}
+                        className="w-24 rounded border border-border bg-background px-1.5 py-0.5 text-xs text-foreground"
+                        placeholder="m:ss.s"
+                      />
+                      {implausibleByRider[index] && (
+                        <span title="This time looks unusually fast or slow compared to the field — double check it." className="text-danger">
+                          ⚠
+                        </span>
+                      )}
+                    </span>
                   </td>
                   <td className="py-1.5 pr-3">
                     <span title={badge.title} className={`rounded px-1 text-[10px] font-bold ${badge.className}`}>
@@ -548,7 +598,9 @@ function RelayReviewPanel({
                       <span className="ml-1.5 text-warning">(not found: {notFound.join(", ")})</span>
                     )}
                   </td>
-                  <td className="py-1.5 pr-3 text-foreground">{cupIdx >= 0 ? relay.cups[cupIdx] : "—"}</td>
+                  <td className="py-1.5 pr-3 text-foreground" title={cupTierLabel(relay.cups, cupIdx)}>
+                    {cupIdx >= 0 ? relay.cups[cupIdx] : "—"}
+                  </td>
                 </tr>
               );
             })}

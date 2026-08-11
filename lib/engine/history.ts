@@ -446,6 +446,18 @@ export function projectToFullCourse(seconds: number, ageOnRaceDay: number, fiveS
   return ageBandOf(ageOnRaceDay) === "5-6" ? seconds * fiveSixCourseFactor : seconds;
 }
 
+/**
+ * Fallback `fiveSixCourseFactor` for a relay whose persisted RaceConfig
+ * predates this field (historyEstimation is optional in raceConfigSchema.ts,
+ * and getRaceConfigs() reads the DB row as-is with no backfill from the seed
+ * default) — without this, a project saved before the field existed would
+ * silently skip the 5-6 projection entirely rather than erroring, producing
+ * impossible-looking times for 5-6 relay riders (their raw estimate is
+ * genuinely on the shorter 5-6 course's scale, just never corrected up to
+ * full-course). Matches sdr.ts's real derived value; see deriveFiveSixFactor.
+ */
+export const DEFAULT_FIVE_SIX_COURSE_FACTOR = 1.78;
+
 // --- estimation --------------------------------------------------------------
 
 export interface EstimateTarget {
