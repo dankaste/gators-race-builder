@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
+  doublePrecision,
   index,
   integer,
   jsonb,
@@ -76,9 +77,61 @@ export const directors = pgTable("directors", {
     .defaultNow(),
 });
 
+/**
+ * Historical WebScorer results (multi-season, multi-race), imported once from
+ * the "Rider History Race Result" export and reused every time relay teams
+ * are built. Director-only PII, same posture as `projects.state` — a bigger
+ * retention surface (8 seasons of minors' names) than any other table here,
+ * so it's the first candidate for the per-season retention/purge job noted
+ * as pending in CLAUDE.md. A new import replaces the prior one wholesale
+ * (see `lib/raceHistory.ts`) rather than accumulating duplicates.
+ *
+ * These tables ride along with every other migration onto the race-day hub's
+ * local PGlite store (`db/raceday-migrate.ts` applies all of `db/migrations`
+ * unconditionally) — that only creates the empty schema there, since no
+ * race-day code ever writes to it; nothing here is synced to the field.
+ */
+export const raceHistoryImports = pgTable("race_history_imports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  filename: text("filename").notNull(),
+  rowCount: integer("row_count").notNull(),
+  importedAt: timestamp("imported_at", { withTimezone: true }).notNull().defaultNow(),
+  importedByEmail: text("imported_by_email"),
+});
+
+export const raceHistoryResults = pgTable(
+  "race_history_results",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    importId: uuid("import_id")
+      .notNull()
+      .references(() => raceHistoryImports.id, { onDelete: "cascade" }),
+    firstName: text("first_name").notNull(),
+    lastName: text("last_name").notNull(),
+    nameKey: text("name_key").notNull(),
+    raceSlug: text("race_slug"), // "sd" | "cs" | "jb" | "sdr" | null (unclassified)
+    season: integer("season"),
+    eventLabel: text("event_label").notNull(),
+    category: text("category").notNull(),
+    ageOnRaceDay: integer("age_on_race_day"),
+    gender: text("gender"), // "M" | "F" | null
+    timeSeconds: doublePrecision("time_seconds"), // null = DNF/DNS/unparseable
+    status: text("status").notNull(),
+    place: integer("place"),
+    groupSize: integer("group_size"),
+    distanceLabel: text("distance_label").notNull(),
+  },
+  (table) => [
+    index("race_history_results_import_idx").on(table.importId),
+    index("race_history_results_name_key_idx").on(table.nameKey),
+  ],
+);
+
 export type Race = typeof races.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type Director = typeof directors.$inferSelect;
+export type RaceHistoryImport = typeof raceHistoryImports.$inferSelect;
+export type RaceHistoryResult = typeof raceHistoryResults.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Race day — granular, idempotent tables (one row per tap/action) so

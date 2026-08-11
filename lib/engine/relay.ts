@@ -7,10 +7,16 @@ import { normName, nameKeys as nameKeysOf } from "./nameMatch";
  * Riders are distributed across the relay's cups (time-staggered heats) and, within
  * each cup, into character teams of ~teamSize. The builder:
  *   1. Groups riders who requested each other (friend requests) so they land on the
- *      same team — a keep-together constraint.
- *   2. Greedily distributes those groups across the cup × character slots to balance
- *      team sizes (and, secondarily, skill via seed level).
- *   3. Assigns a leg order (1..n) within each team.
+ *      same team — a keep-together constraint. Groups larger than a team are split
+ *      into team-sized chunks (flagged, not silently overflowed).
+ *   2. Greedily distributes those groups across cup, then character, slots to
+ *      converge each cup's average estimated Swamp Dash lap time (see
+ *      lib/engine/history.ts) toward the overall mean, and each team's average
+ *      toward its own cup's — a standard longest-first (LPT) load-balance greedy.
+ *      Riders with no estimate (or when nobody has one at all) fall back to
+ *      balancing by count, so team-building still works with zero history data.
+ *   3. Assigns a leg order (1..n) within each team, slowest-estimated first,
+ *      falling back to GBP seed level, then registration order.
  * Directors rebalance individual riders in the UI afterward.
  */
 
@@ -24,6 +30,8 @@ export interface RelayResult {
   teams: RelaySlot[];
   /** Friend-request values that couldn't be matched to a rider. */
   unmatchedFriends: { rider: string; requested: string }[];
+  /** Friend groups larger than a single team — split into team-sized chunks rather than silently overflowing one slot. */
+  splitGroups: { riders: string[]; teamSize: number }[];
 }
 
 const norm = normName;
@@ -49,8 +57,110 @@ class DSU {
 }
 
 /**
+ * Leg-order comparator: slowest first, fastest anchors the last leg.
+ * Riders with a numeric estimate are ranked among themselves (highest
+ * seconds = slowest = earliest leg); riders with no estimate fall back to
+ * ascending GBP `seedLevel` (lower = more beginner/slower — the pre-existing
+ * convention `relay.test.ts` pins), then registration order. Estimated and
+ * unestimated riders are never compared on the same numeric scale directly —
+ * when nobody on a team has an estimate, this reduces exactly to the
+ * original `seedLevel`-only ordering.
+ */
+export function compareLegOrder(a: Rider, b: Rider): number {
+  const bucket = (r: Rider) => (r.estimatedLapSeconds != null ? 0 : r.seedLevel != null ? 1 : 2);
+  const key = (r: Rider) => (r.estimatedLapSeconds != null ? -r.estimatedLapSeconds : (r.seedLevel ?? 0));
+  return bucket(a) - bucket(b) || key(a) - key(b);
+}
+
+interface Group {
+  indices: number[];
+  /** Average estimatedLapSeconds across riders in the group that have one; null if none do. */
+  avg: number | null;
+  /** Fallback signal used only when `avg` is null — see groupSeedSum. */
+  seedSum: number;
+}
+
+function groupAverage(riders: Rider[], indices: number[]): number | null {
+  const times = indices.map((i) => riders[i].estimatedLapSeconds).filter((t): t is number => t != null);
+  return times.length ? times.reduce((a, b) => a + b, 0) / times.length : null;
+}
+
+/** Sum of GBP seedLevel across a group (`?? 0`, matching the pre-history skillSum convention) — the fallback balancing signal when a group has no lap-time estimate. */
+function groupSeedSum(riders: Rider[], indices: number[]): number {
+  return indices.reduce((n, i) => n + (riders[i].seedLevel ?? 0), 0);
+}
+
+/** Split a DSU-merged group larger than `teamSize` into team-sized chunks so one slot never overflows silently. */
+function splitOversizedGroups(rawGroups: number[][], teamSize: number): { groups: number[][]; splits: number[][] } {
+  const groups: number[][] = [];
+  const splits: number[][] = [];
+  for (const g of rawGroups) {
+    if (g.length <= teamSize) {
+      groups.push(g);
+      continue;
+    }
+    splits.push(g);
+    for (let i = 0; i < g.length; i += teamSize) groups.push(g.slice(i, i + teamSize));
+  }
+  return { groups, splits };
+}
+
+interface Bin {
+  capacity: number;
+  count: number;
+  totalSeconds: number;
+  /** Fallback accumulator mirroring the pre-history `skillSum` balancing signal. */
+  totalSeed: number;
+}
+/**
+ * Longest-processing-time-first greedy load balance (the standard
+ * multiprocessor-scheduling heuristic): place estimated groups (slowest
+ * average first) into whichever bin with room currently has the LOWEST
+ * running SUM — not average. Comparing by average looks similar but isn't:
+ * once a bin gets even one high value its average locks in above the field,
+ * so it never gets picked again and everything else piles into the other
+ * bin(s). Sum-comparison is the textbook fix — it keeps converging bins
+ * toward equal load (and, since group sizes are usually similar, equal
+ * counts too, so equal sums end up meaning equal averages). Groups with no
+ * estimate are placed afterward by whichever bin with room has the fewest
+ * riders, tie-broken by lowest total seedLevel — the exact `(count,
+ * skillSum)` rule the original single-tier balancer used, so when NO rider
+ * anywhere has an estimate, every placement decision degrades to that same
+ * signal. Falls back to "any bin" (ignoring capacity) only when nothing has
+ * room, same as the original design.
+ */
+function placeGroupsLPT(groups: Group[], bins: Bin[], assign: (groupIndex: number, binIndex: number) => void) {
+  const withEstimate = groups
+    .map((g, idx) => ({ g, idx }))
+    .filter((x) => x.g.avg != null)
+    .sort((a, b) => b.g.avg! - a.g.avg!);
+  const withoutEstimate = groups.map((g, idx) => ({ g, idx })).filter((x) => x.g.avg == null);
+
+  for (const { g, idx } of withEstimate) {
+    const size = g.indices.length;
+    const fitting = bins.map((b, i) => i).filter((i) => bins[i].count + size <= bins[i].capacity);
+    const pool = fitting.length ? fitting : bins.map((_, i) => i);
+    pool.sort((a, b) => bins[a].totalSeconds - bins[b].totalSeconds);
+    const target = pool[0];
+    bins[target].count += size;
+    bins[target].totalSeconds += g.avg! * size;
+    assign(idx, target);
+  }
+  for (const { g, idx } of withoutEstimate) {
+    const size = g.indices.length;
+    const fitting = bins.map((b, i) => i).filter((i) => bins[i].count + size <= bins[i].capacity);
+    const pool = fitting.length ? fitting : bins.map((_, i) => i);
+    pool.sort((a, b) => bins[a].count - bins[b].count || bins[a].totalSeed - bins[b].totalSeed);
+    const target = pool[0];
+    bins[target].count += size;
+    bins[target].totalSeed += g.seedSum;
+    assign(idx, target);
+  }
+}
+
+/**
  * Build relay teams. Mutates each rider's `relay` field and returns the team
- * structure plus any unmatched friend requests for review.
+ * structure plus any unmatched friend requests / split groups for review.
  */
 export function buildRelayTeams(riders: Rider[], config: RelayConfig): RelayResult {
   const { cups, characters, teamSize } = config;
@@ -83,35 +193,58 @@ export function buildRelayTeams(riders: Rider[], config: RelayConfig): RelayResu
     groupsMap.set(root, arr);
   });
   // Larger groups placed first so they claim capacity before singletons fill in.
-  const groups = [...groupsMap.values()].sort((a, b) => b.length - a.length);
+  const rawGroups = [...groupsMap.values()].sort((a, b) => b.length - a.length);
+  const { groups: indexGroups, splits } = splitOversizedGroups(rawGroups, teamSize);
+  const splitGroups = splits.map((idxs) => ({
+    riders: idxs.map((i) => `${riders[i].firstName} ${riders[i].lastName}`),
+    teamSize,
+  }));
+  const groups: Group[] = indexGroups.map((indices) => ({
+    indices,
+    avg: groupAverage(riders, indices),
+    seedSum: groupSeedSum(riders, indices),
+  }));
 
-  // 2. Build empty slots (cup × character), then greedily place groups.
+  // 2a. Cup pass: converge each cup's average toward the overall mean.
+  const cupBins: Bin[] = cups.map(() => ({ capacity: teamSize * characters.length, count: 0, totalSeconds: 0, totalSeed: 0 }));
+  const groupCup = new Array<number>(groups.length).fill(0);
+  placeGroupsLPT(groups, cupBins, (groupIdx, cupIdx) => {
+    groupCup[groupIdx] = cupIdx;
+  });
+
+  // 2b. Team pass: within each cup, converge each character-team's average toward that cup's.
   const slots: RelaySlot[] = [];
-  for (const cup of cups) for (const character of characters) slots.push({ cup, character, riders: [] });
-
-  const skillSum = (s: RelaySlot) => s.riders.reduce((n, r) => n + (r.seedLevel ?? 0), 0);
-  const groupSkill = (idxs: number[]) => idxs.reduce((n, i) => n + (riders[i].seedLevel ?? 0), 0);
-
-  for (const group of groups) {
-    // Prefer a slot that still has room for the whole group; fall back to the emptiest.
-    const fitting = slots.filter((s) => s.riders.length + group.length <= teamSize);
-    const pool = fitting.length ? fitting : slots;
-    pool.sort((a, b) => a.riders.length - b.riders.length || skillSum(a) - skillSum(b));
-    const target = pool[0];
-    for (const i of group) target.riders.push(riders[i]);
-    void groupSkill; // skill considered via slot sort; kept for future weighting
+  const slotIndexByCupCharacter = new Map<string, number>();
+  for (const cup of cups) {
+    for (const character of characters) {
+      slotIndexByCupCharacter.set(`${cup}||${character}`, slots.length);
+      slots.push({ cup, character, riders: [] });
+    }
   }
+  cups.forEach((cup, cupIdx) => {
+    const groupsInCup = groups.map((g, idx) => ({ g, idx })).filter(({ idx }) => groupCup[idx] === cupIdx);
+    const teamBins: Bin[] = characters.map(() => ({ capacity: teamSize, count: 0, totalSeconds: 0, totalSeed: 0 }));
+    placeGroupsLPT(
+      groupsInCup.map(({ g }) => g),
+      teamBins,
+      (localIdx, characterIdx) => {
+        const { g } = groupsInCup[localIdx];
+        const slot = slots[slotIndexByCupCharacter.get(`${cup}||${characters[characterIdx]}`)!];
+        for (const i of g.indices) slot.riders.push(riders[i]);
+      },
+    );
+  });
 
   // 3. Assign leg order within each team and write back to riders.
   const teams = slots.filter((s) => s.riders.length > 0);
   for (const team of teams) {
-    team.riders.sort((a, b) => (a.seedLevel ?? 1e9) - (b.seedLevel ?? 1e9));
+    team.riders.sort(compareLegOrder);
     team.riders.forEach((r, leg) => {
       r.relay = { cup: team.cup, character: team.character, leg: leg + 1 };
     });
   }
 
-  return { teams, unmatchedFriends };
+  return { teams, unmatchedFriends, splitGroups };
 }
 
 /** Move a rider to a specific cup/character team, recomputing legs is left to a rebuild. */

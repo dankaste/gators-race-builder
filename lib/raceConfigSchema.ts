@@ -43,11 +43,17 @@ export const scheduleConfigSchema = z.object({
   breaks: z.array(scheduleBreakSchema).optional(),
 });
 
+export const historyEstimationSchema = z.object({
+  fiveSixCourseFactor: z.number().positive(),
+  minCellSize: z.number().int().positive(),
+});
+
 export const relaySchema = z.object({
   teamSize: z.number().int().positive(),
   cups: z.array(z.string().min(1)).min(1),
   characters: z.array(z.string().min(1)).min(1),
   friendRequestField: z.string().optional(),
+  historyEstimation: historyEstimationSchema.optional(),
 });
 
 export const eventSchema = z.object({

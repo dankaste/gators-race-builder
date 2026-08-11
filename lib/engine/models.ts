@@ -63,6 +63,14 @@ export interface Rider {
   distanceLabel: string | null;
   /** Seed rank from GBP team placement (lower = more beginner/slower). Null = unseeded. */
   seedLevel: number | null;
+  /**
+   * Estimated Swamp Dash lap time (seconds), from Race History
+   * (lib/engine/history.ts's estimateLapTimes) — relay-team balancing's
+   * speed signal when present. Null = no history match at all.
+   */
+  estimatedLapSeconds?: number | null;
+  /** How the estimate was derived — see EstimateConfidence in lib/engine/history.ts. Absent/undefined when no estimate was attempted (e.g. non-relay events). */
+  estimatedLapConfidence?: "direct" | "cross-event" | "widened" | "none";
   wave: number | null;
   /** Relay assignment (relay events only): cup heat, character team, and leg order. */
   relay?: { cup: string; character: string; leg: number } | null;
@@ -107,6 +115,25 @@ export interface RelayConfig {
   characters: string[];
   /** Export header of the registration question capturing a friend/teammate request. */
   friendRequestField?: string;
+  /**
+   * Knobs for turning Race History (lib/engine/history.ts) into estimated lap
+   * times for team balancing. Config-driven per the project's own rule —
+   * lives here (not a hardcoded module constant) so a director can retune it
+   * from the config editor as more seasons of data come in.
+   */
+  historyEstimation?: {
+    /**
+     * The individual Swamp Dash course for 5-6-year-olds is shorter than the
+     * 7+ course, and 5-6 riders may opt into the relay — this multiplies a
+     * 5-6 cohort's median onto the full-course scale. Derived empirically
+     * (paired 5-6→7-8 ratio ÷ same-course growth, see
+     * `deriveFiveSixFactor`); best-effort, not a measured constant — 5-6
+     * riders never race the full course, so it can't be directly measured.
+     */
+    fiveSixCourseFactor: number;
+    /** Minimum samples a cohort cell needs before its median is trusted; smaller cells widen (drop gender, then merge adjacent seasons) first. */
+    minCellSize: number;
+  };
 }
 
 /**

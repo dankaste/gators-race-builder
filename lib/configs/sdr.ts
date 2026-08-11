@@ -73,6 +73,13 @@ export const swampDashRelayConfig: RaceConfig = {
         cups: RELAY_CUPS,
         characters: RELAY_CHARACTERS,
         // friendRequestField: mapped from the relay registration export in M6.
+        historyEstimation: {
+          // Derived from lib/engine/history.ts's deriveFiveSixFactor() against the
+          // real 2018-2025 export (paired 5-6→7-8 ratio ÷ same-course growth,
+          // n=81 paired riders) — best-effort, editable here as more seasons land.
+          fiveSixCourseFactor: 1.78,
+          minCellSize: 5,
+        },
       },
     },
   ],

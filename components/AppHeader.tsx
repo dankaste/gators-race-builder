@@ -23,6 +23,9 @@ export async function AppHeader() {
           <Link href="/config" className="text-muted hover:text-foreground">
             Races
           </Link>
+          <Link href="/history" className="text-muted hover:text-foreground">
+            History
+          </Link>
           <Link href="/directors" className="text-muted hover:text-foreground">
             Directors
           </Link>

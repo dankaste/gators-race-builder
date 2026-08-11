@@ -1,9 +1,10 @@
 import Papa from "papaparse";
 import type { RegistrationRow, RosterEntry } from "./models";
 
-type Row = Record<string, string>;
+export type Row = Record<string, string>;
 
-function parseCsv(text: string): Row[] {
+/** Generic CSV → header-keyed rows. Shared by every export parser in this module. */
+export function parseCsv(text: string): Row[] {
   const result = Papa.parse<Row>(text, {
     header: true,
     skipEmptyLines: "greedy",
