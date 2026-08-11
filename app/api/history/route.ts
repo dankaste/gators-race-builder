@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { clearHistory, getCurrentImport, importHistory } from "@/lib/raceHistory";
+import { getHistoryStats, listImports, upsertHistory, wipeAllHistory } from "@/lib/raceHistory";
 import { apiRequireDirector } from "@/lib/auth-dal";
 
-/** Current import's summary — no rows, no PII. */
+/** Import log + aggregate coverage stats. No result rows, no PII. */
 export async function GET() {
   const director = await apiRequireDirector();
   if (director instanceof NextResponse) return director;
 
-  const current = await getCurrentImport();
-  return NextResponse.json({ current: current ?? null });
+  const [imports, stats] = await Promise.all([listImports(), getHistoryStats()]);
+  return NextResponse.json({ imports, stats });
 }
 
 const historyRowSchema = z.object({
@@ -31,10 +31,17 @@ const historyRowSchema = z.object({
 
 const importSchema = z.object({
   filename: z.string().min(1),
+  source: z.enum(["bulk-history", "race-result"]).default("bulk-history"),
   rows: z.array(historyRowSchema).max(20000),
 });
 
-/** Body = the CSV parsed client-side (parseHistoryCsv) — same "parse in browser" convention as registration/roster imports. Replaces any prior import wholesale. */
+/**
+ * Body = a CSV/xlsx parsed client-side (parseHistoryCsv / parseRaceResultsXlsx)
+ * — same "parse in browser" convention as registration/roster imports. Additive:
+ * each row upserts by (raceSlug, season, bib), so importing the multi-season
+ * baseline once and a fresh single race after every event just keeps building
+ * up the same table (see lib/raceHistory.ts for the exact merge semantics).
+ */
 export async function POST(request: Request) {
   const director = await apiRequireDirector();
   if (director instanceof NextResponse) return director;
@@ -44,14 +51,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const imported = await importHistory(parsed.data.filename, parsed.data.rows, director.email);
-  return NextResponse.json({ current: imported }, { status: 201 });
+  const imported = await upsertHistory(parsed.data.filename, parsed.data.rows, parsed.data.source, director.email);
+  const stats = await getHistoryStats();
+  return NextResponse.json({ imported, stats }, { status: 201 });
 }
 
+/** Nuclear reset — wipes every import and every result row. Rare; normal imports never need this. */
 export async function DELETE() {
   const director = await apiRequireDirector();
   if (director instanceof NextResponse) return director;
 
-  await clearHistory();
-  return NextResponse.json({ current: null });
+  await wipeAllHistory();
+  return NextResponse.json({ ok: true });
 }

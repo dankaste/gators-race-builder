@@ -1,3 +1,4 @@
+import ExcelJS from "exceljs";
 import { parseCsv } from "./parse";
 import { nameKeys, normName } from "./nameMatch";
 
@@ -119,6 +120,86 @@ export function parseHistoryCsv(csvText: string): HistoryRow[] {
       place: placeRaw ? Number(placeRaw) : null,
       groupSize: groupSizeRaw ? Number(groupSizeRaw) : null,
       distanceLabel: cell(row, "Distance"),
+    };
+  });
+}
+
+/**
+ * Infer {raceSlug, season} from a single-race WebScorer results export's
+ * filename (e.g. "2026 Gators Race Series Swamp Dash Results.xlsx") — this
+ * file format has no per-row Event column, unlike the multi-season history
+ * CSV, so the race/season it covers has to come from somewhere else. Reuses
+ * the same header-variant patterns as classifyEvent since race names are
+ * written the same way in both. Callers should let the director confirm/
+ * override this before importing — filenames get renamed.
+ */
+export function inferRaceFromFilename(filename: string): { raceSlug: HistoryRaceSlug; season: number } | null {
+  const base = filename.replace(/\.[^./]+$/, "");
+  const { raceSlug, season } = classifyEvent(base);
+  return raceSlug && season ? { raceSlug, season } : null;
+}
+
+/**
+ * Parse a single-race WebScorer results export (.xlsx — "Place, Bib, Name,
+ * Distance, Category, Age, Gender, ..., Time, ..." with a decorative title
+ * row and a repeated header row before each category's block). Every row
+ * gets the SAME race/season, since the file covers exactly one event —
+ * pass it in (see inferRaceFromFilename). `groupSize` is derived from the
+ * file itself: how many rows share a category.
+ */
+export async function parseRaceResultsXlsx(
+  data: ArrayBuffer,
+  meta: { raceSlug: HistoryRaceSlug; season: number; eventLabel: string },
+): Promise<HistoryRow[]> {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(data);
+  const sheet = workbook.worksheets[0];
+  if (!sheet) return [];
+
+  interface RawRow {
+    place: string;
+    bib: string;
+    name: string;
+    distance: string;
+    category: string;
+    age: string;
+    gender: string;
+    time: string;
+  }
+  const raw: RawRow[] = [];
+  sheet.eachRow((row) => {
+    const at = (col: number) => {
+      const v = row.getCell(col).value;
+      return v == null ? "" : String(v).trim();
+    };
+    const bib = at(2);
+    // Title rows ("Balance Bike - Balance F"), the repeated "Place/Bib/..." header,
+    // and blank separator rows all lack a numeric bib — every real data row has one.
+    if (!/^\d+$/.test(bib)) return;
+    raw.push({ place: at(1), bib, name: at(3), distance: at(4), category: at(5), age: at(6), gender: at(7), time: at(12) });
+  });
+
+  const groupSizes = new Map<string, number>();
+  for (const r of raw) groupSizes.set(r.category, (groupSizes.get(r.category) ?? 0) + 1);
+
+  return raw.map((r) => {
+    const { firstName, lastName } = splitName(r.name);
+    const timeSeconds = parseRaceTime(r.time);
+    return {
+      bib: r.bib,
+      firstName,
+      lastName,
+      raceSlug: meta.raceSlug,
+      season: meta.season,
+      eventLabel: meta.eventLabel,
+      category: r.category,
+      age: r.age ? Number(r.age) : null,
+      gender: normalizeGender(r.gender),
+      timeSeconds,
+      status: timeSeconds !== null ? "OK" : r.time || "DNS",
+      place: /^\d+$/.test(r.place) ? Number(r.place) : null,
+      groupSize: groupSizes.get(r.category) ?? null,
+      distanceLabel: r.distance,
     };
   });
 }

@@ -78,13 +78,22 @@ export const directors = pgTable("directors", {
 });
 
 /**
- * Historical WebScorer results (multi-season, multi-race), imported once from
- * the "Rider History Race Result" export and reused every time relay teams
- * are built. Director-only PII, same posture as `projects.state` — a bigger
- * retention surface (8 seasons of minors' names) than any other table here,
- * so it's the first candidate for the per-season retention/purge job noted
- * as pending in CLAUDE.md. A new import replaces the prior one wholesale
- * (see `lib/raceHistory.ts`) rather than accumulating duplicates.
+ * Historical WebScorer results (multi-season, multi-race) — either a full
+ * multi-season "Rider History" dump (imported occasionally as a baseline) or
+ * a single race's fresh results (imported after every race, as it happens).
+ * Director-only PII, same posture as `projects.state` — a bigger retention
+ * surface (years of minors' names) than any other table here, so it's the
+ * first candidate for the per-season retention/purge job noted as pending
+ * in CLAUDE.md.
+ *
+ * Imports are additive: `race_history_imports` is an append-only log of
+ * every file ever imported, and each row lands via an upsert keyed on
+ * (raceSlug, season, bib) — see `lib/raceHistory.ts` — so re-importing the
+ * same race (corrected results, or the same rider appearing in a fresh
+ * multi-season dump) updates that rider's row in place instead of
+ * duplicating it. Bib is only a stable identity WITHIN one race/season (the
+ * physical plate stack gets reassigned every season), which is exactly the
+ * scope this key needs.
  *
  * These tables ride along with every other migration onto the race-day hub's
  * local PGlite store (`db/raceday-migrate.ts` applies all of `db/migrations`
@@ -94,6 +103,8 @@ export const directors = pgTable("directors", {
 export const raceHistoryImports = pgTable("race_history_imports", {
   id: uuid("id").primaryKey().defaultRandom(),
   filename: text("filename").notNull(),
+  /** "bulk-history" (multi-season dump) | "race-result" (single race, freshly finished) */
+  source: text("source").notNull().default("bulk-history"),
   rowCount: integer("row_count").notNull(),
   importedAt: timestamp("imported_at", { withTimezone: true }).notNull().defaultNow(),
   importedByEmail: text("imported_by_email"),
@@ -103,9 +114,11 @@ export const raceHistoryResults = pgTable(
   "race_history_results",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    /** Most recent import that wrote/confirmed this row — NOT a "belongs to one import" FK, since later imports upsert existing rows in place. */
     importId: uuid("import_id")
       .notNull()
       .references(() => raceHistoryImports.id, { onDelete: "cascade" }),
+    bib: text("bib").notNull(),
     firstName: text("first_name").notNull(),
     lastName: text("last_name").notNull(),
     nameKey: text("name_key").notNull(),
@@ -124,6 +137,10 @@ export const raceHistoryResults = pgTable(
   (table) => [
     index("race_history_results_import_idx").on(table.importId),
     index("race_history_results_name_key_idx").on(table.nameKey),
+    // The upsert key. Postgres treats NULLs as always-distinct, so a row missing
+    // raceSlug/season (unclassified event) or bib never "conflicts" — it just
+    // always inserts fresh, same as before this constraint existed.
+    uniqueIndex("race_history_results_race_season_bib_idx").on(table.raceSlug, table.season, table.bib),
   ],
 );
 

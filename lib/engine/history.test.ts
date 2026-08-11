@@ -1,12 +1,15 @@
+import ExcelJS from "exceljs";
 import { describe, expect, it } from "vitest";
 import {
   ageBandOf,
   classifyEvent,
   deriveFiveSixFactor,
   estimateLapTimes,
+  inferRaceFromFilename,
   mostRecentSwampDashSeason,
   normalizeGender,
   parseHistoryCsv,
+  parseRaceResultsXlsx,
   parseRaceTime,
   type HistoryRow,
 } from "./history";
@@ -233,5 +236,58 @@ describe("mostRecentSwampDashSeason", () => {
   });
   it("returns null with no data", () => {
     expect(mostRecentSwampDashSeason([])).toBeNull();
+  });
+});
+
+describe("inferRaceFromFilename", () => {
+  it("infers race/season from a single-race results filename", () => {
+    expect(inferRaceFromFilename("2026 Gators Race Series Swamp Dash Results.xlsx")).toEqual({ raceSlug: "sd", season: 2026 });
+    expect(inferRaceFromFilename("2026 Chestnut Scorcher Results.xlsx")).toEqual({ raceSlug: "cs", season: 2026 });
+    expect(inferRaceFromFilename("2026 Swamp Dash Relay Standard Race Results.xlsx")).toEqual({ raceSlug: "sdr", season: 2026 });
+  });
+  it("returns null when it can't tell", () => {
+    expect(inferRaceFromFilename("results.xlsx")).toBeNull();
+    expect(inferRaceFromFilename("Swamp Dash Results.xlsx")).toBeNull(); // no year
+  });
+});
+
+describe("parseRaceResultsXlsx", () => {
+  /** Builds a workbook mirroring the real WebScorer single-race export shape: a decorative title row, a repeated header row per category block, and a blank separator row between blocks. */
+  async function buildWorkbook(): Promise<ArrayBuffer> {
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("Sheet1");
+    const header = ["Place", "Bib", "Name", "Distance", "Category", "Age", "Gender", "Info 1", "Info 2", "Info 3", "Email", "Time"];
+    ws.addRow(["", "", "Balance Bike - Balance F", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    ws.addRow(header);
+    ws.addRow(["1", "790", "Case ,Olive", "Balance Bike", "Balance F", "4", "Female", "", "", "", "", "2:50.1"]);
+    ws.addRow(["-", "699", "Stanard ,Esra", "Balance Bike", "Balance F", "5", "Female", "", "", "", "", "DNS"]);
+    ws.addRow(["", "", "", "", "", "", "", "", "", "", "", ""]);
+    ws.addRow(["", "", "Pedal Bike - 7-8 M", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    ws.addRow(header);
+    ws.addRow(["1", "555", "Smith ,Jack", "Pedal Bike", "7-8 M", "7", "Male", "", "", "", "", "1:45.30"]);
+    ws.addRow(["2", "556", "Jones ,Ben", "Pedal Bike", "7-8 M", "8", "Male", "", "", "", "", "1:50.00"]);
+    // Mirrors the real browser path (File.arrayBuffer()) rather than reaching into Buffer internals.
+    const buf = await wb.xlsx.writeBuffer();
+    return new Blob([buf]).arrayBuffer();
+  }
+
+  it("parses category blocks, skips title/header/blank rows, and derives groupSize per category", async () => {
+    const data = await buildWorkbook();
+    const rows = await parseRaceResultsXlsx(data, { raceSlug: "sd", season: 2026, eventLabel: "2026 Gator Race Series Swamp Dash" });
+    expect(rows).toHaveLength(4);
+    const olive = rows.find((r) => r.firstName === "Olive")!;
+    expect(olive).toMatchObject({
+      bib: "790", lastName: "Case", raceSlug: "sd", season: 2026, category: "Balance F",
+      age: 4, gender: "F", place: 1, groupSize: 2, distanceLabel: "Balance Bike",
+    });
+    expect(olive.timeSeconds).toBeCloseTo(170.1, 1);
+
+    const esra = rows.find((r) => r.firstName === "Esra")!;
+    expect(esra.timeSeconds).toBeNull();
+    expect(esra.place).toBeNull();
+    expect(esra.status).toBe("DNS");
+
+    const jack = rows.find((r) => r.firstName === "Jack")!;
+    expect(jack.groupSize).toBe(2); // the second category block, separately counted
   });
 });

@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { desc } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { raceHistoryImports, raceHistoryResults, type RaceHistoryImport } from "@/db/schema";
 import { normName } from "@/lib/engine/nameMatch";
@@ -9,20 +9,27 @@ import type { HistoryRow } from "@/lib/engine/history";
 export type { RaceHistoryImport };
 
 /**
- * Server-only CRUD for the persisted "Race History" import (mirrors the shape
- * of `lib/projects.ts`). There is at most one import at a time — a new one
- * replaces the prior wholesale, since it's a periodic re-export of the same
- * multi-season WebScorer data, not something to accumulate duplicates of.
+ * Server-only CRUD for the persisted "Race History" data. Imports are
+ * additive and append-only in the log (`raceHistoryImports`): every row
+ * lands via an upsert keyed on (raceSlug, season, bib) — see `upsertHistory`
+ * — so importing the multi-season baseline once and then a fresh race
+ * result after every event just keeps building up the same table, updating
+ * a rider's row in place if the same race/season/bib comes in again (a
+ * corrected results file, or that rider showing up again in a later
+ * multi-season dump). `wipeAllHistory` is the separate, rare, nuclear reset.
  */
 
-/** Postgres has a 65535 bind-parameter limit; 3000+ rows × 16 columns is close to it in one statement. */
-const INSERT_CHUNK_SIZE = 500;
+/** Postgres has a 65535 bind-parameter limit; 3000+ rows × 17 columns is close to it in one statement. */
+const CHUNK_SIZE = 400;
+
+export type HistorySource = "bulk-history" | "race-result";
 
 type ResultInsert = typeof raceHistoryResults.$inferInsert;
 
 function toDbRow(importId: string, row: HistoryRow): ResultInsert {
   return {
     importId,
+    bib: row.bib,
     firstName: row.firstName,
     lastName: row.lastName,
     nameKey: normName(`${row.lastName} ${row.firstName}`),
@@ -40,45 +47,100 @@ function toDbRow(importId: string, row: HistoryRow): ResultInsert {
   };
 }
 
-export async function getCurrentImport(): Promise<RaceHistoryImport | undefined> {
-  const rows = await getDb().select().from(raceHistoryImports).orderBy(desc(raceHistoryImports.importedAt)).limit(1);
-  return rows[0];
+/** Every field an upsert should overwrite on conflict — everything except the (raceSlug, season, bib) key itself. */
+const UPSERT_SET = {
+  importId: sql`excluded.import_id`,
+  firstName: sql`excluded.first_name`,
+  lastName: sql`excluded.last_name`,
+  nameKey: sql`excluded.name_key`,
+  eventLabel: sql`excluded.event_label`,
+  category: sql`excluded.category`,
+  ageOnRaceDay: sql`excluded.age_on_race_day`,
+  gender: sql`excluded.gender`,
+  timeSeconds: sql`excluded.time_seconds`,
+  status: sql`excluded.status`,
+  place: sql`excluded.place`,
+  groupSize: sql`excluded.group_size`,
+  distanceLabel: sql`excluded.distance_label`,
+};
+
+export async function listImports(limit = 50): Promise<RaceHistoryImport[]> {
+  return getDb().select().from(raceHistoryImports).orderBy(desc(raceHistoryImports.importedAt)).limit(limit);
 }
 
-/** Deletes the current import (cascades to its results). No-op if there isn't one. */
-export async function clearHistory(): Promise<void> {
-  await getDb().delete(raceHistoryImports);
+export interface HistoryStats {
+  totalRows: number;
+  seasons: number[];
+  raceSlugs: string[];
+}
+
+export async function getHistoryStats(): Promise<HistoryStats> {
+  const rows = await getDb()
+    .select({ season: raceHistoryResults.season, raceSlug: raceHistoryResults.raceSlug })
+    .from(raceHistoryResults);
+  const seasons = [...new Set(rows.map((r) => r.season).filter((s): s is number => s != null))].sort((a, b) => b - a);
+  const raceSlugs = [...new Set(rows.map((r) => r.raceSlug).filter((s): s is string => s != null))].sort();
+  return { totalRows: rows.length, seasons, raceSlugs };
+}
+
+/** Wipes ALL history (imports log + results) — the rare nuclear reset, not the normal path. */
+export async function wipeAllHistory(): Promise<void> {
+  await getDb().delete(raceHistoryImports); // cascades to results
 }
 
 /**
- * Replace the current history with a freshly-parsed CSV's rows, atomically.
+ * Upsert a batch of parsed rows (from either the multi-season bulk CSV or a
+ * single race's fresh .xlsx results) into history, logging the import. Each
+ * row is keyed on (raceSlug, season, bib) — Postgres never conflicts a row
+ * missing any of those (NULLs are always distinct), so unclassified rows
+ * just insert fresh, same as before this was upsert-based.
+ *
  * The neon-http driver has no `db.transaction()` — `db.batch()` maps to one
- * server-side transaction instead, so the old import's deletion, the new
- * import row, and every chunked results insert either all land or none do.
+ * server-side transaction instead, so the import-log row and every chunked
+ * upsert either all land or none do.
  */
-export async function importHistory(
+export async function upsertHistory(
   filename: string,
   rows: HistoryRow[],
+  source: HistorySource,
   importedByEmail?: string,
 ): Promise<RaceHistoryImport> {
   const db = getDb();
   const id = randomUUID();
   const importedAt = new Date();
-  const importRow = { id, filename, rowCount: rows.length, importedAt, importedByEmail: importedByEmail ?? null };
+  const importRow = { id, filename, source, rowCount: rows.length, importedAt, importedByEmail: importedByEmail ?? null };
 
+  // Postgres refuses to ON CONFLICT DO UPDATE the same row twice within one
+  // statement — and the real historical export does have a handful of rows
+  // sharing a (raceSlug, season, bib) key (data-entry bib collisions from
+  // past seasons, or a rider corrected into a second category). Collapse
+  // those before chunking, last one wins — same "most-recent wins"
+  // convention lib/engine/nameMatch.ts's matchBibCandidates already uses for
+  // conflicting bib data. Rows missing any key part are never collapsed
+  // (each gets its own always-unique key), matching Postgres's own
+  // NULL-is-distinct behavior for the real insert.
+  let anon = 0;
+  const dedupedRows = [...new Map(rows.map((r) => [r.raceSlug && r.season && r.bib ? `${r.raceSlug}|${r.season}|${r.bib}` : `_row_${anon++}`, r])).values()];
+
+  const toInsert = dedupedRows.map((r) => toDbRow(id, r));
   const chunks: ResultInsert[][] = [];
-  for (let i = 0; i < rows.length; i += INSERT_CHUNK_SIZE) {
-    chunks.push(rows.slice(i, i + INSERT_CHUNK_SIZE).map((r) => toDbRow(id, r)));
-  }
+  for (let i = 0; i < toInsert.length; i += CHUNK_SIZE) chunks.push(toInsert.slice(i, i + CHUNK_SIZE));
 
   const statements = [
-    db.delete(raceHistoryImports),
     db.insert(raceHistoryImports).values(importRow),
-    ...chunks.map((chunk) => db.insert(raceHistoryResults).values(chunk)),
+    ...chunks.map((chunk) =>
+      db
+        .insert(raceHistoryResults)
+        .values(chunk)
+        .onConflictDoUpdate({
+          target: [raceHistoryResults.raceSlug, raceHistoryResults.season, raceHistoryResults.bib],
+          set: UPSERT_SET,
+        }),
+    ),
   ];
   // db.batch()'s type wants a statically-known non-empty tuple; ours is built at
   // runtime from a variable row count, so the cast is the boundary — the array is
-  // always non-empty (delete + import-insert are unconditional).
+  // always non-empty (the import-log insert is unconditional).
   await db.batch(statements as unknown as [(typeof statements)[number], ...(typeof statements)[number][]]);
 
   return importRow as RaceHistoryImport;
@@ -94,7 +156,7 @@ export async function importHistory(
 export async function getAllHistoryResults(): Promise<HistoryRow[]> {
   const rows = await getDb().select().from(raceHistoryResults);
   return rows.map((r) => ({
-    bib: "",
+    bib: r.bib,
     firstName: r.firstName,
     lastName: r.lastName,
     raceSlug: r.raceSlug as HistoryRow["raceSlug"],
