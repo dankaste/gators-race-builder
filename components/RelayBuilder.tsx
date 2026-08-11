@@ -103,6 +103,8 @@ export function RelayBuilder({
   raceDate,
   riders,
   onChange,
+  pendingReview,
+  onPendingReviewChange,
   projectId,
   season,
 }: {
@@ -111,14 +113,46 @@ export function RelayBuilder({
   raceDate: string;
   riders: Rider[];
   onChange: (riders: Rider[]) => void;
+  /** The review screen's in-progress state (imported riders + estimates + overrides), lifted up to Workspace so it persists through a reload instead of living only in this component's local state. */
+  pendingReview: Rider[] | undefined;
+  /**
+   * Accepts either a value or a React-style updater function. Always use the
+   * updater form when the next state is derived from the current one (e.g.
+   * `.map(...)` over pendingRegs) — it's threaded straight through to
+   * Workspace's setPendingReviewState, so it's safe against edits fired in
+   * quick succession, unlike computing the next array from this render's
+   * (possibly stale) pendingReview prop.
+   */
+  onPendingReviewChange: (update: Rider[] | undefined | ((prev: Rider[] | undefined) => Rider[] | undefined)) => void;
   projectId: string;
   season: string;
 }) {
   const relay = event.relay;
   const [error, setError] = useState<string | null>(null);
-  const [friendField, setFriendField] = useState<string>(relay?.friendRequestField ?? "");
-  const [pendingRegs, setPendingRegs] = useState<Rider[] | null>(null);
-  const [customFields, setCustomFields] = useState<string[]>([]);
+  // Lazy initializer (not an effect) so this also guesses correctly when pendingReview
+  // arrives already-populated on first render — restored from a reload, see the
+  // pendingReview prop — not just on a fresh "Load riders" click (handleImport does its
+  // own guess for that case, since it's a normal event handler, not render/mount timing).
+  const [friendField, setFriendField] = useState<string>(() => {
+    if (relay?.friendRequestField) return relay.friendRequestField;
+    const fields = new Set<string>();
+    for (const r of pendingReview ?? []) for (const k of Object.keys(r.custom ?? {})) fields.add(k);
+    return [...fields].find((f) => /friend|teammate|team request/i.test(f)) ?? "";
+  });
+  const pendingRegs = pendingReview ?? null;
+  // Plain-value overwrite, for call sites in this component that don't derive
+  // the next array from the current one (fresh import, start-over, post-build
+  // clear). RelayReviewPanel's own setPendingRegs (below) is the
+  // updater-only form for edits that DO derive from the current state.
+  const setPendingRegs = (next: Rider[] | null) => onPendingReviewChange(() => next ?? undefined);
+  // Derived from pendingRegs (not separate state) so it survives a reload — pendingRegs
+  // is now persisted (see the pendingReview prop), but a plain useState here would still
+  // reset to [] on remount even though the underlying custom-field data is right there.
+  const customFields = useMemo(() => {
+    const fields = new Set<string>();
+    for (const r of pendingRegs ?? []) for (const k of Object.keys(r.custom ?? {})) fields.add(k);
+    return [...fields];
+  }, [pendingRegs]);
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
   const [warnings, setWarnings] = useState<Pick<RelayResult, "unmatchedFriends" | "splitGroups"> | null>(null);
@@ -175,11 +209,12 @@ export function RelayBuilder({
       }
       const { riders: computed } = transformEvent({ registrations, roster, event, raceDate });
       const withEstimates = await withLapTimeEstimates(computed, relay!.historyEstimation);
-      const fields = new Set<string>();
-      for (const r of withEstimates) for (const k of Object.keys(r.custom ?? {})) fields.add(k);
-      setCustomFields([...fields]);
-      const guess = [...fields].find((f) => /friend|teammate|team request/i.test(f));
-      if (guess && !friendField) setFriendField(guess);
+      if (!friendField) {
+        const fields = new Set<string>();
+        for (const r of withEstimates) for (const k of Object.keys(r.custom ?? {})) fields.add(k);
+        const guess = [...fields].find((f) => /friend|teammate|team request/i.test(f));
+        if (guess) setFriendField(guess);
+      }
       setPendingRegs(withMedianDefault(withEstimates));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to import");
@@ -190,10 +225,18 @@ export function RelayBuilder({
 
   function build() {
     if (!pendingRegs) return;
-    const clone = pendingRegs.map((r) => ({ ...r }));
-    const result = buildRelayTeams(clone, { ...relay!, friendRequestField: friendField || undefined });
-    setWarnings({ unmatchedFriends: result.unmatchedFriends, splitGroups: result.splitGroups });
-    onChange(clone);
+    try {
+      const clone = pendingRegs.map((r) => ({ ...r }));
+      const result = buildRelayTeams(clone, { ...relay!, friendRequestField: friendField || undefined });
+      setWarnings({ unmatchedFriends: result.unmatchedFriends, splitGroups: result.splitGroups });
+      onChange(clone);
+      // Only clear the review state once the build has actually succeeded and
+      // landed in `riders` — otherwise a failure here would silently discard
+      // the director's in-progress edits with no way to get them back.
+      setPendingRegs(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to build teams");
+    }
   }
 
   /** Append a hand-entered rider onto a chosen cup/character team and renumber legs. */
@@ -231,17 +274,18 @@ export function RelayBuilder({
       return (
         <RelayReviewPanel
           pendingRegs={pendingRegs}
-          setPendingRegs={setPendingRegs}
+          setPendingRegs={(updater) => onPendingReviewChange((prev) => updater(prev ?? []))}
           relay={relay}
           friendField={friendField}
           setFriendField={setFriendField}
           customFields={customFields}
           rosterSource={rosterSource}
+          error={error}
           onBuild={build}
           onStartOver={() => {
             setPendingRegs(null);
-            setCustomFields([]);
             setRosterSource(null);
+            setError(null);
           }}
         />
       );
@@ -449,16 +493,19 @@ function RelayReviewPanel({
   setFriendField,
   customFields,
   rosterSource,
+  error,
   onBuild,
   onStartOver,
 }: {
   pendingRegs: Rider[];
-  setPendingRegs: (r: Rider[]) => void;
+  /** Always the updater form — every edit here derives the next array from the current one, so a stale closure over `pendingRegs` from an earlier render must never be the source of truth (see onPendingReviewChange in RelayBuilder). */
+  setPendingRegs: (updater: (prev: Rider[]) => Rider[]) => void;
   relay: RelayConfig;
   friendField: string;
   setFriendField: (v: string) => void;
   customFields: string[];
   rosterSource: string[] | null;
+  error: string | null;
   onBuild: () => void;
   onStartOver: () => void;
 }) {
@@ -535,7 +582,7 @@ function RelayReviewPanel({
   function moveGroupToCup(riderIndex: number, cupIndex: number | null) {
     const gi = groupIndexOfRider[riderIndex];
     const memberIndices = new Set(gi >= 0 ? groups[gi].indices : [riderIndex]);
-    setPendingRegs(pendingRegs.map((r, i) => (memberIndices.has(i) ? { ...r, manualCupOverride: cupIndex ?? undefined } : r)));
+    setPendingRegs((prev) => prev.map((r, i) => (memberIndices.has(i) ? { ...r, manualCupOverride: cupIndex ?? undefined } : r)));
   }
 
   // Sanity check, not a hard rule: flag any estimate under half or over double the
@@ -550,8 +597,8 @@ function RelayReviewPanel({
   }, [pendingRegs]);
 
   function updateEstimate(index: number, seconds: number) {
-    setPendingRegs(
-      pendingRegs.map((r, i) => (i === index ? { ...r, estimatedLapSeconds: seconds, estimatedLapConfidence: "manual" as const } : r)),
+    setPendingRegs((prev) =>
+      prev.map((r, i) => (i === index ? { ...r, estimatedLapSeconds: seconds, estimatedLapConfidence: "manual" as const } : r)),
     );
   }
 
@@ -564,15 +611,15 @@ function RelayReviewPanel({
   );
 
   function addManualMatch(index: number, targetPlayerId: string) {
-    setPendingRegs(
-      pendingRegs.map((r, i) =>
+    setPendingRegs((prev) =>
+      prev.map((r, i) =>
         i === index ? { ...r, manualFriendMatches: [...(r.manualFriendMatches ?? []), targetPlayerId] } : r,
       ),
     );
   }
   function removeManualMatch(index: number, targetPlayerId: string) {
-    setPendingRegs(
-      pendingRegs.map((r, i) =>
+    setPendingRegs((prev) =>
+      prev.map((r, i) =>
         i === index ? { ...r, manualFriendMatches: (r.manualFriendMatches ?? []).filter((id) => id !== targetPlayerId) } : r,
       ),
     );
@@ -819,6 +866,7 @@ function RelayReviewPanel({
         <button onClick={onBuild} className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-foreground hover:bg-brand-strong">
           Build teams ({pendingRegs.length} riders)
         </button>
+        {error && <p className="mt-2 text-danger">{error}</p>}
       </div>
     </div>
   );

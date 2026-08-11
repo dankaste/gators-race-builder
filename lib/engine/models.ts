@@ -261,6 +261,14 @@ export interface ProjectEventState {
   riders: Rider[];
   /** Editable wave-timing schedule for this event; falls back to the event/template default. */
   schedule?: ScheduleConfig;
+  /**
+   * Relay-only: the imported-but-not-yet-built rider list, with estimates and
+   * any director edits (time overrides, manual friend/cup matches) from the
+   * review screen — see RelayBuilder.tsx. Persisted through the same
+   * debounced autosave as `riders` so a reload during review doesn't lose
+   * that work; cleared once "Build teams" commits it into `riders`.
+   */
+  pendingRelayReview?: Rider[];
 }
 
 /**

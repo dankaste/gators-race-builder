@@ -33,6 +33,14 @@ export function Workspace({
     for (const e of config.events) m[e.id] = initialState.events?.[e.id]?.schedule ?? e.schedule;
     return m;
   });
+  // Relay-only: the in-progress review-screen state (imported riders + estimates +
+  // any time/friend/cup overrides), persisted the same way as riders/schedule so a
+  // reload mid-review doesn't lose that work — see RelayBuilder.tsx.
+  const [pendingReviewState, setPendingReviewState] = useState<Record<string, Rider[] | undefined>>(() => {
+    const m: Record<string, Rider[] | undefined> = {};
+    for (const e of config.events) m[e.id] = initialState.events?.[e.id]?.pendingRelayReview;
+    return m;
+  });
   const [activeId, setActiveId] = useState(config.events[0]?.id);
   const [save, setSave] = useState<SaveState>("idle");
   const firstRender = useRef(true);
@@ -45,9 +53,14 @@ export function Workspace({
     setSave("saving");
     const handle = setTimeout(async () => {
       const events = Object.fromEntries(
-        Object.entries(eventsState).map(([id, riders]) => [id, { riders, schedule: schedulesState[id] }]),
+        Object.entries(eventsState).map(([id, riders]) => [
+          id,
+          { riders, schedule: schedulesState[id], pendingRelayReview: pendingReviewState[id] },
+        ]),
       );
-      const anyRiders = Object.values(eventsState).some((r) => r.length > 0);
+      const anyRiders =
+        Object.values(eventsState).some((r) => r.length > 0) ||
+        Object.values(pendingReviewState).some((r) => (r?.length ?? 0) > 0);
       try {
         const res = await fetch(`/api/projects/${projectId}`, {
           method: "PATCH",
@@ -63,7 +76,7 @@ export function Workspace({
       }
     }, 800);
     return () => clearTimeout(handle);
-  }, [eventsState, schedulesState, raceDate, projectId]);
+  }, [eventsState, schedulesState, pendingReviewState, raceDate, projectId]);
 
   const setEventRiders = useCallback((eventId: string, riders: Rider[]) => {
     setEventsState((prev) => ({ ...prev, [eventId]: riders }));
@@ -72,6 +85,20 @@ export function Workspace({
   const setEventSchedule = useCallback((eventId: string, schedule: ScheduleConfig) => {
     setSchedulesState((prev) => ({ ...prev, [eventId]: schedule }));
   }, []);
+
+  // Accepts either a value or a React-style updater function. The updater form is
+  // what makes this safe against edits fired in quick succession (e.g. tabbing
+  // between review-table inputs before a re-render lands) — each call always sees
+  // the latest state at apply time, never a stale snapshot from render time.
+  const setEventPendingReview = useCallback(
+    (eventId: string, update: Rider[] | undefined | ((prev: Rider[] | undefined) => Rider[] | undefined)) => {
+      setPendingReviewState((prev) => ({
+        ...prev,
+        [eventId]: typeof update === "function" ? update(prev[eventId]) : update,
+      }));
+    },
+    [],
+  );
 
   const activeEvent = config.events.find((e) => e.id === activeId) ?? config.events[0];
 
@@ -121,6 +148,8 @@ export function Workspace({
             raceDate={raceDate}
             riders={eventsState[activeEvent.id] ?? []}
             onChange={(r) => setEventRiders(activeEvent.id, r)}
+            pendingReview={pendingReviewState[activeEvent.id]}
+            onPendingReviewChange={(update) => setEventPendingReview(activeEvent.id, update)}
             projectId={projectId}
             season={season}
           />
