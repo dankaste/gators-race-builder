@@ -8,6 +8,7 @@ import { buildRelayTeams, compareLegOrder, type RelayResult } from "@/lib/engine
 import { createManualRider } from "@/lib/engine/manualRider";
 import { toRelayWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { downloadBlob } from "@/lib/download";
+import { fetchSeasonRoster } from "@/lib/fetchSeasonRoster";
 import type { RaceEvent, Rider } from "@/lib/engine/models";
 import { AddRiderForm, type AddRiderFields } from "./AddRiderForm";
 import { ConfirmButton } from "./ConfirmButton";
@@ -62,12 +63,16 @@ export function RelayBuilder({
   raceDate,
   riders,
   onChange,
+  projectId,
+  season,
 }: {
   event: RaceEvent;
   slug: string;
   raceDate: string;
   riders: Rider[];
   onChange: (riders: Rider[]) => void;
+  projectId: string;
+  season: string;
 }) {
   const relay = event.relay;
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +82,7 @@ export function RelayBuilder({
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
   const [warnings, setWarnings] = useState<Pick<RelayResult, "unmatchedFriends" | "splitGroups"> | null>(null);
+  const [rosterSource, setRosterSource] = useState<string[] | null>(null);
 
   // Group assigned riders by cup -> character for display. (Declared before any
   // early return so hooks run in a stable order.)
@@ -110,9 +116,16 @@ export function RelayBuilder({
   async function handleImport(regFile: File, rosterFile: File | null) {
     setError(null);
     setImporting(true);
+    setRosterSource(null);
     try {
       const registrations = parseRegistrations(await regFile.text());
-      const roster = rosterFile ? parseRoster(await rosterFile.text()) : [];
+      let roster = rosterFile ? parseRoster(await rosterFile.text()) : [];
+      if (!rosterFile) {
+        // No Player export this time — reuse whatever bib/team/contact data other races this season already captured.
+        const derived = await fetchSeasonRoster(season, projectId);
+        roster = derived.roster;
+        if (derived.sourceProjectNames.length > 0) setRosterSource(derived.sourceProjectNames);
+      }
       const { riders: computed } = transformEvent({ registrations, roster, event, raceDate });
       const withEstimates = await withLapTimeEstimates(computed);
       const fields = new Set<string>();
@@ -181,6 +194,7 @@ export function RelayBuilder({
         friendField={friendField}
         setFriendField={setFriendField}
         onBuild={build}
+        rosterSource={rosterSource}
       />
     );
   }
@@ -361,6 +375,7 @@ function RelayImportPanel(props: {
   friendField: string;
   setFriendField: (v: string) => void;
   onBuild: () => void;
+  rosterSource: string[] | null;
 }) {
   const [reg, setReg] = useState<File | null>(null);
   const [roster, setRoster] = useState<File | null>(null);
@@ -386,10 +401,18 @@ function RelayImportPanel(props: {
           <label className={label}>Player export (CSV) — for bibs &amp; seeding</label>
           <input type="file" accept=".csv" onChange={(e) => setRoster(e.target.files?.[0] ?? null)}
             className="block w-full text-sm text-muted file:mr-3 file:rounded file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-foreground" />
+          <p className="mt-1 text-xs text-muted">
+            Optional — leave blank to reuse bibs/teams/contacts already captured from another race this season.
+          </p>
         </div>
       </div>
       {!props.raceDate && <p className="mt-4 text-warning">Set the race date above before importing.</p>}
       {props.error && <p className="mt-4 text-danger">{props.error}</p>}
+      {props.rosterSource && (
+        <p className="mt-4 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
+          No Player export uploaded — used roster data from {props.rosterSource.join(", ")} instead.
+        </p>
+      )}
 
       {!props.pending ? (
         <button

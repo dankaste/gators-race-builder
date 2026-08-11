@@ -2,7 +2,7 @@ import "server-only";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { projects, type Project } from "@/db/schema";
-import type { ProjectState } from "@/lib/engine/models";
+import type { ProjectState, RosterEntry } from "@/lib/engine/models";
 import { matchBibCandidates, type BibCandidate, type BibMatch, type BibSource } from "@/lib/engine/nameMatch";
 
 export type { Project, ProjectState };
@@ -62,6 +62,58 @@ export async function findExistingBibs(
       return { raceSlug: p.raceSlug, projectName: p.name, updatedAt: p.updatedAt, riders };
     });
   return matchBibCandidates(candidates, sources);
+}
+
+/**
+ * A season-wide "roster" derived from every other project's already-imported
+ * riders — bib, GBP team, and contact info, exactly what a Player export CSV
+ * would provide. Once ANY race this season has had its Player export
+ * uploaded, every later race can skip re-uploading it: a director only needs
+ * that file once a season, for whichever race they build first.
+ *
+ * One entry per playerId; when the same rider appears in multiple other
+ * projects with conflicting data (a re-imported/corrected roster since),
+ * the most-recently-updated project wins — same convention `findExistingBibs`
+ * uses. Manually-added riders (`manual-*` ids) aren't real roster members
+ * and are excluded.
+ */
+export async function deriveSeasonRoster(
+  season: string,
+  opts: { excludeProjectId?: string } = {},
+): Promise<{ roster: RosterEntry[]; sourceProjectNames: string[] }> {
+  const all = await listProjectsBySeason(season);
+  const others = all.filter((p) => p.id !== opts.excludeProjectId);
+
+  const byPlayerId = new Map<string, { rider: RosterEntry; updatedAt: Date }>();
+  const usedProjectNames = new Set<string>();
+  for (const p of others) {
+    const state = (p.state ?? {}) as ProjectState;
+    for (const ev of Object.values(state.events ?? {})) {
+      for (const r of ev.riders ?? []) {
+        if (!r.playerId || r.playerId.startsWith("manual-")) continue;
+        const existing = byPlayerId.get(r.playerId);
+        if (existing && existing.updatedAt >= p.updatedAt) continue; // an earlier-checked, more-recent project already won
+        byPlayerId.set(r.playerId, {
+          updatedAt: p.updatedAt,
+          rider: {
+            id: r.playerId,
+            firstName: r.firstName,
+            lastName: r.lastName,
+            bib: r.bib,
+            gender: r.gender,
+            birthDate: r.birthDate,
+            team: r.team,
+            email: r.email,
+            parentName: r.parentName,
+            phone: r.phone,
+          },
+        });
+        if (r.bib != null || r.team) usedProjectNames.add(p.name); // only credit projects that actually contributed data worth having
+      }
+    }
+  }
+
+  return { roster: [...byPlayerId.values()].map((v) => v.rider), sourceProjectNames: [...usedProjectNames] };
 }
 
 export async function getProject(id: string): Promise<Project | undefined> {

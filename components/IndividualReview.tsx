@@ -14,6 +14,7 @@ import { toWebScorerXlsx } from "@/lib/render/webscorerXlsx";
 import { handoutsToPdf } from "@/lib/render/pdf";
 import { downloadBlob, downloadText } from "@/lib/download";
 import { normName } from "@/lib/engine/nameMatch";
+import { fetchSeasonRoster } from "@/lib/fetchSeasonRoster";
 import { DEFAULT_SCHEDULE, type RaceEvent, type Rider, type ScheduleConfig } from "@/lib/engine/models";
 import { ReviewTable } from "./ReviewTable";
 import { WaveEditor } from "./WaveEditor";
@@ -50,6 +51,7 @@ export function IndividualReview({
   const [busy, setBusy] = useState(false);
   const [matching, setMatching] = useState(false);
   const [bibMessage, setBibMessage] = useState<string | null>(null);
+  const [rosterSource, setRosterSource] = useState<string[] | null>(null);
   const [view, setView] = useState<"table" | "waves">("table");
   const [adding, setAdding] = useState(false);
   // Bumped to re-mount (re-seed) the WaveEditor when riders change underneath it.
@@ -72,9 +74,16 @@ export function IndividualReview({
 
   async function handleImport(regFile: File, rosterFile: File | null) {
     setImportError(null);
+    setRosterSource(null);
     try {
       const registrations = parseRegistrations(await regFile.text());
-      const roster = rosterFile ? parseRoster(await rosterFile.text()) : [];
+      let roster = rosterFile ? parseRoster(await rosterFile.text()) : [];
+      if (!rosterFile) {
+        // No Player export this time — reuse whatever bib/team/contact data other races this season already captured.
+        const derived = await fetchSeasonRoster(season, projectId);
+        roster = derived.roster;
+        if (derived.sourceProjectNames.length > 0) setRosterSource(derived.sourceProjectNames);
+      }
       const { riders: computed } = transformEvent({ registrations, roster, event, raceDate });
 
       // Auto-fill bibs for riders who already raced this season under another
@@ -336,6 +345,9 @@ export function IndividualReview({
           {highestBib > 0 && <> → next available {highestBib + 1}</>}
         </span>
         {bibMessage && <span className="text-xs text-brand-strong">{bibMessage}</span>}
+        {rosterSource && (
+          <span className="text-xs text-muted">No Player export uploaded — used roster data from {rosterSource.join(", ")} instead.</span>
+        )}
       </div>
       {adding && (
         <div className="mt-4">

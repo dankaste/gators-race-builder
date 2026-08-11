@@ -55,6 +55,29 @@ describe("buildRelayTeams", () => {
     expect(unmatchedFriends).toEqual([{ rider: "Solo Rider", requested: "Nobody Here" }]);
   });
 
+  it("splits a multi-name request and matches every name found, even when some don't match", () => {
+    const alice = rider({ firstName: "Alice", lastName: "Smith" });
+    const bob = rider({ firstName: "Bob", lastName: "Jones" });
+    const req = rider({
+      firstName: "Req",
+      lastName: "Ester",
+      custom: { "Teammate request": "Alice Smith, Bob Jones and Nobody Here" },
+    });
+    const { teams, unmatchedFriends } = buildRelayTeams([req, alice, bob, ...Array.from({ length: 9 }, () => rider())], config);
+    const team = teams.find((t) => t.riders.some((r) => r.firstName === "Req"))!;
+    // The one unfindable name doesn't stop the two real matches from grouping.
+    expect(team.riders.map((r) => r.firstName).sort()).toEqual(["Alice", "Bob", "Req"]);
+    expect(unmatchedFriends).toEqual([{ rider: "Req Ester", requested: "Nobody Here" }]);
+  });
+
+  it("treats a non-answer (NA/none/etc) as no request at all, not an unmatched one", () => {
+    for (const nonAnswer of ["NA", "N/A", "none", "None", "no one", "nobody", "-", "TBD"]) {
+      const a = rider({ firstName: "Solo", lastName: "Rider", custom: { "Teammate request": nonAnswer } });
+      const { unmatchedFriends } = buildRelayTeams([a, rider(), rider()], config);
+      expect(unmatchedFriends).toEqual([]);
+    }
+  });
+
   it("assigns sequential legs within a team", () => {
     // A chain of friend requests forces all four onto one team (teamSize 4).
     const a = rider({ firstName: "A", lastName: "X", seedLevel: 3 });

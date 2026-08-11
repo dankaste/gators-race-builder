@@ -41,6 +41,23 @@ function nameKeys(r: Rider): string[] {
   return nameKeysOf(r.firstName, r.lastName);
 }
 
+/** Free-text non-answers to a "who do you want as a teammate?" question — not a real request, don't even flag them. */
+const NON_ANSWER = /^(n\/?a|none|no\s*one|nobody|-|tbd)$/i;
+
+/**
+ * A teammate-request field is a free-text box, and parents commonly list
+ * more than one name ("Tyler and Thatcher", "Brayden Good, Thatcher Behum")
+ * even though the form asks for one. Split on the common separators so each
+ * name gets its own match attempt instead of the whole blob failing to
+ * match as a single (unfindable) string.
+ */
+function splitNameList(text: string): string[] {
+  return text
+    .split(/,|;|\n|\band\b|&/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 // --- union-find over rider indices for friend grouping ---
 class DSU {
   parent: number[];
@@ -175,12 +192,14 @@ export function buildRelayTeams(riders: Rider[], config: RelayConfig): RelayResu
   const unmatchedFriends: { rider: string; requested: string }[] = [];
   if (friendField) {
     riders.forEach((r, i) => {
-      const req = r.custom?.[friendField];
-      if (!req) return;
-      const target = byName.get(norm(req));
-      if (target !== undefined && target !== i) dsu.union(i, target);
-      else if (target === undefined) {
-        unmatchedFriends.push({ rider: `${r.firstName} ${r.lastName}`, requested: req });
+      const req = r.custom?.[friendField]?.trim();
+      if (!req || NON_ANSWER.test(req)) return;
+      for (const candidate of splitNameList(req)) {
+        const target = byName.get(norm(candidate));
+        if (target !== undefined && target !== i) dsu.union(i, target);
+        else if (target === undefined) {
+          unmatchedFriends.push({ rider: `${r.firstName} ${r.lastName}`, requested: candidate });
+        }
       }
     });
   }

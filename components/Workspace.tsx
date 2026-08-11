@@ -121,6 +121,8 @@ export function Workspace({
             raceDate={raceDate}
             riders={eventsState[activeEvent.id] ?? []}
             onChange={(r) => setEventRiders(activeEvent.id, r)}
+            projectId={projectId}
+            season={season}
           />
         ) : (
           <IndividualReview
