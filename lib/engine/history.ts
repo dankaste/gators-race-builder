@@ -457,6 +457,39 @@ export function projectToFullCourse(seconds: number, ageOnRaceDay: number, fiveS
   return ageBandOf(ageOnRaceDay) === "5-6" ? seconds * fiveSixCourseFactor : seconds;
 }
 
+export interface AgeCourseFactor {
+  age: number;
+  ageBand: string;
+  /** True when this age's band is already treated as full-course (see ageBandOf) — factor is fixed at 1, not derived, since there's nothing to correct for. */
+  fullCourse: boolean;
+  /** Multiply a rider of this age's raw Swamp Dash time by this to project it onto the full-course scale. Null only when fullCourse is false and there isn't enough paired data to derive one (see deriveFiveSixFactor). */
+  factor: number | null;
+  /** Paired-sample count backing a derived factor; null for a fixed (fullCourse) factor or when nothing could be derived. */
+  n: number | null;
+}
+
+/**
+ * Per-age view of the SAME course-scaling math {@link deriveFiveSixFactor}
+ * uses, for the history page's transparency/audit table — lets a director
+ * see the number behind the constant broken out by single age instead of
+ * only as one blended "5-6" figure. Every age within the 5-6 band shares
+ * that band's one derived factor: there's no way to separate age 5 from age
+ * 6 any further from this data, since they run the physically identical
+ * short course — the difference between them is ordinary year-over-year
+ * growth, which `estimateLapTimes` already accounts for separately via
+ * cohort-median comparison, not this factor. Ages outside the 5-6 band get
+ * a fixed factor of 1 (not derived) — see `projectToFullCourse`, which only
+ * ever scales the 5-6 band.
+ */
+export function deriveAgeCourseFactors(history: HistoryRow[], ages: number[]): AgeCourseFactor[] {
+  const fiveSix = deriveFiveSixFactor(history);
+  return ages.map((age) => {
+    const ageBand = ageBandOf(age);
+    if (ageBand !== "5-6") return { age, ageBand, fullCourse: true, factor: 1, n: null };
+    return { age, ageBand, fullCourse: false, factor: fiveSix.factor, n: fiveSix.factor != null ? fiveSix.n : null };
+  });
+}
+
 /**
  * Fallback `fiveSixCourseFactor` for a relay whose persisted RaceConfig
  * predates this field (historyEstimation is optional in raceConfigSchema.ts,

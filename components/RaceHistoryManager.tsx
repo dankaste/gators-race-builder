@@ -7,6 +7,7 @@ import {
   inferRaceFromFilename,
   parseHistoryCsv,
   parseRaceResultsXlsx,
+  type AgeCourseFactor,
   type HistoryRaceSlug,
   type HistoryRow,
 } from "@/lib/engine/history";
@@ -35,9 +36,12 @@ const RACE_LABELS: Record<HistoryRaceSlug, string> = {
 export function RaceHistoryManager({
   initialImports,
   initialStats,
+  ageFactors,
 }: {
   initialImports: RaceHistoryImport[];
   initialStats: HistoryStats;
+  /** Age → full-course scaling factor (see deriveAgeCourseFactors) — recomputed server-side on refresh, so no local state needed for it. */
+  ageFactors: AgeCourseFactor[];
 }) {
   const router = useRouter();
   const [imports, setImports] = useState(initialImports);
@@ -47,6 +51,20 @@ export function RaceHistoryManager({
   const [season, setSeason] = useState<number | "">("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // `stats` updates instantly from the POST response for a snappy summary line, but
+  // `ageFactors` is a server-computed prop that only catches up once router.refresh()'s
+  // re-render lands — a beat later. Without this, a first import into an empty history
+  // would flash the age-factor card's "not enough paired data" warning even though the
+  // import that just landed IS enough data; it just hasn't been recomputed yet.
+  // Reset during render (not an effect) once the refreshed prop actually arrives — the
+  // React-recommended way to adjust state in response to a prop change without an
+  // extra render round trip. See https://react.dev/learn/you-might-not-need-an-effect.
+  const [prevAgeFactors, setPrevAgeFactors] = useState(ageFactors);
+  const [awaitingRefresh, setAwaitingRefresh] = useState(false);
+  if (ageFactors !== prevAgeFactors) {
+    setPrevAgeFactors(ageFactors);
+    setAwaitingRefresh(false);
+  }
 
   const isXlsx = file?.name.toLowerCase().endsWith(".xlsx") ?? false;
   const isCsv = file?.name.toLowerCase().endsWith(".csv") ?? false;
@@ -106,6 +124,7 @@ export function RaceHistoryManager({
         setFile(null);
         setRaceSlug("");
         setSeason("");
+        setAwaitingRefresh(true);
         router.refresh();
       }
     } catch (err) {
@@ -152,6 +171,52 @@ export function RaceHistoryManager({
           </div>
         )}
       </div>
+
+      {stats.totalRows > 0 && (
+        <div className="mt-6 rounded-xl border border-border bg-surface p-5">
+          <h2 className="font-semibold text-foreground">Age → full Swamp Dash lap-time scaling factor</h2>
+          <p className="mt-1 text-sm text-muted">
+            The 5-6 age band races a physically shorter individual course — multiply a rider&apos;s raw time by
+            this factor to project it onto the same scale as everyone else (see{" "}
+            <span className="font-mono text-xs">deriveFiveSixFactor</span>). 5 and 6 share one derived factor
+            (same course; the difference between those ages is ordinary growth, handled separately). 7 and 8 are
+            already full-course, so their factor is fixed at 1 — not derived.
+          </p>
+          <p className="mt-2 text-xs text-warning">
+            This is derived fresh from whatever history is currently imported — it is NOT automatically what
+            relay seeding actually uses. That value is stored per-race in the config (
+            <span className="font-mono">RelayConfig.historyEstimation.fiveSixCourseFactor</span>, edited on the
+            race&apos;s config page) and only updates if you copy this number over by hand. If the two drift,
+            relay seeding keeps using the stored one.
+          </p>
+          <table className="mt-3 w-full max-w-sm text-sm">
+            <thead>
+              <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+                <th className="py-1.5 pr-3">Age</th>
+                <th className="py-1.5 pr-3">Course</th>
+                <th className="py-1.5 pr-3">Factor</th>
+                <th className="py-1.5 pr-3">n (paired samples)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ageFactors.map((a) => (
+                <tr key={a.age} className="border-b border-border/60 last:border-0">
+                  <td className="py-1.5 pr-3 text-foreground">{a.age}</td>
+                  <td className="py-1.5 pr-3 text-muted">{a.fullCourse ? "full" : "5-6 (short)"}</td>
+                  <td className="py-1.5 pr-3 text-foreground">{a.factor != null ? a.factor.toFixed(2) : "—"}</td>
+                  <td className="py-1.5 pr-3 text-muted">{a.n ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!awaitingRefresh && ageFactors.some((a) => !a.fullCourse && a.factor == null) && (
+            <p className="mt-2 text-xs text-warning">
+              Not enough paired same-rider data yet to derive the 5-6 factor — relay seeding falls back to the
+              stored config default until there is.
+            </p>
+          )}
+        </div>
+      )}
 
       <form onSubmit={submitImport} className="mt-6 rounded-xl border border-border bg-surface p-5">
         <label className="block text-sm font-semibold text-muted">

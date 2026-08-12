@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   ageBandOf,
   classifyEvent,
+  deriveAgeCourseFactors,
   deriveFiveSixFactor,
   estimateLapTimes,
   inferRaceFromFilename,
@@ -156,6 +157,53 @@ describe("deriveFiveSixFactor", () => {
 
   it("returns a null factor when there's no paired data", () => {
     expect(deriveFiveSixFactor([])).toEqual({ factor: null, n: 0 });
+  });
+});
+
+describe("deriveAgeCourseFactors", () => {
+  function sdRow(name: string, season: number, age: number, timeSeconds: number): HistoryRow {
+    const [lastName, firstName] = name.split(", ");
+    return {
+      bib: "1",
+      firstName,
+      lastName,
+      raceSlug: "sd",
+      season,
+      eventLabel: `${season} Gator Race Series Swamp Dash`,
+      category: "",
+      age,
+      gender: "M",
+      timeSeconds,
+      status: "OK",
+      place: 1,
+      groupSize: 10,
+      distanceLabel: "Pedal Bike",
+    };
+  }
+
+  it("gives ages 5 and 6 the SAME derived 5-6 factor, and ages 7/8 a fixed factor of 1 (already full-course)", () => {
+    const rows: HistoryRow[] = [];
+    for (let i = 0; i < 6; i++) {
+      const name = `Rider${i}, R`;
+      rows.push(sdRow(name, 2022, 5, 100));
+      rows.push(sdRow(name, 2023, 6, 80));
+      rows.push(sdRow(name, 2024, 8, 128));
+    }
+    const factors = deriveAgeCourseFactors(rows, [5, 6, 7, 8]);
+    expect(factors).toEqual([
+      { age: 5, ageBand: "5-6", fullCourse: false, factor: expect.closeTo(2.0, 5), n: 6 },
+      { age: 6, ageBand: "5-6", fullCourse: false, factor: expect.closeTo(2.0, 5), n: 6 },
+      { age: 7, ageBand: "7-8", fullCourse: true, factor: 1, n: null },
+      { age: 8, ageBand: "7-8", fullCourse: true, factor: 1, n: null },
+    ]);
+  });
+
+  it("returns a null factor (not a fixed 1) for 5/6 when there's no paired data to derive one from", () => {
+    const factors = deriveAgeCourseFactors([], [5, 6]);
+    expect(factors).toEqual([
+      { age: 5, ageBand: "5-6", fullCourse: false, factor: null, n: null },
+      { age: 6, ageBand: "5-6", fullCourse: false, factor: null, n: null },
+    ]);
   });
 });
 

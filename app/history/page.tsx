@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { hasDatabase } from "@/db";
 import { requireDirector } from "@/lib/auth-dal";
-import { getHistoryStats, listImports } from "@/lib/raceHistory";
+import { getAgeCourseFactors, getHistoryStats, listImports } from "@/lib/raceHistory";
 import { RaceHistoryManager } from "@/components/RaceHistoryManager";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Race History — Gators Race Director" };
+
+// The 5-6/7-8 course-length boundary is where the scaling factor actually matters —
+// see deriveAgeCourseFactors. Extend this if a future band needs auditing too.
+const AGE_FACTOR_AGES = [5, 6, 7, 8];
 
 export default async function HistoryPage() {
   await requireDirector();
@@ -29,7 +33,11 @@ export default async function HistoryPage() {
           No database connected. Set <code>DATABASE_URL</code> to manage race history.
         </p>
       ) : (
-        <RaceHistoryManager initialImports={await listImports()} initialStats={await getHistoryStats()} />
+        <RaceHistoryManager
+          initialImports={await listImports()}
+          initialStats={await getHistoryStats()}
+          ageFactors={await getAgeCourseFactors(AGE_FACTOR_AGES)}
+        />
       )}
     </main>
   );

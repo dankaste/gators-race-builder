@@ -4,7 +4,7 @@ import { desc, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { raceHistoryImports, raceHistoryResults, type RaceHistoryImport } from "@/db/schema";
 import { normName } from "@/lib/engine/nameMatch";
-import type { HistoryRow } from "@/lib/engine/history";
+import { deriveAgeCourseFactors, type AgeCourseFactor, type HistoryRow } from "@/lib/engine/history";
 
 export type { RaceHistoryImport };
 
@@ -81,6 +81,18 @@ export async function getHistoryStats(): Promise<HistoryStats> {
   const seasons = [...new Set(rows.map((r) => r.season).filter((s): s is number => s != null))].sort((a, b) => b - a);
   const raceSlugs = [...new Set(rows.map((r) => r.raceSlug).filter((s): s is string => s != null))].sort();
   return { totalRows: rows.length, seasons, raceSlugs };
+}
+
+/**
+ * Age → full-course scaling factor, for the history page's audit table (see
+ * deriveAgeCourseFactors). Reads the full history table server-side — same
+ * as the estimator does — but only ever ships the small derived summary
+ * (age/band/factor/n) to the browser, never a raw row: names are PII and
+ * never cross the wire from here, matching getAllHistoryResults's own rule.
+ */
+export async function getAgeCourseFactors(ages: number[]): Promise<AgeCourseFactor[]> {
+  const history = await getAllHistoryResults();
+  return deriveAgeCourseFactors(history, ages);
 }
 
 /** Wipes ALL history (imports log + results) — the rare nuclear reset, not the normal path. */
