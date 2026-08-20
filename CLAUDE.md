@@ -55,3 +55,40 @@ automates everything *between* the exports and the manual WebScorer upload.
 ## Pending (deferred)
 The Vercel + Neon production deploy (auth is wired; set `AUTH_SECRET`, `AUTH_GOOGLE_ID`,
 `AUTH_GOOGLE_SECRET`, `DIRECTOR_BOOTSTRAP` in Vercel) and the per-season retention/purge job.
+
+## Working with agents
+
+Work is tracked as GitHub issues on a project board, and every change lands through a branch
+and a PR. `CONTRIBUTING.md` has the human version; this is the agent routing.
+
+```
+/file  →  /refine (features)  →  /work  →  CI  →  /ship
+          /triage  (bugs)
+```
+
+| Skill | When |
+|---|---|
+| `/file` | Something is broken or missing. Creates the issue, puts it on the board. |
+| `/refine <n>` | Before building a feature. `spec-writer` → spec comment on the issue. |
+| `/triage <n>` | Before fixing a bug whose cause isn't obvious. `triage` → RCA comment. |
+| `/work <n>` | Build it. Branch `claude/<n>-<slug>` → `implementer` → gate → PR. |
+| `/ship` | Review, wait for CI, squash-merge. Closes the issue. |
+| `/board` | What's open and what's next. |
+
+Three agents, in `.claude/agents/`: `triage` (read-only RCA), `spec-writer` (issue → spec),
+`implementer` (spec → staged code). Shared rules live in `.claude/doctrine.md`.
+
+**Use the built-ins for review.** `/code-review` and `/security-review` already exist — do not
+write a review agent. CI (`test`, `typecheck`, `lint`, `build`) is the preflight layer, and the
+golden tests are the requirements check for the engine.
+
+**The gate is `npm test && npx tsc --noEmit && npm run lint`.** A `PreToolUse` hook runs it
+before any `git push`; a `PostToolUse` hook inspects the index after `git add` and blocks
+staged rider data. Both live in `.claude/scripts/`.
+
+**Board state lives on GitHub, not in a file.** The issue is the system of record. Specs and
+RCAs are issue comments tagged `<!-- artifact:spec -->` / `<!-- artifact:triage -->`. The
+branch name carries the issue number, so there is no session-state file to go stale — anything
+that needs to know what's in flight reads `git branch --show-current`.
+
+**Never push to `main`.** It's protected; branch and open a PR.

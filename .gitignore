@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude code (agents, skills, and hooks are committed on purpose)
+.claude/settings.local.json
+.claude/*.lock
