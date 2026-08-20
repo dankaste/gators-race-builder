@@ -10,7 +10,11 @@ input=$(cat)
 cmd=$(echo "$input" | jq -r '.tool_input.command // empty')
 echo "$cmd" | grep -qE '(^|[;&|[:space:]])git[[:space:]]+add' || exit 0
 
-cd "$(git rev-parse --show-toplevel)" || exit 0
+# `cd "$(git rev-parse ...)"` succeeds outside a repo (cd "" is a no-op), which
+# would silently skip the check. Resolve the root explicitly and bail loudly.
+root=${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null)}
+[ -n "$root" ] && [ -d "$root/.git" ] || { echo "hook: not in a git repo, skipping" >&2; exit 0; }
+cd "$root" || exit 0
 bad=$(git diff --cached --name-only \
       | grep -iE '\.(csv|xlsx|xls)$' \
       | grep -v '^lib/engine/__fixtures__/' || true)

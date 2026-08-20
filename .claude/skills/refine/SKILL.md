@@ -32,6 +32,9 @@ description: Research a filed enhancement and turn it into a spec with acceptanc
 
 7. End with: "Spec on #<n>. Run `/work <n>` to build it."
 
+Board moves are cosmetic — if `board.sh` fails, the spec comment is already posted and the work
+stands. Say the board wasn't updated and carry on; never redo the durable step.
+
 ## Rules
 
 - If spec-writer says the change is **config only**, say that prominently. It usually means the

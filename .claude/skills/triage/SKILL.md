@@ -28,6 +28,9 @@ description: Investigate a bug's root cause before anyone writes a fix, and post
 
 7. End with: "Root cause on #<n>. Run `/work <n>` to fix it."
 
+Board moves are cosmetic — if `board.sh` fails, the RCA comment is already posted and the work
+stands. Say the board wasn't updated and carry on; never redo the durable step.
+
 ## Rules
 
 - Do not fix the bug in this skill, however obvious it looks.

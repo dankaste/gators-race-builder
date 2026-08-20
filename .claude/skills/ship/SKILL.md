@@ -11,6 +11,9 @@ description: Review, wait for CI, and merge the current branch's PR, closing its
    If the branch has no number, read the PR body's `Closes #<n>` instead. If neither exists,
    ask.
 
+   **Hold `<n>` from here on.** Step 6 deletes the branch, so by step 7 there is nothing left
+   to derive it from. Do not re-read it at the point of use.
+
 2. **Run the gate locally** — faster feedback than waiting on CI:
    ```bash
    npm test && npx tsc --noEmit && npm run lint

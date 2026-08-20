@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/scripts/gate.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/scripts/gate.sh",
             "timeout": 300,
             "statusMessage": "Running the gate before push..."
           }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/scripts/pii-guard.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/scripts/pii-guard.sh",
             "timeout": 15,
             "statusMessage": "Checking staged files for PII..."
           }

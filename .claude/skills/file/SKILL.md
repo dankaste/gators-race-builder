@@ -58,6 +58,11 @@ Take the issue number from the command output. Never invent it.
 
 (This adds the item if it isn't on the board yet.)
 
+If it fails — most likely `.claude/gh-project.json` doesn't exist yet — **the issue still
+exists and that is the part that matters.** Report the issue number and URL, note that the
+board wasn't updated, and point at `.claude/scripts/board.sh init`. Do not present this as
+the filing having failed, and do not create a second issue.
+
 ## Step 4 — Offer the next step
 
 Report the issue number and URL, then ask one question:

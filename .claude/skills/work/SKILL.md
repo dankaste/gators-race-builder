@@ -65,6 +65,9 @@ needs to know what is being worked on derives it from `git branch --show-current
 
 10. End with: "PR open on #<n>. CI is running. Run `/ship` when it's green."
 
+Board moves are cosmetic — if `board.sh` fails, the branch and PR already exist and the work
+stands. Say the board wasn't updated and carry on; never redo the durable step.
+
 ## Rules
 
 - One issue per branch. If the work grows a second concern, `/file` it and keep this branch
