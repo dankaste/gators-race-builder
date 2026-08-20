@@ -1,0 +1,106 @@
+name: Claude — build a labeled issue
+
+# Opt-in per issue: add the `agent:go` label and Claude opens a PR for it.
+#
+# SECURITY — this repo is PUBLIC and this job holds ANTHROPIC_API_KEY.
+# `issues` events run in base-repo context with secrets, so anyone who can open an
+# issue could otherwise spend the budget. The `authorize` job below is the gate:
+# it checks that whoever APPLIED THE LABEL (github.event.sender — not the issue
+# author) has write or admin on this repo. Never remove it, and never widen this
+# to `issue_comment` without re-doing the same check.
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: claude-issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    if: github.event.label.name == 'agent:go'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require write access on the labeler
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.event.sender.login }}
+        run: |
+          lvl=$(gh api "repos/${{ github.repository }}/collaborators/$ACTOR/permission" \
+                 --jq .permission 2>/dev/null || echo none)
+          echo "$ACTOR has: $lvl"
+          case "$lvl" in
+            admin|write) echo "authorized" ;;
+            *) echo "::error::$ACTOR is not a collaborator with write access — refusing to run."; exit 1 ;;
+          esac
+
+  build:
+    needs: authorize
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # A PR opened with the default GITHUB_TOKEN does NOT trigger ci.yml —
+          # GitHub suppresses that to prevent recursion, and the PR would sit
+          # forever with its required check never running. GH_AGENT_TOKEN is a
+          # fine-grained PAT (contents/PRs/issues/projects: write). See CONTRIBUTING.md.
+          token: ${{ secrets.GH_AGENT_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GH_AGENT_TOKEN }}
+          # Pinned deliberately. Swap to claude-opus-5 if the work needs it —
+          # sonnet is the cost-efficient default for scoped, well-specified issues.
+          claude_args: |
+            --model claude-sonnet-5
+            --max-turns 25
+          prompt: |
+            REPO: ${{ github.repository }}
+            ISSUE: #${{ github.event.issue.number }}
+
+            Build issue #${{ github.event.issue.number }}.
+
+            1. Read the issue and its comments with `gh issue view ${{ github.event.issue.number }} --comments`.
+               Find the comment starting with `<!-- artifact:spec -->` or `<!-- artifact:triage -->` —
+               that is the spec. If neither exists, comment on the issue saying it needs
+               `/refine` or `/triage` first, and stop without changing any code.
+
+            2. Follow CLAUDE.md and .claude/doctrine.md. The rules that matter most:
+               - Race differences are DATA in a RaceConfig (lib/configs/), never a branch in code.
+               - Never weaken lib/configs/golden.test.ts or lib/engine/history.golden.test.ts.
+               - Never commit PII (rider data, .csv/.xlsx outside lib/engine/__fixtures__/) or
+                 the WebScorer credentials. This repo is public.
+               - lib/engine/* stays pure — no React/Next/server imports.
+               - Next.js 16: read node_modules/next/dist/docs/ before writing route code.
+
+            3. Write the failing test first for anything in lib/engine/.
+
+            4. Run the gate and do not open a PR until it passes:
+               npm test && npx tsc --noEmit && npm run lint
+
+            5. Stage with explicit paths. Never `git add -A` or `git add .`.
+
+            6. Open a PR whose body starts with `Closes #${{ github.event.issue.number }}`,
+               then says what changed and how it was verified.
+
+            Do not merge. Do not push to main. Stay inside the issue's scope — if you find
+            another problem, mention it in the PR body instead of fixing it.
