@@ -19,7 +19,9 @@ const HISTORY_CSV = path.join(DATA_DIR, "Rider History Race Result.csv");
 const present = existsSync(HISTORY_CSV);
 
 describe.skipIf(!present)("Rider history real-data diagnostics", () => {
-  const history = parseHistoryCsv(readFileSync(HISTORY_CSV, "utf8"));
+  // `describe.skipIf` still runs this callback at collection time, so the read has to
+  // be guarded too — otherwise CI (where the file is absent) fails instead of skipping.
+  const history = present ? parseHistoryCsv(readFileSync(HISTORY_CSV, "utf8")) : [];
 
   it("classifies effectively every row's event", () => {
     const unclassified = history.filter((r) => r.raceSlug === null || r.season === null);
