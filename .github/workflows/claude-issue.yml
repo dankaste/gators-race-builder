@@ -49,7 +49,7 @@ jobs:
       issues: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # A PR opened with the default GITHUB_TOKEN does NOT trigger ci.yml —
           # GitHub suppresses that to prevent recursion, and the PR would sit
@@ -57,7 +57,7 @@ jobs:
           # fine-grained PAT (contents/PRs/issues/projects: write). See CONTRIBUTING.md.
           token: ${{ secrets.GH_AGENT_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: npm
